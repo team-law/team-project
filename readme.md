@@ -28,13 +28,18 @@ Group Project - README Template
 
 **Required Must-have Stories**
 
-* [fill in your required user stories here]
-* ...
+* share pictures among multiple people
+* limit number of pictures taken
+* easy way for people to join groups
+* time limit for taking pictures period 
+* easy way to access pictures after the event has ended 
+
 
 **Optional Nice-to-have Stories**
 
-* [fill in your required user stories here]
-* ...
+* video/ picture complation after the event that tells the story
+* retro filter on picture
+* 
 
 ### 2. Screen Archetypes
 
