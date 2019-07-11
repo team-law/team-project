@@ -78,7 +78,45 @@ Group Project - README Template
 ## Schema 
 [This section will be completed in Unit 9]
 ### Models
-[Add table of models]
+
+User
+| Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | username      | String   | unique user id |
+   | password      | String     | secret access key |
+   | profilePictue        | File| image displayed in user profile |
+   | mediaLinks     | List<Strings>   | links to other social media accounts |
+   | friends | List <User>  | friends |
+
+Picture
+| Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | user      | String   | user who created the image |
+   | image        | File | picture taken |
+   | time         | String     | time at which picture is taken |
+   | event         | Event     | event at which picture is taken |
+   
+UserNode
+| Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | event      | Event   | event at which node is displayed |
+   | user        | User| user being displayed |
+   | host         | Boolean     | indicator whether or not the node is hosting |
+   | parentNode       | UserNode   | who invited the user |
+   | picturesCreated | List<Pictures>   | images taken at event |
+   
+Event
+| Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | timeFrame      | String   | time details |
+   | guestList        | List<User> | list of users invited |
+   | pictures         | Lists<Picture>     | all pictures taken at event |
+   | picsPerPerson       | Integer   | limit of pictures taken at event |
+   | location | String   | location of event |
+   | description    | String   | summary of the event |
+   | title     | String | Name of event |
+   | hosts    | List<Users> | users hosting event |
+
 ### Networking
 - [Add list of network requests by screen ]
 - [Create basic snippets for each Parse network request]
