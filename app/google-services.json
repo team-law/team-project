@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "234032523526",
+    "firebase_url": "https://team-law-4084f.firebaseio.com",
+    "project_id": "team-law-4084f",
+    "storage_bucket": "team-law-4084f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:234032523526:android:13c3c6a65bcbec53",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "234032523526-ue3g87ps8npsk9rdl2lm6go810mvb82e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myapplication",
+            "certificate_hash": "ca33738de64df021f1d3dd65f4ff96f417a5960c"
+          }
+        },
+        {
+          "client_id": "234032523526-7ci37j7i96nv2rrac91e3u7epq6en7o4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzMJNiLx8oLGDG69YvHfB8evldCd6k8y8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "234032523526-7ci37j7i96nv2rrac91e3u7epq6en7o4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
