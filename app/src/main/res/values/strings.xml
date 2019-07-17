@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">My Application</string>
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_app_id">2346921408856296</string>
+    <string name="fb_login_protocol_scheme">fb2346921408856296</string>
 </resources>
