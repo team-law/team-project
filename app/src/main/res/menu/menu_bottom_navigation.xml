@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_home"
@@ -8,21 +9,21 @@
         android:title="home"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_search"
+        android:id="@+id/action_new_event"
         android:enabled="true"
-        android:icon="@drawable/search_selector_bg"
+        android:icon="@drawable/add_event_selector_bg"
         android:title="search"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_add_photo"
+        android:id="@+id/action_camera"
         android:enabled="true"
-        android:icon="@drawable/add_selector_bg"
+        android:icon="@drawable/camera_selector_bg"
         android:title="add"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_likes"
+        android:id="@+id/action_invites"
         android:enabled="true"
-        android:icon="@drawable/likes_selector_bg"
+        android:icon="@drawable/invites_selector_bg"
         android:title="likes"
         app:showAsAction="ifRoom" />
     <item

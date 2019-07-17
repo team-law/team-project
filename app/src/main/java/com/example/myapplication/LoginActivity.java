@@ -68,6 +68,10 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
                 // check login status
                 handleFacebookAccessToken(loginResult.getAccessToken());
+                final Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish();
+
             }
 
             @Override
