@@ -15,7 +15,7 @@
         android:title="search"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_camera"
+        android:id="@+id/action_cam"
         android:enabled="true"
         android:icon="@drawable/camera_selector_bg"
         android:title="add"
