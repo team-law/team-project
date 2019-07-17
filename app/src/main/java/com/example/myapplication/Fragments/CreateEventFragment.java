@@ -1,5 +1,6 @@
 package com.example.myapplication.Fragments;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,7 +16,10 @@ import android.widget.SearchView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.myapplication.HomeActivity;
+import com.example.myapplication.LoginActivity;
 import com.example.myapplication.R;
+import com.facebook.login.widget.LoginButton;
 
 public class CreateEventFragment extends Fragment {
     private TimePicker picker;
@@ -27,7 +31,6 @@ public class CreateEventFragment extends Fragment {
     private NumberPicker numberPicker;
 
     private int numPics = 2;
-
 
 
     @Nullable
@@ -50,6 +53,7 @@ public class CreateEventFragment extends Fragment {
         btnCreateEvent = view.findViewById(R.id.btnCreateEvent);
         sVAddFriends = view.findViewById(R.id.svAddFriends);
         numberPicker = view.findViewById(R.id.numberPicker);
+
 
         //assigning the exact time for the event, to display later and add to event object
         picker.setIs24HourView(false);
