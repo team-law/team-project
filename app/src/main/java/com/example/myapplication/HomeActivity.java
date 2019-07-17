@@ -1,16 +1,17 @@
 package com.example.myapplication;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.myapplication.Fragments.AlbumFragment;
+import com.example.myapplication.Fragments.CreateEventFragment;
 
-import static com.example.myapplication.R.id.action_camera;
+import static com.example.myapplication.R.id.action_cam;
 import static com.example.myapplication.R.id.action_invites;
 import static com.example.myapplication.R.id.action_new_event;
 import static com.example.myapplication.R.id.action_profile;
@@ -38,6 +39,7 @@ public class HomeActivity extends AppCompatActivity {
         // define your fragments here
 
         final Fragment albums = new AlbumFragment();
+        final Fragment createEvent = new CreateEventFragment();
         /*
         final Fragment addPhoto = new ComposeFragment();
         final Fragment profile = new ProfileFragment();
@@ -54,9 +56,9 @@ public class HomeActivity extends AppCompatActivity {
                                 fragment = albums;
                                 break;
                             case action_new_event:
-                                fragment = albums;
+                                fragment = createEvent;
                                 break;
-                            case action_camera:
+                            case action_cam:
                                 fragment = albums;
                                 break;
                             case action_invites:

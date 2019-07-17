@@ -52,7 +52,7 @@ public class CreateEventFragment extends Fragment {
         numberPicker = view.findViewById(R.id.numberPicker);
 
         //assigning the exact time for the event, to display later and add to event object
-        picker.setIs24HourView(true);
+        picker.setIs24HourView(false);
         int hour, minute;
         String am_pm;
         hour = picker.getCurrentHour();
