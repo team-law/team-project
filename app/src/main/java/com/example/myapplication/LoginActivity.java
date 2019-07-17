@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 //    private static final String EMAIL = "email";
 
     private LoginButton loginButton;
+
     private FirebaseAuth mAuth;
     private CallbackManager callbackManager = CallbackManager.Factory.create();
 
@@ -51,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = (LoginButton) findViewById(R.id.login_button);
 
         loginButton.setReadPermissions("email", "public_profile");
-        loginButton.setReadPermissions(Arrays.asList(EMAIL));
+//        loginButton.setReadPermissions(Arrays.asList(EMAIL));
 
         // request permission to access email and public profile
         loginButton.setReadPermissions("email", "public_profile");
