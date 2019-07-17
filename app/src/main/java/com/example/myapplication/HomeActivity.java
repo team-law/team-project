@@ -10,6 +10,11 @@ import android.view.MenuItem;
 
 import com.example.myapplication.Fragments.AlbumFragment;
 
+import static com.example.myapplication.R.id.action_camera;
+import static com.example.myapplication.R.id.action_invites;
+import static com.example.myapplication.R.id.action_new_event;
+import static com.example.myapplication.R.id.action_profile;
+
 public class HomeActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
@@ -48,16 +53,16 @@ public class HomeActivity extends AppCompatActivity {
                             default:
                                 fragment = albums;
                                 break;
-                            case R.id.action_new_event:
+                            case action_new_event:
                                 fragment = albums;
                                 break;
-                            case R.id.action_camera:
+                            case action_camera:
                                 fragment = albums;
                                 break;
-                            case R.id.action_invites:
+                            case action_invites:
                                 fragment = albums;
                                 break;
-                            case R.id.action_profile:
+                            case action_profile:
                                 fragment = albums;
                                 break;
                         }
