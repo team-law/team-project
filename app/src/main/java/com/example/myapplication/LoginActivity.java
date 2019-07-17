@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 //    private static final String EMAIL = "email";
 
     private LoginButton loginButton;
+
     private FirebaseAuth mAuth;
     private CallbackManager callbackManager = CallbackManager.Factory.create();
 
