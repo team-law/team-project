@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+<<<<<<< Updated upstream
+=======
 import com.example.myapplication.Fragments.AlbumFragment;
 
 import static com.example.myapplication.R.id.action_camera;
@@ -15,6 +17,7 @@ import static com.example.myapplication.R.id.action_invites;
 import static com.example.myapplication.R.id.action_new_event;
 import static com.example.myapplication.R.id.action_profile;
 
+>>>>>>> Stashed changes
 public class HomeActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
@@ -36,12 +39,10 @@ public class HomeActivity extends AppCompatActivity {
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
         // define your fragments here
-
-        final Fragment albums = new AlbumFragment();
-        /*
+        final Fragment posts = new PostsFragment();
         final Fragment addPhoto = new ComposeFragment();
         final Fragment profile = new ProfileFragment();
-        */
+
 
         // handle navigation selection
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -51,8 +52,21 @@ public class HomeActivity extends AppCompatActivity {
                         Fragment fragment;
                         switch (item.getItemId()) {
                             default:
-                                fragment = albums;
+                                fragment = posts;
                                 break;
+<<<<<<< Updated upstream
+                            case R.id.action_search:
+                                fragment = addPhoto;
+                                break;
+                            case R.id.action_add_photo:
+                                fragment = addPhoto;
+                                break;
+                            case R.id.action_likes:
+                                fragment = addPhoto;
+                                break;
+                            case R.id.action_profile:
+                                fragment = profile;
+=======
                             case action_new_event:
                                 fragment = albums;
                                 break;
@@ -64,6 +78,7 @@ public class HomeActivity extends AppCompatActivity {
                                 break;
                             case action_profile:
                                 fragment = albums;
+>>>>>>> Stashed changes
                                 break;
                         }
                         fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
@@ -73,6 +88,5 @@ public class HomeActivity extends AppCompatActivity {
         // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
-
 
 }
