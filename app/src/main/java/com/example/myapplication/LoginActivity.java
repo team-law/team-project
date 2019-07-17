@@ -39,17 +39,34 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
+        mAuth = FirebaseAuth.getInstance();
+
+
+        // initialize Firebase authorization and Callback manager
         mAuth = FirebaseAuth.getInstance();
         callbackManager = CallbackManager.Factory.create();
 
+        // sync login button
         loginButton = (LoginButton) findViewById(R.id.login_button);
+
+        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.setReadPermissions(Arrays.asList(EMAIL));
+
+        // request permission to access email and public profile
         loginButton.setReadPermissions("email", "public_profile");
 
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
+                handleFacebookAccessToken(loginResult.getAccessToken());
+
+                // App code
+                Log.d(TAG, "facebook:onSuccess:" + loginResult);
+                // check login status
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
@@ -87,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // pass the login results via callbackManager
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
