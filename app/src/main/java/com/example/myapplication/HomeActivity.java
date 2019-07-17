@@ -37,13 +37,13 @@ public class HomeActivity extends AppCompatActivity {
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
         // define your fragments here
-
         final Fragment albums = new AlbumFragment();
         final Fragment createEvent = new CreateEventFragment();
         /*
         final Fragment addPhoto = new ComposeFragment();
         final Fragment profile = new ProfileFragment();
         */
+
 
         // handle navigation selection
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -75,6 +75,5 @@ public class HomeActivity extends AppCompatActivity {
         // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
-
 
 }
