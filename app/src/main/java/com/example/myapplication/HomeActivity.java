@@ -8,6 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+<<<<<<< Updated upstream
+=======
+import com.example.myapplication.Fragments.AlbumFragment;
+
+import static com.example.myapplication.R.id.action_camera;
+import static com.example.myapplication.R.id.action_invites;
+import static com.example.myapplication.R.id.action_new_event;
+import static com.example.myapplication.R.id.action_profile;
+
+>>>>>>> Stashed changes
 public class HomeActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
@@ -44,6 +54,7 @@ public class HomeActivity extends AppCompatActivity {
                             default:
                                 fragment = posts;
                                 break;
+<<<<<<< Updated upstream
                             case R.id.action_search:
                                 fragment = addPhoto;
                                 break;
@@ -55,6 +66,19 @@ public class HomeActivity extends AppCompatActivity {
                                 break;
                             case R.id.action_profile:
                                 fragment = profile;
+=======
+                            case action_new_event:
+                                fragment = albums;
+                                break;
+                            case action_camera:
+                                fragment = albums;
+                                break;
+                            case action_invites:
+                                fragment = albums;
+                                break;
+                            case action_profile:
+                                fragment = albums;
+>>>>>>> Stashed changes
                                 break;
                         }
                         fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
