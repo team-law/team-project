@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 
 import com.example.myapplication.R;
 
+
 public class AlbumFragment extends Fragment {
+
 
         @Nullable
         @Override
@@ -23,7 +25,6 @@ public class AlbumFragment extends Fragment {
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-
 
         }
     }
