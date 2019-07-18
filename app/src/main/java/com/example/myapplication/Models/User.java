@@ -14,6 +14,7 @@ import com.google.firebase.auth.UserInfo;
 import java.util.List;
 
 public class User extends FirebaseUser {
+
     @NonNull
     @Override
     public String getUid() {
