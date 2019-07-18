@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.myapplication.Fragments.AlbumFragment;
+import com.example.myapplication.Fragments.ProfileFragment;
 
 import static com.example.myapplication.R.id.action_camera;
 import static com.example.myapplication.R.id.action_invites;
@@ -63,7 +64,7 @@ public class HomeActivity extends AppCompatActivity {
                                 fragment = albums;
                                 break;
                             case action_profile:
-                                fragment = albums;
+                                fragment = new ProfileFragment();
                                 break;
                         }
                         fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
