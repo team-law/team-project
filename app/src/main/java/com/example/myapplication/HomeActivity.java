@@ -9,8 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.example.myapplication.Fragments.AlbumFragment;
-import com.example.myapplication.Fragments.ProfileFragment;
 import com.example.myapplication.Fragments.CreateEventFragment;
+import com.example.myapplication.Fragments.ProfileFragment;
 
 import static com.example.myapplication.R.id.action_cam;
 import static com.example.myapplication.R.id.action_invites;
