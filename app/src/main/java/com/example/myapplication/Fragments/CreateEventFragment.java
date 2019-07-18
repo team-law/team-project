@@ -1,5 +1,6 @@
 package com.example.myapplication.Fragments;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.myapplication.HomeActivity;
 import com.example.myapplication.LoginActivity;
+import com.example.myapplication.Models.Event;
 import com.example.myapplication.R;
 import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,22 +32,27 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
 public class CreateEventFragment extends Fragment {
     private TimePicker picker;
     private DatePicker datePicker;
     private EditText etEventDescription;
     private EditText etEventTitle;
+    private EditText etLocation;
     private Button btnCreateEvent;
     private SearchView sVAddFriends;
     private NumberPicker numberPicker;
 
-    private int numPics = 2;
+    public int hour, minute;
+    public String am_pm;
+    public int numPics = 2;
 
     //Firebase things
     private FirebaseDatabase mFirebaseDatabase;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference myRef;
+    FirebaseUser user;
     //might need to be using the FirebaseApp ones?
 
     @Nullable
@@ -65,6 +72,7 @@ public class CreateEventFragment extends Fragment {
         datePicker = view.findViewById(R.id.datePicker);
         etEventDescription = view.findViewById(R.id.etDescription);
         etEventTitle = view.findViewById(R.id.etEventTitle);
+        etLocation = view.findViewById(R.id.etLocation);
         btnCreateEvent = view.findViewById(R.id.btnCreateEvent);
         sVAddFriends = view.findViewById(R.id.svAddFriends);
         numberPicker = view.findViewById(R.id.numberPicker);
@@ -76,7 +84,7 @@ public class CreateEventFragment extends Fragment {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                user = firebaseAuth.getCurrentUser();
                 if (user != null) { //user is signed in
 
                 } else {
@@ -86,7 +94,7 @@ public class CreateEventFragment extends Fragment {
         };
 
         // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
+        /*myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
@@ -98,14 +106,12 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
-                //Log.w(TAG, "Failed to read value.", error.toException());
+                Log.w(TAG, "Failed to read value.", error.toException());
             }
-        });
+        });*/
 
         //assigning the exact time for the event, to display later and add to event object
         picker.setIs24HourView(false);
-        int hour, minute;
-        String am_pm;
         hour = picker.getCurrentHour();
         minute = picker.getCurrentMinute();
         if(hour > 12) {
@@ -126,7 +132,23 @@ public class CreateEventFragment extends Fragment {
         btnCreateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // read the index key
+                //Event event = new Event();
+                String mGroupId = myRef.push().getKey();
+
                 String title = etEventTitle.getText().toString();
+                String description = etEventDescription.getText().toString();
+                String date = String.valueOf(datePicker.getMonth()) + String.valueOf(datePicker.getDayOfMonth())
+                        + String.valueOf(datePicker.getYear());
+                String time = String.valueOf(hour) + minute + am_pm;
+                String location = etLocation.getText().toString();
+
+                //TODO handle exceptions for when the fields are left blank
+
+                Event event = new Event(title, time, date, description, location, numPics);
+                myRef.child("Events").push();
+                myRef.child("Events").child(mGroupId).setValue(event);
+                ///Toast.makeText(CreateEventFragment)
 
             }
         });
