@@ -32,8 +32,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Map;
+
 
 public class CreateEventFragment extends Fragment {
+    private final String TAG = "CreateEventFragment";
     private TimePicker picker;
     private DatePicker datePicker;
     private EditText etEventDescription;
@@ -94,13 +97,14 @@ public class CreateEventFragment extends Fragment {
         };
 
         // Read from the database
-        /*myRef.addValueEventListener(new ValueEventListener() {
+        myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                //Log.d(TAG, "Value is: " + value);
+                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                //String value = dataSnapshot.getValue(String.class);
+                Log.d(TAG, "Value is: " + map);
             }
 
             @Override
@@ -108,7 +112,7 @@ public class CreateEventFragment extends Fragment {
                 // Failed to read value
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
-        });*/
+        });
 
         //assigning the exact time for the event, to display later and add to event object
         picker.setIs24HourView(false);
@@ -145,7 +149,7 @@ public class CreateEventFragment extends Fragment {
 
                 //TODO handle exceptions for when the fields are left blank
 
-                Event event = new Event(title, time, date, description, location, numPics);
+                Event event = new Event(user.getUid(), title, time, date, description, location, numPics);
                 myRef.child("Events").push();
                 myRef.child("Events").child(mGroupId).setValue(event); //pushes the event to firebase
                 Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
