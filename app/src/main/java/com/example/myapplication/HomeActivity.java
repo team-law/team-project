@@ -1,6 +1,5 @@
 package com.example.myapplication;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -60,8 +59,6 @@ public class HomeActivity extends AppCompatActivity {
                                 break;
                             case action_cam:
                                 fragment = albums;
-                                Intent intent = new Intent(HomeActivity.this, CameraActivity.class);
-                                startActivity(intent);
                                 break;
                             case action_invites:
                                 fragment = albums;
