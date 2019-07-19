@@ -27,6 +27,8 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Arrays;
+
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
@@ -44,9 +46,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
+        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-
 
         // initialize Firebase authorization and Callback manager
         mAuth = FirebaseAuth.getInstance();
@@ -58,13 +59,14 @@ public class LoginActivity extends AppCompatActivity {
 //        loginButton = (LoginButton) findViewById(R.id.login_button);
 //        loginButton.setReadPermissions("email", "public_profile");
 //        loginButton.setReadPermissions(Arrays.asList("name", "email", "picture"));
-        // request permission to access email and public profile
 
         btnFBLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pb.setVisibility(ProgressBar.VISIBLE);
-                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
+                // request permission to access email and public profile
+                LoginManager.getInstance()
+                            .logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
                 LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
@@ -92,24 +94,6 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
-
-        LoginManager.getInstance().retrieveLoginStatus(this, new LoginStatusCallback() {
-            @Override
-            public void onCompleted(AccessToken accessToken) {
-                // User was previously logged in, can log them in directly here.
-                // If this callback is called, a popup notification appears that says
-                // "Logged in as <User Name>"
-            }
-            @Override
-            public void onFailure() {
-                // No access token could be retrieved for the user
-            }
-            @Override
-            public void onError(Exception exception) {
-                // An error occurred
-            }
-        });
-
     }
 
     private void updateUI() {
@@ -147,7 +131,6 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-//                            FirebaseUser user = mAuth.getCurrentUser();
                             btnFBLogin.setEnabled(true);
                             updateUI();
                         } else {
