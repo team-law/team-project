@@ -40,11 +40,9 @@ public class HomeActivity extends AppCompatActivity {
         // define your fragments here
         final Fragment albums = new AlbumFragment();
         final Fragment createEvent = new CreateEventFragment();
-        /*
-        final Fragment addPhoto = new ComposeFragment();
-        final Fragment profile = new ProfileFragment();
-        */
 
+//        final Fragment addPhoto = new ComposeFragment();
+        final Fragment profile = new ProfileFragment();
 
         // handle navigation selection
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -66,7 +64,7 @@ public class HomeActivity extends AppCompatActivity {
                                 fragment = albums;
                                 break;
                             case action_profile:
-                                fragment = new ProfileFragment();
+                                fragment = profile;
                                 break;
                         }
                         fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
