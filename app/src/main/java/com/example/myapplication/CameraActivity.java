@@ -1,7 +1,9 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +13,8 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.camerakit.CameraKitView;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,11 +26,17 @@ public class CameraActivity extends AppCompatActivity {
     private CameraKitView cameraKitView;
     private Button btnCapture;
     private ImageView ivResult;
+    private StorageReference mStorageRef;
 
+
+    public Uri imguri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
         cameraKitView = (CameraKitView) findViewById(R.id.camera);
         btnCapture = (Button) findViewById(R.id.btnCapture);
         ivResult = (ImageView) findViewById(R.id.ivResult);
@@ -82,4 +92,16 @@ public class CameraActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         cameraKitView.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
+
+            imguri=data.getData();
+            ivResult.setImageURI(imguri);
+        }
+    }
+
+
 }
