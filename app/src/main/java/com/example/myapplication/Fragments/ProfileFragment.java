@@ -20,6 +20,9 @@ import com.example.myapplication.FirebaseApp;
 import com.example.myapplication.HomeActivity;
 import com.example.myapplication.LoginActivity;
 import com.example.myapplication.R;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.Login;
 import com.facebook.login.LoginManager;
@@ -29,15 +32,23 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
 
-    private Button btnSignout;
+    private static final String TAG = "ProfileFragment";
+
+    private Button btnLogout;
     private ImageView ivProfilePicture;
     private TextView tvUsername;
     private TextView tvEmail;
-    private TextView tvAbout;
+    private TextView tvNumFriends;
+    private TextView tvFriendList;
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -57,30 +68,59 @@ public class ProfileFragment extends Fragment {
         // Initialize Firebase Auth and User
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-        Profile profile = Profile.getCurrentProfile();
+        profile = Profile.getCurrentProfile();
 
         // Initialize objects in profile fragment
         ivProfilePicture = (ImageView) view.findViewById(R.id.ivProfilePicture);
         tvUsername = (TextView) view.findViewById(R.id.tvUsername);
         tvEmail = (TextView) view.findViewById(R.id.tvEmail);
+        tvNumFriends = (TextView) view.findViewById(R.id.tvNumFriends);
+        tvFriendList = (TextView) view.findViewById(R.id.tvFriendList);
 
+        btnLogout = (Button) view.findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth .signOut();
+                LoginManager.getInstance().logOut();
+                updateUI();
+            }
+        });
+        queryUserInfo();
+    }
+
+    private void queryUserInfo() {
         // Fetch Facebook information and to insert in objects
         Glide.with(this).load(profile.getProfilePictureUri(400, 400)).into(ivProfilePicture);
 //        tvUsername.setText(profile.getName());
 //        Glide.with(this).load(user.getPhotoUrl()).into(ivProfilePicture);
         tvUsername.setText(user.getDisplayName());
         tvEmail.setText(user.getEmail());
+        GraphRequest request = GraphRequest.newMeRequest(
+                AccessToken.getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        try {
+                            Toast.makeText(getContext(), "Successfully queried fb friends", Toast.LENGTH_LONG).show();
+                            JSONArray friendList = object.getJSONObject("friends").getJSONArray("data");
+                            tvNumFriends.setText("Friends: " + friendList.length());
+                            for (int i = 0; i < friendList.length(); i++) {
+                                tvFriendList.append(friendList.getJSONObject(i).getString("name"));
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(getContext(), "Error parsing json", Toast.LENGTH_LONG).show();
+                            Log.e(TAG, "Error parsing json", e);
+                            e.printStackTrace();
+                        }
 
-        btnSignout = (Button) view.findViewById(R.id.btnLogout);
-        btnSignout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth .signOut();
-                LoginManager.getInstance().logOut();
-                updateUI();
-           }
-        });
+                    }
+                });
 
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "friends");
+        request.setParameters(parameters);
+        request.executeAsync();
     }
 
     private void updateUI() {
@@ -93,7 +133,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        // check if user was already logged-in (user persistence)
+        // check if user was already logged-out (user persistence)
         if (mAuth.getCurrentUser() == null) {
             updateUI();
         }
