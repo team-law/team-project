@@ -15,7 +15,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="12dp"
         android:background="@drawable/border"
-        android:hint="Write description..."
+        android:hint=" Write description..."
         app:layout_constraintBottom_toTopOf="@+id/tvDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.096"
@@ -68,7 +68,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/border"
-        android:hint="Write event title..."
+        android:hint=" Write event title..."
         app:layout_constraintBottom_toTopOf="@+id/tvEventDescription"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.108"
@@ -170,6 +170,8 @@
         app:layout_constraintHorizontal_bias="0.695"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvAddFriends"
+        app:iconifiedByDefault="false"
+        android:hint="Search For Friends"
         app:queryHint="Search For Friends" />
 
     <TimePicker
@@ -219,22 +221,40 @@
         app:layout_constraintEnd_toStartOf="@+id/btnCreateEvent"
         app:layout_constraintTop_toBottomOf="@+id/svAddFriends" />
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_button2"
+    <TextView
+        android:id="@+id/tvLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="317dp"
+        android:layout_marginLeft="317dp"
+        android:layout_marginEnd="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="17dp"
+        android:text="Location"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toTopOf="@+id/etLocation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.143" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/etLocation"
+        android:layout_width="113dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginBottom="21dp"
+        android:background="@drawable/border"
+        android:hint=" Location..."
+        app:layout_constraintBottom_toTopOf="@+id/tvTime"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/etEventTitle"
+        app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
 
 </android.support.constraint.ConstraintLayout>
