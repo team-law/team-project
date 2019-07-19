@@ -26,6 +26,9 @@ public class Event {
     }
 
     public Event(String title, String time, String date, String description, String location, int pics) {
+
+    public Event(String host, String title, String time, String date, String description, String location, int pics,
+                 List<String> invited, List<String> attending, List<Picture> allPictures) {
         this.title = title;
         this.host = host;
         this.time = time;
@@ -33,5 +36,8 @@ public class Event {
         this.description = description;
         this.location = location;
         this.pics = pics;
+        this.invited = invited;
+        this.attending = attending;
+        this.allPictures = allPictures;
     }
 }
