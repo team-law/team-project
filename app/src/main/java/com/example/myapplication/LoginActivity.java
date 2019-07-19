@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                 pb.setVisibility(ProgressBar.VISIBLE);
                 // request permission to access email and public profile
                 LoginManager.getInstance()
-                            .logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
+                            .logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile", "user_friends"));
                 LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
