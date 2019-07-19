@@ -1,19 +1,19 @@
 package com.example.myapplication.Models;
 
-import android.graphics.Picture;
 import android.util.Property;
 import android.widget.EditText;
 
 import com.example.myapplication.FirebaseApp;
+import com.firebase.ui.auth.data.model.User;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
 public class Event {
-    public List<User> invited; //everyone that's invited
-    public List<User> attending; //list of everyone who has responsed "yes" to the invite
+    public List<String> invited; //everyone that's invited
+    public List<String> attending; //list of everyone who has responsed "yes" to the invite
     public String title; //what the event is called
-    public FirebaseUser host; //list of people in charge of event - maybe only a singular person?
+    public String host; //list of people in charge of event - maybe only a singular person?
     public String time; //time of date
     public String date; //event date
     public String description;
@@ -24,7 +24,8 @@ public class Event {
     public Event() {
     }
 
-    public Event(String title, String time, String date, String description, String location, int pics) {
+    public Event(String host, String title, String time, String date, String description, String location, int pics,
+                 List<String> invited, List<String> attending, List<Picture> allPictures) {
         this.title = title;
         this.host = host;
         this.time = time;
@@ -32,5 +33,8 @@ public class Event {
         this.description = description;
         this.location = location;
         this.pics = pics;
+        this.invited = invited;
+        this.attending = attending;
+        this.allPictures = allPictures;
     }
 }

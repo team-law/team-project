@@ -22,8 +22,9 @@ import android.widget.Toast;
 import com.example.myapplication.HomeActivity;
 import com.example.myapplication.LoginActivity;
 import com.example.myapplication.Models.Event;
+import com.example.myapplication.Models.Picture;
 import com.example.myapplication.R;
-import com.facebook.login.widget.LoginButton;
+import android.widget.ListView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,8 +33,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 
 public class CreateEventFragment extends Fragment {
+    private final String TAG = "CreateEventFragment";
     private TimePicker picker;
     private DatePicker datePicker;
     private EditText etEventDescription;
@@ -46,6 +52,8 @@ public class CreateEventFragment extends Fragment {
     public int hour, minute;
     public String am_pm;
     public int numPics = 2;
+    public List<String> invited;
+    //public FriendsAdapter adapter; //the adapter used for going through Facebook friends
 
     //Firebase things
     private FirebaseDatabase mFirebaseDatabase;
@@ -94,13 +102,14 @@ public class CreateEventFragment extends Fragment {
         };
 
         // Read from the database
-        /*myRef.addValueEventListener(new ValueEventListener() {
+        myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                //Log.d(TAG, "Value is: " + value);
+                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                //String value = dataSnapshot.getValue(String.class);
+                Log.d(TAG, "Value is: " + map);
             }
 
             @Override
@@ -108,7 +117,28 @@ public class CreateEventFragment extends Fragment {
                 // Failed to read value
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
-        });*/
+        });
+
+        //dealing with searchview
+        sVAddFriends.setQueryHint("Search For Friends");
+        CharSequence query = sVAddFriends.getQuery();
+
+        // perform set on query text listener event
+        sVAddFriends.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+            // do something on text submit
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+            // do something when text changes
+                String text = newText;
+                //adapter.filter(text);
+                return false;
+            }
+        });
 
         //assigning the exact time for the event, to display later and add to event object
         picker.setIs24HourView(false);
@@ -142,10 +172,11 @@ public class CreateEventFragment extends Fragment {
                         + String.valueOf(datePicker.getYear());
                 String time = String.valueOf(hour) + minute + am_pm;
                 String location = etLocation.getText().toString();
+                invited = new ArrayList<>(); //should be retrieved from the search view
+                List<String> attending = new ArrayList<>();
+                List<Picture> pics = new ArrayList<>();
 
-                //TODO handle exceptions for when the fields are left blank
-
-                Event event = new Event(title, time, date, description, location, numPics);
+                Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics);
                 myRef.child("Events").push();
                 myRef.child("Events").child(mGroupId).setValue(event); //pushes the event to firebase
                 Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
@@ -155,7 +186,6 @@ public class CreateEventFragment extends Fragment {
                 etEventDescription.setText("");
                 etLocation.setText("");
                 numberPicker.setValue(2);
-
 
             }
         });
