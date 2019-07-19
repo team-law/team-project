@@ -147,8 +147,15 @@ public class CreateEventFragment extends Fragment {
 
                 Event event = new Event(title, time, date, description, location, numPics);
                 myRef.child("Events").push();
-                myRef.child("Events").child(mGroupId).setValue(event);
-                ///Toast.makeText(CreateEventFragment)
+                myRef.child("Events").child(mGroupId).setValue(event); //pushes the event to firebase
+                Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
+
+                //reset all the fields in the create fragment
+                etEventTitle.setText("");
+                etEventDescription.setText("");
+                etLocation.setText("");
+                numberPicker.setValue(2);
+
 
             }
         });
