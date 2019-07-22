@@ -1,6 +1,5 @@
 package com.example.myapplication;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -28,14 +27,6 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
-       /* bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                return false;
-            }
-        });
-        */
-
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
         // define your fragments here
@@ -60,8 +51,6 @@ public class HomeActivity extends AppCompatActivity {
                                 break;
                             case action_cam:
                                 fragment = albums;
-                                Intent intent = new Intent(HomeActivity.this, CameraActivity.class);
-                                startActivity(intent);
                                 break;
                             case action_invites:
                                 fragment = albums;
