@@ -28,14 +28,6 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
-       /* bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                return false;
-            }
-        });
-        */
-
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
         // define your fragments here
