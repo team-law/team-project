@@ -32,13 +32,13 @@ public class Event {
 
     public Event(String host, String title, String time, String date, String description, String location, int pics,
                  List<String> invited, Map<String, Boolean> attending, List<Picture> allPictures) {
-        this.host = uid;
+        this.host = host;
         this.title = title;
         this.time = time;
         this.date = date;
         this.description = description;
         this.location = location;
-        this.pics = numPics;
+        this.pics = pics;
         this.invited = invited;
         this.attending = attending;
        // this.allPictures = pics;
