@@ -34,8 +34,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 
 public class CreateEventFragment extends Fragment {
@@ -53,6 +55,7 @@ public class CreateEventFragment extends Fragment {
     public String am_pm;
     public int numPics = 2;
     public List<String> invited;
+    Map<String, Event> events = new HashMap<>();
     //public FriendsAdapter adapter; //the adapter used for going through Facebook friends
 
     //Firebase things
@@ -108,7 +111,6 @@ public class CreateEventFragment extends Fragment {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                //String value = dataSnapshot.getValue(String.class);
                 Log.d(TAG, "Value is: " + map);
             }
 
@@ -173,12 +175,15 @@ public class CreateEventFragment extends Fragment {
                 String time = String.valueOf(hour) + minute + am_pm;
                 String location = etLocation.getText().toString();
                 invited = new ArrayList<>(); //should be retrieved from the search view
-                List<String> attending = new ArrayList<>();
+                Map<String, Boolean> attending = new HashMap<>(1);
+                attending.put(user.getUid(), true);
                 List<Picture> pics = new ArrayList<>();
+                String accessCode = getCode();
+
+                DatabaseReference eventsRef = myRef.child("Events");
 
                 Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics);
-                myRef.child("Events").push();
-                myRef.child("Events").child(mGroupId).setValue(event); //pushes the event to firebase
+                eventsRef.child(accessCode).setValue(event); //creates the event in firebase
                 Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
 
                 //reset all the fields in the create fragment
@@ -186,15 +191,27 @@ public class CreateEventFragment extends Fragment {
                 etEventDescription.setText("");
                 etLocation.setText("");
                 numberPicker.setValue(2);
-
             }
         });
+    }
+
+
+    public String getCode() {
+        //generate randomized access code and check to see if it already exists
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder code = new StringBuilder();
+        Random rand = new Random();
+        while (code.length() < 7) { // length of the random string.
+            int index = rand.nextInt(characters.length());
+            code.append(characters.charAt(index));
+        }
+        String finalCode = code.toString();
+        return finalCode;
     }
 
     NumberPicker.OnValueChangeListener onValueChangeListener = new NumberPicker.OnValueChangeListener() {
                 @Override
                 public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                    //Toast.makeText(MainActivity.this, "selected number "+numberPicker.getValue(), Toast.LENGTH_SHORT);
                     numPics = numberPicker.getValue();
                 }
     };
