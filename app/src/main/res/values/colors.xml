@@ -3,8 +3,12 @@
     <color name="colorPrimary">#fa9696</color>
     <color name="dustyYellow">#f1ba37</color>
     <color name="grapefruitPink">#fa9696</color>
+    <color name="pressedGrapefruitPink">#ffabab</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="lightGray">#f2f2f2</color>
+    <color name="white">#ffffff </color>
+    <color name="mediumLightGray">#c4c4c4</color>
+    <color name="mediumDarkGray">#707070</color>
     <color name="accentBlue">#1e3d8a</color>
 </resources>

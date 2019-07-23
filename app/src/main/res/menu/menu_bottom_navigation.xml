@@ -14,12 +14,7 @@
         android:icon="@drawable/add_event_selector_bg"
         android:title="search"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_cam"
-        android:enabled="true"
-        android:icon="@drawable/camera_selector_bg"
-        android:title="add"
-        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_invites"
         android:enabled="true"
