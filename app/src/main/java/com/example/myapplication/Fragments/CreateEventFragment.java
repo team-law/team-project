@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 
 public class CreateEventFragment extends Fragment {
@@ -178,7 +179,7 @@ public class CreateEventFragment extends Fragment {
                 Map<String, Boolean> attending = new HashMap<>(1);
                 attending.put(user.getUid(), true);
                 List<Picture> pics = new ArrayList<>();
-                String accessCode = "temp"; //TODO: should put the access code as the string
+                String accessCode = getCode();
 
                 DatabaseReference eventsRef = myRef.child("Events");
 
@@ -197,6 +198,19 @@ public class CreateEventFragment extends Fragment {
 
             }
         });
+    }
+
+    public String getCode() {
+        //generate randomized access code and check to see if it already exists
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder code = new StringBuilder();
+        Random rand = new Random();
+        while (code.length() < 7) { // length of the random string.
+            int index = rand.nextInt(characters.length());
+            code.append(characters.charAt(index));
+        }
+        String finalCode = code.toString();
+        return finalCode;
     }
 
     NumberPicker.OnValueChangeListener onValueChangeListener = new NumberPicker.OnValueChangeListener() {

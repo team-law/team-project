@@ -43,7 +43,4 @@ public class Event {
         this.accessCode = accessCode;
     }
 
-    /*public void setAttending(ArrayList<String> UID) {
-        attending = UID;
-    }*/
 }

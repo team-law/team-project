@@ -86,78 +86,40 @@ public class JoinEventFragment extends Fragment {
                         boolean joined = false;
                         // This method is called once with the initial value and again
                         // whenever data at this location is updated.
-                        //Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
 
                         //for every event in Events
                         for (DataSnapshot snapshot: dataSnapshot.child("Events").getChildren()) {
-                            //String accessCode = (String) snapshot.child("accessCode").getValue();
 
                             if ((snapshot.getKey()).equals(code)) {
                                 DatabaseReference eventRef = myRef.child("Events").child(code);
 
                                 DatabaseReference dbRef = eventRef.child("attending");
 
-                                dbRef.child("new guest2").setValue(true); //should be access code instead of new guest
+                                dbRef.child("new guest2").setValue(true);
 
-                                Map<String, Object> hopperUpdates = new HashMap<>();
-                                hopperUpdates.put("nickname", "Amazing Grace");
-
-                                eventRef.updateChildren(hopperUpdates);
                                 etEventCode.setText("");
                                 Toast.makeText(getActivity(), "Successfully joined event!", Toast.LENGTH_SHORT).show();
                                 joined = true;
                                 break;
 
                             }
-
-                            /*if (accessCode != null && accessCode.equals(code)) {
-                                //if event does exist, add user to guestlist, reset edittext, submit success text
-                                Event event = snapshot.getValue(Event.class);
-                                //ArrayList<String> attending = (ArrayList<String>) snapshot.child("attending").getValue();
-                                ArrayList<String> attending = (ArrayList<String>) event.attending;
-                                attending.add("new guest"); //TODO fix this to add a user's name
-                                //event.attending = attending;
-                                //myRef.child("Events").child(snapshot.getKey()).child("attending").setValue(attending); BAD
-                                //dataSnapshot.child("Events").getValue(Event.class).setAttending(attending);
-                                //myRef.child(snapshot.getKey()).child("attending").setValue(attending);
-                                //snapshot.child("attending").setValue(attending);
-                                String mGroupId = myRef.getKey();
-                                myRef.child("Events").child(mGroupId).child("attending").setValue(attending);
-                                etEventCode.setText("");
-                                Toast.makeText(getActivity(), "Successfully joined event!", Toast.LENGTH_SHORT).show();
-                                joined = true;
-                                break;
-                            }*/
-
-
-//                            if(messageSnapshot.accessCode.equals(code)){
-//                                retrievedUser = messageSnapshot.getValue(Event.class);
-//                                doSomethingWithTheUser(retrievedUser);
-//                            }
                         }
 
                         if (!joined) {
+                            etEventCode.setText("");
                             Toast.makeText(getActivity(), "No event exists with that code, please try again", Toast.LENGTH_LONG).show();
                         }
-                        //String value = dataSnapshot.getValue(String.class);
-                        //Log.d(TAG, "Value is: " + map);
                     }
 
                     @Override
                     public void onCancelled(DatabaseError error) {
                         // Failed to read value
-                        Log.w(TAG, "Failed to read value.", error.toException());
+                        //Log.w(TAG, "Failed to read value.", error.toException());
                     }
 
                 });
             }
         });
-
-
-
-
-
-
 
     }
 }
