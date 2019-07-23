@@ -29,8 +29,8 @@ public class EventAlbumViewFragment extends Fragment {
         rvEventPictures = view.findViewById(R.id.rvEventPictures);
 
 
-        GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
-        rvEventPictures.setLayoutManager(mLayoutManager);
+       // GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
+        //rvEventPictures.setLayoutManager(mLayoutManager);
 
 
     }
