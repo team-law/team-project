@@ -23,13 +23,12 @@ public class Event {
     public String location; //location of event
     public int pics; // number of pics per person
     public List<Picture> allPictures; //list of all pictures taken at event, needs to be updated when Picture class is made
-    public String accessCode; //event specific code used to add users
 
     public Event() {
     }
 
     public Event(String host, String title, String time, String date, String description, String location, int pics,
-                 List<String> invited, Map<String, Boolean> attending, List<Picture> allPictures, String accessCode) {
+                 List<String> invited, Map<String, Boolean> attending, List<Picture> allPictures) {
         this.title = title;
         this.host = host;
         this.time = time;
@@ -40,7 +39,6 @@ public class Event {
         this.invited = invited;
         this.attending = attending;
         this.allPictures = allPictures;
-        this.accessCode = accessCode;
     }
 
 }

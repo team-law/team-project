@@ -23,11 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 public class JoinEventFragment extends Fragment {
     private final String TAG = "JoinEventFragment";
 
@@ -40,7 +35,6 @@ public class JoinEventFragment extends Fragment {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference myRef;
     FirebaseUser user;
-    //might need to be using the FirebaseApp ones?
 
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
@@ -92,10 +86,9 @@ public class JoinEventFragment extends Fragment {
 
                             if ((snapshot.getKey()).equals(code)) {
                                 DatabaseReference eventRef = myRef.child("Events").child(code);
-
                                 DatabaseReference dbRef = eventRef.child("attending");
 
-                                dbRef.child("new guest2").setValue(true);
+                                dbRef.child(user.getUid()).setValue(true); //add user to guest list by their user ID
 
                                 etEventCode.setText("");
                                 Toast.makeText(getActivity(), "Successfully joined event!", Toast.LENGTH_SHORT).show();

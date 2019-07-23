@@ -111,7 +111,6 @@ public class CreateEventFragment extends Fragment {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                //String value = dataSnapshot.getValue(String.class);
                 Log.d(TAG, "Value is: " + map);
             }
 
@@ -183,11 +182,8 @@ public class CreateEventFragment extends Fragment {
 
                 DatabaseReference eventsRef = myRef.child("Events");
 
-                Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
-                //myRef.child("Events").push();
-                //events.put("tempParent3", event);
-                eventsRef.child(accessCode).setValue(event);
-                //myRef.child("Events").child(mGroupId).setValue(event); //pushes the event to firebase
+                Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics);
+                eventsRef.child(accessCode).setValue(event); //creates the event in firebase
                 Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
 
                 //reset all the fields in the create fragment
@@ -195,10 +191,10 @@ public class CreateEventFragment extends Fragment {
                 etEventDescription.setText("");
                 etLocation.setText("");
                 numberPicker.setValue(2);
-
             }
         });
     }
+
 
     public String getCode() {
         //generate randomized access code and check to see if it already exists
@@ -216,7 +212,6 @@ public class CreateEventFragment extends Fragment {
     NumberPicker.OnValueChangeListener onValueChangeListener = new NumberPicker.OnValueChangeListener() {
                 @Override
                 public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                    //Toast.makeText(MainActivity.this, "selected number "+numberPicker.getValue(), Toast.LENGTH_SHORT);
                     numPics = numberPicker.getValue();
                 }
     };
