@@ -11,9 +11,9 @@ import java.util.List;
 @Parcel
 public class UserNode {
 
-    public FirebaseUser user;
-    public FirebaseUser invitedBy;
-    public Event event;
+    public String user;
+    public String invitedBy;
+    public String event;
     public boolean isHost;
     // public List<Picture> picturesTaken;
 
@@ -21,7 +21,7 @@ public class UserNode {
         // Default constructor required for calls to DataSnapshot.getValue(UserNode.class)
     }
 
-    public UserNode(FirebaseUser user, FirebaseUser invitedBy, Event event, boolean isHost, List<Picture> picturesTaken) {
+    public UserNode(String user, String invitedBy, String event, boolean isHost, List<Picture> picturesTaken) {
         this.user = user;
         this.invitedBy = invitedBy;
         this.event = event;
