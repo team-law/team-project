@@ -13,7 +13,6 @@ import com.example.myapplication.Fragments.AlbumFragment;
 import com.example.myapplication.Fragments.CreateEventFragment;
 import com.example.myapplication.Fragments.ProfileFragment;
 
-import static com.example.myapplication.R.id.action_cam;
 import static com.example.myapplication.R.id.action_invites;
 import static com.example.myapplication.R.id.action_new_event;
 import static com.example.myapplication.R.id.action_profile;
@@ -49,11 +48,6 @@ public class HomeActivity extends AppCompatActivity {
                                 break;
                             case action_new_event:
                                 fragment = createEvent;
-                                break;
-                            case action_cam:
-                                fragment = albums;
-                                Intent intent = new Intent(HomeActivity.this, CameraActivity.class);
-                                startActivity(intent);
                                 break;
                             case action_invites:
                                 fragment = albums;

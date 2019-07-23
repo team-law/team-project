@@ -20,8 +20,15 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.camerakit.CameraKitView;
+import com.example.myapplication.Models.Event;
+import com.example.myapplication.Models.Picture;
+import com.example.myapplication.Models.UserNode;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -44,6 +51,14 @@ public class CameraActivity extends AppCompatActivity {
 
     private final String TAG = "CameraActivity";
 
+    //Firebase things
+    private FirebaseDatabase mFirebaseDatabase;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference myRef;
+    FirebaseUser user;
+
+
     public Uri imguri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +72,24 @@ public class CameraActivity extends AppCompatActivity {
         btnUpload = (Button) findViewById(R.id.btnUpload);
         ivResult = (ImageView) findViewById(R.id.ivResult);
 
-         ivResult.setImageResource(com_facebook_favicon_blue);
+        ivResult.setImageResource(com_facebook_favicon_blue);
 
+
+        mAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                user = firebaseAuth.getCurrentUser();
+                if (user != null) { //user is signed in
+
+                } else {
+
+                }
+            }
+        };
 
 //        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.common_google_signin_btn_icon_light_normal);
 //        ivResult.setImageBitmap(b);
@@ -89,6 +120,8 @@ public class CameraActivity extends AppCompatActivity {
                             outputStream = openFileOutput(photoFileName, Context.MODE_PRIVATE);
                             outputStream.write(capturedImage);
                             outputStream.close();
+
+
                         } catch (java.io.IOException e) {
                             e.printStackTrace();
                         }
@@ -121,7 +154,9 @@ public class CameraActivity extends AppCompatActivity {
        photoFile = getPhotoFileUri(photoFileName);
         //Uri file = FileProvider.getUriForFile(this, "com.codepath.fileprovider", photoFile);
         Uri file = Uri.fromFile(photoFile);
-        StorageReference ref = mStorageRef.child(System.currentTimeMillis() +".jpg");
+
+        String imgRef = System.currentTimeMillis() +".jpg";
+        StorageReference ref = mStorageRef.child(imgRef);
         /*
         Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
         StorageReference riversRef = mStorageRef.child("images/rivers.jpg");
@@ -138,27 +173,22 @@ public class CameraActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
-/*
-        ref.putFile(file)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
-                        // Uri downloadUrl = taskSnapshot.getUploadSessionUri();
-                        Toast.makeText(CameraActivity.this, "Image upload success", Toast.LENGTH_LONG).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        exception.printStackTrace();
-                        Toast.makeText(CameraActivity.this, "Image upload failure", Toast.LENGTH_LONG).show();
-                    }
-                });
-                */
+
+
+        // push picture to database
+        String mPicId = myRef.push().getKey();
+
+        //TODO -- add createdAt timestamp
+
+        Picture picture = new Picture(imgRef,
+                user.getUid(),
+                "test");
+        myRef.child("Picture").push();
+        myRef.child("Picture").child(mPicId).setValue(picture); //pushes the event to firebase
+        Toast.makeText(this, "Picture object uploaded successfully!", Toast.LENGTH_SHORT).show();
 
     }
+
 
     // Returns the File for a photo stored on disk given the fileName
     public File getPhotoFileUri(String fileName) {
@@ -182,6 +212,7 @@ public class CameraActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         cameraKitView.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
     }
     @Override
     protected void onResume() {
@@ -197,6 +228,9 @@ public class CameraActivity extends AppCompatActivity {
     protected void onStop() {
         cameraKitView.onStop();
         super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
