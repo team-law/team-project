@@ -1,12 +1,18 @@
 package com.example.myapplication.Fragments;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,13 +38,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 
 public class CreateEventFragment extends Fragment {
+
+    private static final int PERMISSION_REQUEST_CODE = 1;
     private final String TAG = "CreateEventFragment";
     private TimePicker picker;
     private DatePicker datePicker;
@@ -187,8 +196,43 @@ public class CreateEventFragment extends Fragment {
                 etLocation.setText("");
                 numberPicker.setValue(2);
 
+                if (checkPermission()) {
+                    Log.e("permission", "Permission already granted.");
+                } else {
+                    requestPermission();
+                }
+                // send sms invite to users
+                sendInvite(event);
             }
         });
+    }
+
+    private void sendInvite(Event event) {
+        if (checkPermission()) {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(),
+                    null, "Welcome to grapefruit", null , null);
+        }
+    }
+
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS}, PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     NumberPicker.OnValueChangeListener onValueChangeListener = new NumberPicker.OnValueChangeListener() {
