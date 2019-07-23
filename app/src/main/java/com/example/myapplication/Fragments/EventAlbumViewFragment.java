@@ -6,15 +6,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.myapplication.Models.Event;
 import com.example.myapplication.R;
 
 public class EventAlbumViewFragment extends Fragment {
 
     private RecyclerView rvEventPictures;
+    private Event event;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -28,6 +32,11 @@ public class EventAlbumViewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rvEventPictures = view.findViewById(R.id.rvEventPictures);
 
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            event = bundle.getParcelable("event");
+        }
+        Log.d("AlbumViewFrag", event.accessCode);
 
        // GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
         //rvEventPictures.setLayoutManager(mLayoutManager);
