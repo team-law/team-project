@@ -182,7 +182,7 @@ public class CreateEventFragment extends Fragment {
 
                 DatabaseReference eventsRef = myRef.child("Events");
 
-                Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics);
+                Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
                 eventsRef.child(accessCode).setValue(event); //creates the event in firebase
                 Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
 
