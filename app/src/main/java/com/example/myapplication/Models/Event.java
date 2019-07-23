@@ -34,6 +34,7 @@ public class Event {
 
     public Event(String host, String title, String time, String date, String description, String location, int pics,
                  List<String> invited, Map<String, Boolean> attending, Map<String, Boolean> allPictures, String accessCode) {
+        this.host = host;
         this.title = title;
         this.host = host;
         this.time = time;
