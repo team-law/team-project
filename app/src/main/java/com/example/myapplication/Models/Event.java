@@ -7,6 +7,7 @@ import com.example.myapplication.FirebaseApp;
 import com.firebase.ui.auth.data.model.User;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Event {
@@ -20,12 +21,13 @@ public class Event {
     public String location; //location of event
     public int pics; // number of pics per person
     public List<Picture> allPictures; //list of all pictures taken at event, needs to be updated when Picture class is made
+    public String accessCode; //event specific code used to add users
 
     public Event() {
     }
 
     public Event(String host, String title, String time, String date, String description, String location, int pics,
-                 List<String> invited, List<String> attending, List<Picture> allPictures) {
+                 List<String> invited, List<String> attending, List<Picture> allPictures, String accessCode) {
         this.title = title;
         this.host = host;
         this.time = time;
@@ -36,5 +38,10 @@ public class Event {
         this.invited = invited;
         this.attending = attending;
         this.allPictures = allPictures;
+        this.accessCode = accessCode;
+    }
+
+    public void setAttending(ArrayList<String> UID) {
+        attending = UID;
     }
 }

@@ -34,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -173,12 +174,17 @@ public class CreateEventFragment extends Fragment {
                 String time = String.valueOf(hour) + minute + am_pm;
                 String location = etLocation.getText().toString();
                 invited = new ArrayList<>(); //should be retrieved from the search view
-                List<String> attending = new ArrayList<>();
+                List<String> attending = new ArrayList<>(1);
+                attending.add(user.getUid());
                 List<Picture> pics = new ArrayList<>();
+                String accessCode = "temp";
 
-                Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics);
+                Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
                 myRef.child("Events").push();
-                myRef.child("Events").child(mGroupId).setValue(event); //pushes the event to firebase
+                Map<String, Event> events = new HashMap<>();
+                events.put(user.getUid(), event);
+                myRef.child("Events").setValue(events);
+                //myRef.child("Events").child(mGroupId).setValue(event); //pushes the event to firebase
                 Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
 
                 //reset all the fields in the create fragment

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.example.myapplication.Fragments.AlbumFragment;
 import com.example.myapplication.Fragments.CreateEventFragment;
+import com.example.myapplication.Fragments.JoinEventFragment;
 import com.example.myapplication.Fragments.ProfileFragment;
 
 import static com.example.myapplication.R.id.action_cam;
@@ -40,6 +41,7 @@ public class HomeActivity extends AppCompatActivity {
         // define your fragments here
         final Fragment albums = new AlbumFragment();
         final Fragment createEvent = new CreateEventFragment();
+        final Fragment joinEvent = new JoinEventFragment();
 
 //        final Fragment addPhoto = new ComposeFragment();
         final Fragment profile = new ProfileFragment();
@@ -61,7 +63,7 @@ public class HomeActivity extends AppCompatActivity {
                                 fragment = albums;
                                 break;
                             case action_invites:
-                                fragment = albums;
+                                fragment = joinEvent;
                                 break;
                             case action_profile:
                                 fragment = profile;
