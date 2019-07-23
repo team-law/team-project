@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +17,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
-import android.widget.Toast;
 
 import com.example.myapplication.Fragments.AlbumFragment;
 import com.example.myapplication.Fragments.CreateEventFragment;
@@ -67,7 +65,7 @@ public class EventDetail extends AppCompatActivity {
             }
         });
 
-
+/*
         final Fragment eventAlbum = new EventAlbumViewFragment();
 
         FragmentManager fm = getSupportFragmentManager();
@@ -109,7 +107,7 @@ public class EventDetail extends AppCompatActivity {
                 }
             }
         });
-
+*/
     }
 
 

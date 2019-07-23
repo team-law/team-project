@@ -8,14 +8,14 @@ import com.firebase.ui.auth.data.model.User;
 import com.google.firebase.auth.FirebaseUser;
 import com.example.myapplication.Models.Picture;
 
-import org.parceler.Parcel;
+//import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Parcel
+//@Parcel
 public class Event {
     public List<String> invited; //everyone that's invited
     public Map<String, Boolean> attending = new HashMap<>(); //list of everyone who has responsed "yes" to the invite

@@ -38,8 +38,8 @@ public class EventAlbumViewFragment extends Fragment {
         }
         Log.d("AlbumViewFrag", event.accessCode);
 
-       // GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
-        //rvEventPictures.setLayoutManager(mLayoutManager);
+        GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
+        rvEventPictures.setLayoutManager(mLayoutManager);
 
 
     }

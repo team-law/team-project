@@ -1,12 +1,18 @@
 package com.example.myapplication.Fragments;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,15 +38,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 
 public class CreateEventFragment extends Fragment {
+
+    private static final int PERMISSION_REQUEST_CODE = 1;
     private final String TAG = "CreateEventFragment";
     private TimePicker picker;
     private DatePicker datePicker;
@@ -55,7 +62,6 @@ public class CreateEventFragment extends Fragment {
     public String am_pm;
     public int numPics = 2;
     public List<String> invited;
-    Map<String, Event> events = new HashMap<>();
     //public FriendsAdapter adapter; //the adapter used for going through Facebook friends
 
     //Firebase things
@@ -111,6 +117,7 @@ public class CreateEventFragment extends Fragment {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                //String value = dataSnapshot.getValue(String.class);
                 Log.d(TAG, "Value is: " + map);
             }
 
@@ -175,15 +182,19 @@ public class CreateEventFragment extends Fragment {
                 String time = String.valueOf(hour) + minute + am_pm;
                 String location = etLocation.getText().toString();
                 invited = new ArrayList<>(); //should be retrieved from the search view
+<<<<<<< HEAD
+                List<String> attending = new ArrayList<>();
+                List<Picture> pics = new ArrayList<>();
+=======
                 Map<String, Boolean> attending = new HashMap<>(1);
                 attending.put(user.getUid(), true);
-                Map<String, Boolean> pics = new HashMap<>(0);
+                List<Picture> pics = new ArrayList<>();
                 String accessCode = getCode();
+>>>>>>> parent of 4a8733b... Merge pull request #36 from team-law/event-list-display
 
-                DatabaseReference eventsRef = myRef.child("Events");
-
-                Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
-                eventsRef.child(accessCode).setValue(event); //creates the event in firebase
+                Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics);
+                myRef.child("Events").push();
+                myRef.child("Events").child(mGroupId).setValue(event); //pushes the event to firebase
                 Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
 
                 //reset all the fields in the create fragment
@@ -191,27 +202,50 @@ public class CreateEventFragment extends Fragment {
                 etEventDescription.setText("");
                 etLocation.setText("");
                 numberPicker.setValue(2);
+
+                if (checkPermission()) {
+                    Log.e("permission", "Permission already granted.");
+                } else {
+                    requestPermission();
+                }
+                // send sms invite to users
+                sendInvite(event);
             }
         });
     }
 
-
-    public String getCode() {
-        //generate randomized access code and check to see if it already exists
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder code = new StringBuilder();
-        Random rand = new Random();
-        while (code.length() < 7) { // length of the random string.
-            int index = rand.nextInt(characters.length());
-            code.append(characters.charAt(index));
+    private void sendInvite(Event event) {
+        if (checkPermission()) {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(),
+                    null, "Welcome to grapefruit", null , null);
         }
-        String finalCode = code.toString();
-        return finalCode;
+    }
+
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS}, PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     NumberPicker.OnValueChangeListener onValueChangeListener = new NumberPicker.OnValueChangeListener() {
                 @Override
                 public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                    //Toast.makeText(MainActivity.this, "selected number "+numberPicker.getValue(), Toast.LENGTH_SHORT);
                     numPics = numberPicker.getValue();
                 }
     };

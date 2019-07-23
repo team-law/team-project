@@ -58,6 +58,7 @@
             android:button="@null"
             android:gravity="center"
             android:text="Map"
+            android:onClick="onRadioButtonClicked"
             android:textColor="@drawable/switch_text"
             android:textSize="18sp" />
 
