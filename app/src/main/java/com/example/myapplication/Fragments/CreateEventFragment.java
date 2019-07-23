@@ -182,8 +182,15 @@ public class CreateEventFragment extends Fragment {
                 String time = String.valueOf(hour) + minute + am_pm;
                 String location = etLocation.getText().toString();
                 invited = new ArrayList<>(); //should be retrieved from the search view
+<<<<<<< HEAD
                 List<String> attending = new ArrayList<>();
                 List<Picture> pics = new ArrayList<>();
+=======
+                Map<String, Boolean> attending = new HashMap<>(1);
+                attending.put(user.getUid(), true);
+                List<Picture> pics = new ArrayList<>();
+                String accessCode = getCode();
+>>>>>>> parent of 4a8733b... Merge pull request #36 from team-law/event-list-display
 
                 Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics);
                 myRef.child("Events").push();
