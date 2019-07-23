@@ -8,11 +8,13 @@ import com.firebase.ui.auth.data.model.User;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Event {
     public List<String> invited; //everyone that's invited
-    public List<String> attending; //list of everyone who has responsed "yes" to the invite
+    public Map<String, Boolean> attending = new HashMap<>(); //list of everyone who has responsed "yes" to the invite
     public String title; //what the event is called
     public String host; //list of people in charge of event - maybe only a singular person?
     public String time; //time of date
@@ -27,7 +29,7 @@ public class Event {
     }
 
     public Event(String host, String title, String time, String date, String description, String location, int pics,
-                 List<String> invited, List<String> attending, List<Picture> allPictures, String accessCode) {
+                 List<String> invited, Map<String, Boolean> attending, List<Picture> allPictures, String accessCode) {
         this.title = title;
         this.host = host;
         this.time = time;
@@ -41,7 +43,7 @@ public class Event {
         this.accessCode = accessCode;
     }
 
-    public void setAttending(ArrayList<String> UID) {
+    /*public void setAttending(ArrayList<String> UID) {
         attending = UID;
-    }
+    }*/
 }

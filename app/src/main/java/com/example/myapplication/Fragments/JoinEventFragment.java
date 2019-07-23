@@ -1,6 +1,7 @@
 package com.example.myapplication.Fragments;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class JoinEventFragment extends Fragment {
@@ -86,10 +88,29 @@ public class JoinEventFragment extends Fragment {
                         // whenever data at this location is updated.
                         //Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
 
+                        //for every event in Events
                         for (DataSnapshot snapshot: dataSnapshot.child("Events").getChildren()) {
-                            String accessCode = (String) snapshot.child("accessCode").getValue();
+                            //String accessCode = (String) snapshot.child("accessCode").getValue();
 
-                            if (accessCode != null && accessCode.equals(code)) {
+                            if ((snapshot.getKey()).equals(code)) {
+                                DatabaseReference eventRef = myRef.child("Events").child(code);
+
+                                DatabaseReference dbRef = eventRef.child("attending");
+
+                                dbRef.child("new guest2").setValue(true); //should be access code instead of new guest
+
+                                Map<String, Object> hopperUpdates = new HashMap<>();
+                                hopperUpdates.put("nickname", "Amazing Grace");
+
+                                eventRef.updateChildren(hopperUpdates);
+                                etEventCode.setText("");
+                                Toast.makeText(getActivity(), "Successfully joined event!", Toast.LENGTH_SHORT).show();
+                                joined = true;
+                                break;
+
+                            }
+
+                            /*if (accessCode != null && accessCode.equals(code)) {
                                 //if event does exist, add user to guestlist, reset edittext, submit success text
                                 Event event = snapshot.getValue(Event.class);
                                 //ArrayList<String> attending = (ArrayList<String>) snapshot.child("attending").getValue();
@@ -106,7 +127,7 @@ public class JoinEventFragment extends Fragment {
                                 Toast.makeText(getActivity(), "Successfully joined event!", Toast.LENGTH_SHORT).show();
                                 joined = true;
                                 break;
-                            }
+                            }*/
 
 
 //                            if(messageSnapshot.accessCode.equals(code)){

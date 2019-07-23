@@ -54,6 +54,7 @@ public class CreateEventFragment extends Fragment {
     public String am_pm;
     public int numPics = 2;
     public List<String> invited;
+    Map<String, Event> events = new HashMap<>();
     //public FriendsAdapter adapter; //the adapter used for going through Facebook friends
 
     //Firebase things
@@ -174,16 +175,17 @@ public class CreateEventFragment extends Fragment {
                 String time = String.valueOf(hour) + minute + am_pm;
                 String location = etLocation.getText().toString();
                 invited = new ArrayList<>(); //should be retrieved from the search view
-                List<String> attending = new ArrayList<>(1);
-                attending.add(user.getUid());
+                Map<String, Boolean> attending = new HashMap<>(1);
+                attending.put(user.getUid(), true);
                 List<Picture> pics = new ArrayList<>();
-                String accessCode = "temp";
+                String accessCode = "temp"; //TODO: should put the access code as the string
+
+                DatabaseReference eventsRef = myRef.child("Events");
 
                 Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
-                myRef.child("Events").push();
-                Map<String, Event> events = new HashMap<>();
-                events.put(user.getUid(), event);
-                myRef.child("Events").setValue(events);
+                //myRef.child("Events").push();
+                //events.put("tempParent3", event);
+                eventsRef.child(accessCode).setValue(event);
                 //myRef.child("Events").child(mGroupId).setValue(event); //pushes the event to firebase
                 Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
 
