@@ -8,8 +8,11 @@ import com.firebase.ui.auth.data.model.User;
 import com.google.firebase.auth.FirebaseUser;
 import com.example.myapplication.Models.Picture;
 
+import org.parceler.Parcel;
+
 import java.util.List;
 
+@Parcel
 public class Event {
     public List<String> invited; //everyone that's invited
     public List<String> attending; //list of everyone who has responsed "yes" to the invite
@@ -20,7 +23,7 @@ public class Event {
     public String description;
     public String location; //location of event
     public int pics; // number of pics per person
-    public List<Picture> allPictures; //list of all pictures taken at event, needs to be updated when Picture class is made
+    // public List<Picture> allPictures; //list of all pictures taken at event, needs to be updated when Picture class is made
 
     public Event(){}
 
@@ -35,6 +38,6 @@ public class Event {
         this.pics = numPics;
         this.invited = invited;
         this.attending = attending;
-        this.allPictures = pics;
+       // this.allPictures = pics;
     }
 }

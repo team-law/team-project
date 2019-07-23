@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.Models.Event;
 
+import org.parceler.Parcels;
+
 import java.util.List;
 
 public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> {
@@ -96,13 +98,10 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
             if (position != RecyclerView.NO_POSITION) {
                 // get the movie at the position
                 Event event = events.get(position);
-                // create intent for new activity
-                // create intent for new activity
 
-
+                // create intent for new activity
                 Intent intent = new Intent(context, EventDetail.class);
-
-                // TODO -- serialize or parcel the event
+                intent.putExtra("event", Parcels.wrap(event));
                 // show the activity
                  context.startActivity(intent);
             }

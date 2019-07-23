@@ -142,12 +142,8 @@ public class AlbumFragment extends Fragment {
                     mEvents.add(event);
                     adapter.notifyDataSetChanged();
                     swipeContainer.setRefreshing(false);
-
                 }
-//                String eventId = dataSnapshot.getKey();
-//                Event event = (HashMap) dataSnapshot.getValue(Event.class);
-//                mEvents.add(event);
-//                System.out.println(event);
+                Log.d(TAG, "loaded events correctly");
             }
 
             @Override

@@ -7,21 +7,50 @@
     tools:context=".EventDetail"
     android:background="@color/lightGray">
 
-    <RadioGroup
-        android:id="@+id/toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/outline"
-        android:checkedButton="@+id/map"
-        android:orientation="horizontal"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/grapefruitPink"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:elevation="8dp">
 
+        <TextView
+            android:id="@+id/toolbarTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:text="Title"
+            android:textAppearance="@android:style/TextAppearance.WindowTitle"
+            android:textSize="18sp"
+            android:visibility="visible"
+            tools:layout_editor_absoluteX="179dp"
+            tools:layout_editor_absoluteY="18dp" />
+    </android.support.v7.widget.Toolbar>
+
+    <RadioGroup
+        android:id="@+id/rgToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/outline"
+        android:checkedButton="@+id/rbMap"
+        android:elevation="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
         <RadioButton
-            android:id="@+id/map"
+            android:id="@+id/rbMap"
             android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -29,11 +58,12 @@
             android:button="@null"
             android:gravity="center"
             android:text="Map"
+            android:onClick="onRadioButtonClicked"
             android:textColor="@drawable/switch_text"
             android:textSize="18sp" />
 
         <RadioButton
-            android:id="@+id/album"
+            android:id="@+id/rbAlbum"
             android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -44,5 +74,33 @@
             android:textColor="@drawable/switch_text"
             android:textSize="18sp" />
     </RadioGroup>
+
+    <FrameLayout
+        android:id="@+id/flEventContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"></FrameLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnNewPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@color/dustyYellow"
+        android:src="@drawable/camera_selector_bg"
+        android:tint="@color/white"
+        app:backgroundTint="@color/dustyYellow"
+        app:fabSize="normal"
+        app:layout_anchorGravity="bottom|right|end"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
