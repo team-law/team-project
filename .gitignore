@@ -225,6 +225,9 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+# API Keys
+secrets.xml
+
 ### AndroidStudio Patch ###
 
 !/gradle/wrapper/gradle-wrapper.jar

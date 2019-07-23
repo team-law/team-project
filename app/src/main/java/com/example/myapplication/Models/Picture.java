@@ -3,21 +3,23 @@ package com.example.myapplication.Models;
 import android.media.Image;
 import android.net.Uri;
 
+import org.parceler.Parcel;
+
 import java.net.URI;
 
+@Parcel
 public class Picture {
 
-    public Uri image;
-    public UserNode userNode;
+    public String imageRef;
+    public String user;
     public String createdAt;
 
-    public Picture() {
-        // Default constructor required for calls to DataSnapshot.getValue(Picture.class)
-    }
+    // Default constructor required for calls to DataSnapshot.getValue(Picture.class)
+    public Picture() { }
 
-    public Picture(Uri image, UserNode userNode, String createdAt) {
-        this.image = image;
-        this.userNode = userNode;
+    public Picture(String imageRef, String user, String createdAt) {
+        this.imageRef = imageRef;
+        this.user = user;
         this.createdAt = createdAt;
     }
 
