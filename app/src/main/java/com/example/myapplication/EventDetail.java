@@ -89,6 +89,11 @@ public class EventDetail extends AppCompatActivity {
                         break;
                     case R.id.rbAlbum:
                         Log.d("Event Detail", "Album");
+
+                        FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction2.replace(R.id.flEventContainer,new EventAlbumViewFragment());
+                        fragmentTransaction2.commit();
+
                        // transaction.replace(R.id.flEventContainer, eventAlbum);
                         //transaction.commit();
                         break;
