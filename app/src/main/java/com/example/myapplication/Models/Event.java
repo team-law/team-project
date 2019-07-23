@@ -22,6 +22,8 @@ public class Event {
     public int pics; // number of pics per person
     public List<Picture> allPictures; //list of all pictures taken at event, needs to be updated when Picture class is made
 
+    public Event(){}
+
     public Event(String uid, String title, String time, String date, String description, String location, int numPics,
                  List<String> invited, List<String> attending, List<Picture> pics) {
         this.host = uid;

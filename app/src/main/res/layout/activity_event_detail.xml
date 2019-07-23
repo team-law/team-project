@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EventDetail"
+    android:background="@color/lightGray">
+
+    <RadioGroup
+        android:id="@+id/toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/outline"
+        android:checkedButton="@+id/map"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="8dp">
+
+        <RadioButton
+            android:id="@+id/map"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/switch_map"
+            android:button="@null"
+            android:gravity="center"
+            android:text="Map"
+            android:textColor="@drawable/switch_text"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/album"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/switch_album"
+            android:button="@null"
+            android:gravity="center"
+            android:text="Album"
+            android:textColor="@drawable/switch_text"
+            android:textSize="18sp" />
+    </RadioGroup>
+
+</android.support.constraint.ConstraintLayout>
