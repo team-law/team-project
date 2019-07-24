@@ -1,12 +1,20 @@
 package com.example.myapplication.Fragments;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+<<<<<<< Updated upstream
+=======
+import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
+>>>>>>> Stashed changes
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -238,6 +246,7 @@ public class CreateEventFragment extends Fragment {
         }
     }
 
+<<<<<<< Updated upstream
 
     public String getCode() {
         //generate randomized access code and check to see if it already exists
@@ -257,6 +266,27 @@ public class CreateEventFragment extends Fragment {
                 public void onValueChange(NumberPicker numberPicker, int i, int i1) {
                     numPics = numberPicker.getValue();
 
+=======
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS}, PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+>>>>>>> Stashed changes
 
     public String getCode() {
         //generate randomized access code and check to see if it already exists
