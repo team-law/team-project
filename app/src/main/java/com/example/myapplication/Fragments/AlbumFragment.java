@@ -151,8 +151,8 @@ public class AlbumFragment extends Fragment {
                     if (userEvents.containsKey(event.accessCode)) { //code from user list of events//
                         mEvents.add(event);
                         adapter.notifyDataSetChanged();
-                        swipeContainer.setRefreshing(false);
                     }
+                    swipeContainer.setRefreshing(false);
                 }
                 Log.d(TAG, "loaded events correctly");
             }
