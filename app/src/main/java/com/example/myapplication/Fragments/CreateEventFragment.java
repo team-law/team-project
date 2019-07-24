@@ -19,6 +19,7 @@ import android.widget.SearchView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.myapplication.ContactsListActivity;
 import com.example.myapplication.HomeActivity;
 import com.example.myapplication.LoginActivity;
 import com.example.myapplication.Models.Event;
@@ -52,7 +53,7 @@ public class CreateEventFragment extends Fragment {
     private EditText etEventTitle;
     private EditText etLocation;
     private Button btnCreateEvent;
-    private SearchView sVAddFriends;
+    private Button btnInviteFriends;
     private NumberPicker numberPicker;
     private Button btnSendInvite;
 
@@ -90,7 +91,7 @@ public class CreateEventFragment extends Fragment {
         etEventTitle = view.findViewById(R.id.etEventTitle);
         etLocation = view.findViewById(R.id.etLocation);
         btnCreateEvent = view.findViewById(R.id.btnCreateEvent);
-        sVAddFriends = view.findViewById(R.id.svAddFriends);
+        btnInviteFriends = view.findViewById(R.id.btnInviteFriends);
         numberPicker = view.findViewById(R.id.numberPicker);
 
         mAuth = FirebaseAuth.getInstance();
@@ -126,26 +127,33 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
-        //dealing with searchview
-        sVAddFriends.setQueryHint("Search For Friends");
-        CharSequence query = sVAddFriends.getQuery();
-
-        // perform set on query text listener event
-        sVAddFriends.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        btnInviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                // do something on text submit
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // do something when text changes
-                String text = newText;
-                //adapter.filter(text);
-                return false;
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ContactsListActivity.class));
             }
         });
+
+//        //dealing with searchview
+//        sVAddFriends.setQueryHint("Search For Friends");
+//        CharSequence query = sVAddFriends.getQuery();
+
+//        // perform set on query text listener event
+//        sVAddFriends.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                // do something on text submit
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                // do something when text changes
+//                String text = newText;
+//                //adapter.filter(text);
+//                return false;
+//            }
+//        });
 
         //assigning the exact time for the event, to display later and add to event object
         picker.setIs24HourView(false);
@@ -226,7 +234,7 @@ public class CreateEventFragment extends Fragment {
         if (checkPermission()) {
             SmsManager smsManager = SmsManager.getDefault();
             String message = "Welcome to Grapefruit";
-            smsManager.sendTextMessage("1234567890", null, message, null , null);
+            smsManager.sendTextMessage("17874074524", null, message, null , null);
         }
     }
 
