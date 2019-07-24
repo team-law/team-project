@@ -1,12 +1,17 @@
 package com.example.myapplication.Fragments;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +46,9 @@ import java.util.Random;
 
 
 public class CreateEventFragment extends Fragment {
+
+    private static final int PERMISSION_REQUEST_CODE = 1;
+
     private final String TAG = "CreateEventFragment";
     private TimePicker picker;
     private DatePicker datePicker;
@@ -50,6 +58,7 @@ public class CreateEventFragment extends Fragment {
     private Button btnCreateEvent;
     private SearchView sVAddFriends;
     private NumberPicker numberPicker;
+    private Button btnSendInvite;
 
     public int hour, minute;
     public String am_pm;
@@ -77,7 +86,7 @@ public class CreateEventFragment extends Fragment {
     // Any view setup should occur here.  E.g., view lookups and attaching view listeners.
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-       super.onViewCreated(view, savedInstanceState);
+        super.onViewCreated(view, savedInstanceState);
 
         picker = view.findViewById(R.id.timePicker1);
         datePicker = view.findViewById(R.id.datePicker);
@@ -129,13 +138,13 @@ public class CreateEventFragment extends Fragment {
         sVAddFriends.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-            // do something on text submit
+                // do something on text submit
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-            // do something when text changes
+                // do something when text changes
                 String text = newText;
                 //adapter.filter(text);
                 return false;
@@ -197,6 +206,49 @@ public class CreateEventFragment extends Fragment {
                 numberPicker.setValue(2);
             }
         });
+
+        // temporary button to send a text message
+        btnSendInvite = view.findViewById(R.id.btnSendInvite);
+        btnSendInvite.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if (checkPermission()) {
+                    Log.e("permission", "Permission already granted.");
+                } else {
+                    requestPermission();
+                }
+                // send sms invite to users
+                sendInvite();
+            }
+        });
+    }
+
+    private void sendInvite() {
+        if (checkPermission()) {
+            SmsManager smsManager = SmsManager.getDefault();
+            String message = "Welcome to Grapefruit";
+            smsManager.sendTextMessage("1234567890", null, message, null , null);
+        }
+    }
+
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS}, PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
 
@@ -230,10 +282,10 @@ public class CreateEventFragment extends Fragment {
     }
 
     NumberPicker.OnValueChangeListener onValueChangeListener = new NumberPicker.OnValueChangeListener() {
-                @Override
-                public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                    numPics = numberPicker.getValue();
-                }
+        @Override
+        public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+            numPics = numberPicker.getValue();
+        }
     };
 
     @Override

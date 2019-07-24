@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -35,6 +36,7 @@ import static com.example.myapplication.R.id.action_profile;
 public class EventDetail extends AppCompatActivity {
 
     private FloatingActionButton btnNewPhoto;
+    Event event;
     //Event event;
 
     @Override
@@ -51,7 +53,7 @@ public class EventDetail extends AppCompatActivity {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        Event event = (Event) Parcels.unwrap(getIntent().getParcelableExtra("event"));
+        event = (Event) Parcels.unwrap(getIntent().getParcelableExtra("event"));
 
 
         TextView textView = (TextView) toolbar.findViewById(R.id.toolbarTextView);
@@ -86,12 +88,19 @@ public class EventDetail extends AppCompatActivity {
                         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.flEventContainer,new EventAlbumViewFragment());
                         fragmentTransaction.commit();
+
                         break;
                     case R.id.rbAlbum:
                         Log.d("Event Detail", "Album");
 
+                        Fragment albumFragment = new EventAlbumViewFragment();
                         FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction2.replace(R.id.flEventContainer,new EventAlbumViewFragment());
+                        fragmentTransaction2.replace(R.id.flEventContainer,albumFragment);
+
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("event", (Parcelable) event);
+                        albumFragment.setArguments(bundle);
+
                         fragmentTransaction2.commit();
 
                        // transaction.replace(R.id.flEventContainer, eventAlbum);
