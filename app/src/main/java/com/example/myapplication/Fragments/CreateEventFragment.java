@@ -193,6 +193,10 @@ public class CreateEventFragment extends Fragment {
 
                 Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
                 eventsRef.child(accessCode).setValue(event); //creates the event in firebase
+
+                //add event to host list of events
+                DatabaseReference userEventRef = myRef.child("UserNodes").child(user.getUid()).child("eventsAttending");
+                userEventRef.child(accessCode).setValue(true); //adds the event to the user's list of events, marks true as them being the host
                 Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
 
                 //reset all the fields in the create fragment
@@ -257,7 +261,23 @@ public class CreateEventFragment extends Fragment {
             int index = rand.nextInt(characters.length());
             code.append(characters.charAt(index));
         }
-        String finalCode = code.toString();
+        final String finalCode = code.toString();
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.child("Events").getChildren()) {
+                    if ((snapshot.getKey()).equals(finalCode)) {
+                        getCode();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                //Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
         return finalCode;
     }
 
