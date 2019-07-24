@@ -16,7 +16,10 @@ import android.view.ViewGroup;
 import com.example.myapplication.AlbumAdapter;
 import com.example.myapplication.EndlessRecyclerViewScrollListener;
 import com.example.myapplication.Models.Event;
+import com.example.myapplication.Models.UserNode;
 import com.example.myapplication.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,10 +27,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AlbumFragment extends Fragment {
 
@@ -125,21 +130,29 @@ public class AlbumFragment extends Fragment {
 
     protected void queryPosts() {
 
-        DatabaseReference ref = database.getReference("Events");
+        DatabaseReference ref = database.getReference();
 
         // Generate a reference to a new location and add some data using push()
         // DatabaseReference pushedPostRef = postsRef.push();
 
-
-
+        //get the list of events, go through the events and only publish the ones from the list
         ref.addValueEventListener(new ValueEventListener() {
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            FirebaseUser user = mAuth.getCurrentUser();
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot eventSnapshot: dataSnapshot.getChildren()){
+                UserNode userInfo = dataSnapshot.child("UserNodes").child(user.getUid()).getValue(UserNode.class);
+                Map<String, Boolean> userEvents = new HashMap<>(1);
+                userEvents = userInfo.eventsAttending; //gets map of events the user is attending
+
+                for(DataSnapshot eventSnapshot: dataSnapshot.child("Events").getChildren()){
                     Event event = eventSnapshot.getValue(Event.class);
-                    mEvents.add(event);
-                    adapter.notifyDataSetChanged();
-                    swipeContainer.setRefreshing(false);
+
+                    if (userEvents.containsKey(event.accessCode)) { //code from user list of events//
+                        mEvents.add(event);
+                        adapter.notifyDataSetChanged();
+                        swipeContainer.setRefreshing(false);
+                    }
                 }
                 Log.d(TAG, "loaded events correctly");
             }
