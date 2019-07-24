@@ -81,18 +81,6 @@
         app:layout_constraintTop_toBottomOf="@+id/datePicker" />
 
     <TextView
-        android:id="@+id/tvAddFriends"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Add Friends"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etEventTitle" />
-
-    <TextView
         android:id="@+id/tvPicturesPer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -116,24 +104,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/timePicker1" />
-
-    <SearchView
-        android:id="@+id/svAddFriends"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/border"
-        android:hint="Search For Friends"
-        app:defaultQueryHint="Search For Friends"
-        app:iconifiedByDefault="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/etDescription"
-        app:layout_constraintTop_toBottomOf="@+id/tvAddFriends"
-        app:queryHint="Search For Friends" />
 
     <TimePicker
         android:id="@+id/timePicker1"
@@ -210,5 +180,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnCreateEvent" />
+
+    <Button
+        android:id="@+id/btnInviteFriends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Invite Friends"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEventDescription" />
 
 </android.support.constraint.ConstraintLayout>

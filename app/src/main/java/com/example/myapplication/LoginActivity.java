@@ -32,12 +32,17 @@ import java.util.Arrays;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
-//    private static final String EMAIL = "email";
 
-//    private LoginButton loginButton;
+    // Permissions
+    private static final String EMAIL = "email";
+    private static final String PUBLIC_PROFILE = "public_profile";
+    private static final String USER_FRIENDS = "user_friends";
+
+    // UI Objects
     private Button btnFBLogin;
     private ProgressBar pb;
 
+    // Database declaration
     private FirebaseAuth mAuth;
     private CallbackManager callbackManager;
 
@@ -56,9 +61,6 @@ public class LoginActivity extends AppCompatActivity {
         // sync login button and progress bar
         btnFBLogin = (Button) findViewById(R.id.btnFBLogin);
         pb = (ProgressBar) findViewById(R.id.pbLoading);
-//        loginButton = (LoginButton) findViewById(R.id.login_button);
-//        loginButton.setReadPermissions("email", "public_profile");
-//        loginButton.setReadPermissions(Arrays.asList("name", "email", "picture"));
 
         btnFBLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                 pb.setVisibility(ProgressBar.VISIBLE);
                 // request permission to access email and public profile
                 LoginManager.getInstance()
-                            .logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile", "user_friends"));
+                            .logInWithReadPermissions(LoginActivity.this, Arrays.asList(EMAIL, PUBLIC_PROFILE, USER_FRIENDS));
                 LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
