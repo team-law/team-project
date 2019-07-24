@@ -1,12 +1,17 @@
 package com.example.myapplication.Fragments;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +24,7 @@ import android.widget.SearchView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.myapplication.ContactsListActivity;
 import com.example.myapplication.HomeActivity;
 import com.example.myapplication.LoginActivity;
 import com.example.myapplication.Models.Event;
@@ -52,7 +58,7 @@ public class CreateEventFragment extends Fragment {
     private EditText etEventTitle;
     private EditText etLocation;
     private Button btnCreateEvent;
-    private SearchView sVAddFriends;
+    private Button btnInviteFriends;
     private NumberPicker numberPicker;
     private Button btnSendInvite;
 
@@ -90,7 +96,7 @@ public class CreateEventFragment extends Fragment {
         etEventTitle = view.findViewById(R.id.etEventTitle);
         etLocation = view.findViewById(R.id.etLocation);
         btnCreateEvent = view.findViewById(R.id.btnCreateEvent);
-        sVAddFriends = view.findViewById(R.id.svAddFriends);
+        btnInviteFriends = view.findViewById(R.id.btnInviteFriends);
         numberPicker = view.findViewById(R.id.numberPicker);
 
         mAuth = FirebaseAuth.getInstance();
@@ -126,26 +132,33 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
-        //dealing with searchview
-        sVAddFriends.setQueryHint("Search For Friends");
-        CharSequence query = sVAddFriends.getQuery();
-
-        // perform set on query text listener event
-        sVAddFriends.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        btnInviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                // do something on text submit
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // do something when text changes
-                String text = newText;
-                //adapter.filter(text);
-                return false;
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ContactsListActivity.class));
             }
         });
+
+//        //dealing with searchview
+//        sVAddFriends.setQueryHint("Search For Friends");
+//        CharSequence query = sVAddFriends.getQuery();
+
+//        // perform set on query text listener event
+//        sVAddFriends.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                // do something on text submit
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                // do something when text changes
+//                String text = newText;
+//                //adapter.filter(text);
+//                return false;
+//            }
+//        });
 
         //assigning the exact time for the event, to display later and add to event object
         picker.setIs24HourView(false);
@@ -226,29 +239,29 @@ public class CreateEventFragment extends Fragment {
         if (checkPermission()) {
             SmsManager smsManager = SmsManager.getDefault();
             String message = "Welcome to Grapefruit";
-            smsManager.sendTextMessage("1234567890", null, message, null , null);
+            smsManager.sendTextMessage("17874074524", null, message, null , null);
         }
     }
 
-
-    public String getCode() {
-        //generate randomized access code and check to see if it already exists
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder code = new StringBuilder();
-        Random rand = new Random();
-        while (code.length() < 7) { // length of the random string.
-            int index = rand.nextInt(characters.length());
-            code.append(characters.charAt(index));
-        }
-        String finalCode = code.toString();
-        return finalCode;
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS);
+        return result == PackageManager.PERMISSION_GRANTED;
     }
 
-    NumberPicker.OnValueChangeListener onValueChangeListener = new NumberPicker.OnValueChangeListener() {
-                @Override
-                public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                    numPics = numberPicker.getValue();
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS}, PERMISSION_REQUEST_CODE);
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
     public String getCode() {
         //generate randomized access code and check to see if it already exists
