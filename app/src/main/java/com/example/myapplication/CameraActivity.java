@@ -27,14 +27,21 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.parceler.Parcels;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.example.myapplication.R.drawable.com_facebook_favicon_blue;
 
@@ -49,6 +56,9 @@ public class CameraActivity extends AppCompatActivity {
     private File photoFile;
     private byte[] postImage;
 
+    private Event event;
+
+
     private final String TAG = "CameraActivity";
 
     //Firebase things
@@ -56,6 +66,7 @@ public class CameraActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference myRef;
+    private DatabaseReference eventRef;
     FirebaseUser user;
 
 
@@ -78,6 +89,11 @@ public class CameraActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
+
+        event = (Event) Parcels.unwrap(getIntent().getParcelableExtra("event"));
+
+
+        eventRef = mFirebaseDatabase.getReference("Events/" + event.accessCode);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -183,8 +199,26 @@ public class CameraActivity extends AppCompatActivity {
         Picture picture = new Picture(imgRef,
                 user.getUid(),
                 "test");
+
         myRef.child("Picture").push();
         myRef.child("Picture").child(mPicId).setValue(picture); //pushes the event to firebase
+
+/*
+        eventRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String accessCode = dataSnapshot.getValue("accessCode");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+        */
+        eventRef.child("allPictures").child("imgRef").setValue(true);
+
         Toast.makeText(this, "Picture object uploaded successfully!", Toast.LENGTH_SHORT).show();
 
     }

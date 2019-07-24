@@ -34,8 +34,7 @@ import static com.example.myapplication.R.id.action_profile;
 public class EventDetail extends AppCompatActivity {
 
     private FloatingActionButton btnNewPhoto;
-    Event event;
-    //Event event;
+    // Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +50,7 @@ public class EventDetail extends AppCompatActivity {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        event = (Event) Parcels.unwrap(getIntent().getParcelableExtra("event"));
+        final Event event = (Event) Parcels.unwrap(getIntent().getParcelableExtra("event"));
 
 
         TextView textView = (TextView) toolbar.findViewById(R.id.toolbarTextView);
@@ -61,6 +60,7 @@ public class EventDetail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(EventDetail.this, CameraActivity.class);
+                intent.putExtra("event", Parcels.wrap(event));
                 startActivity(intent);
             }
         });
@@ -90,11 +90,14 @@ public class EventDetail extends AppCompatActivity {
                     case R.id.rbAlbum:
 
                         Fragment albumFragment = new EventAlbumViewFragment();
-/*
+
                         Bundle bundle = new Bundle();
-                        bundle.putParcelable("event", event);
+
+                        Event e = event;
+
+                        bundle.putParcelable("event", e);
                         albumFragment.setArguments(bundle);
-*/
+
                         FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                         fragmentTransaction2.replace(R.id.flEventContainer,albumFragment).addToBackStack(null);
 

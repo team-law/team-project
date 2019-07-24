@@ -33,14 +33,14 @@ public class EventAlbumViewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rvEventPictures = view.findViewById(R.id.rvEventPictures);
 
-        /*
+
         if (getArguments() != null) {
-         
+
             event = getArguments().getParcelable("event");
             Log.d("AlbumViewFrag", event.accessCode);
 
         }
-        */
+
 
 //        Log.d("AlbumViewFrag", EventDetail.event);
 //
