@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.graphics.Picture;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.myapplication.Models.UserNode;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -18,6 +20,7 @@ import com.facebook.LoginStatusCallback;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.firebase.ui.auth.data.model.User;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,8 +29,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,6 +50,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private CallbackManager callbackManager;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +115,44 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         pb.setVisibility(ProgressBar.INVISIBLE);
         finish();
+        //check to see if this user already exists - if it doesn't then get the UserID from FB and create new UserNode object
+        checkUser();
+    }
+
+    private void checkUser() {
+        mAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean userExists = false;
+                //for every user in Users
+                for (DataSnapshot snapshot : dataSnapshot.child("UserNode").getChildren()) {
+                    if ((snapshot.getKey()).equals(user.getUid())) {
+                        userExists = true;
+                        break;
+
+                    }
+                }
+
+                if (!userExists) {
+                    //create a new user class for that person
+                    DatabaseReference userRef = myRef.child("UserNode");
+                    Map<String, Picture> picturesTaken = new HashMap<>(1);
+                    Map<String, Boolean> events = new HashMap<>(1);
+                    UserNode userProfile = new UserNode(picturesTaken, events);
+                    userRef.child(user.getUid()).setValue(userProfile); //creates the userNode in firebase
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                //Log.w(TAG, "Failed to read value.", error.toException());
+            }
+
+        });
     }
 
     @Override

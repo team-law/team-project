@@ -89,6 +89,9 @@ public class JoinEventFragment extends Fragment {
                                 DatabaseReference dbRef = eventRef.child("attending");
 
                                 dbRef.child(user.getUid()).setValue(true); //add user to guest list by their user ID
+                                //add event to userNode
+                                DatabaseReference userEventRef = myRef.child("UserNode").child(user.getUid()).child("Events");
+                                userEventRef.child(code).setValue(false); //adds the event to the user's list of events
 
                                 etEventCode.setText("");
                                 Toast.makeText(getActivity(), "Successfully joined event!", Toast.LENGTH_SHORT).show();
