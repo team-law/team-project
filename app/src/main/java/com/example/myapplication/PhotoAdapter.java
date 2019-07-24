@@ -22,6 +22,9 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
+
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> {
     private Context context;
     private List<Picture> pictures;
