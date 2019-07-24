@@ -73,6 +73,7 @@ public class JoinEventFragment extends Fragment {
                     }
                 };
 
+                user = mAuth.getCurrentUser();
                 // Read from the database
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -84,11 +85,16 @@ public class JoinEventFragment extends Fragment {
                         //for every event in Events
                         for (DataSnapshot snapshot: dataSnapshot.child("Events").getChildren()) {
 
+                            //TODO check to make sure they haven't already joined event as the host, otherwise it will change the value
                             if ((snapshot.getKey()).equals(code)) {
                                 DatabaseReference eventRef = myRef.child("Events").child(code);
                                 DatabaseReference dbRef = eventRef.child("attending");
 
                                 dbRef.child(user.getUid()).setValue(true); //add user to guest list by their user ID
+                                //add event to userNode
+                                DatabaseReference userEventRef = myRef.child("UserNodes").child(user.getUid()).child("eventsAttending");
+                                userEventRef.child(code).setValue(false); //adds the event to the user's list of events
+                                //false means this user is not the host of this event
 
                                 etEventCode.setText("");
                                 Toast.makeText(getActivity(), "Successfully joined event!", Toast.LENGTH_SHORT).show();

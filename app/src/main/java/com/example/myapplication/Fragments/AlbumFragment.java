@@ -106,8 +106,6 @@ public class AlbumFragment extends Fragment {
             }
         });
 
-
-
     }
 
 
@@ -151,65 +149,7 @@ public class AlbumFragment extends Fragment {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-        /*
-        ref.orderByChild("date").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
-                Event event = dataSnapshot.getValue(Event.class);
-                mEvents.add(event);
-                adapter.notifyDataSetChanged();
-                swipeContainer.setRefreshing(false);
-            }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-        */
-
-        /*
-        ParseQuery<Post> postQuery = new ParseQuery<Post>(Post.class);
-        postQuery.include(Post.KEY_USER);
-
-        // postQuery.whereLessThan(Post.KEY_CREATED_AT, maxId);
-        postQuery.setLimit(20);
-        postQuery.addDescendingOrder(Post.KEY_CREATED_AT);
-        postQuery.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> objects, ParseException e) {
-                if(e != null){
-                    Log.e(TAG, "Error with query");
-                    e.printStackTrace();
-                    return;
-                }
-                mPosts.addAll(objects);
-                adapter.notifyDataSetChanged();
-                for(int i = 0; i < objects.size(); i++){
-                    Log.d(TAG, "Post: " + objects.get(i).getDescription() +", username: " + objects.get(i).getUser().getUsername());
-
-                }
-                swipeContainer.setRefreshing(false);
-            }
-        });
-    }
-    */
     }
 }
 

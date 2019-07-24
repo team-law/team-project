@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.example.myapplication.Fragments.AlbumFragment;
 import com.example.myapplication.Fragments.CreateEventFragment;
@@ -27,6 +29,9 @@ import com.firebase.ui.auth.data.model.User;
 
 import org.parceler.Parcels;
 
+import java.io.Serializable;
+import java.util.HashMap;
+
 import static com.example.myapplication.R.id.action_invites;
 import static com.example.myapplication.R.id.action_new_event;
 import static com.example.myapplication.R.id.action_profile;
@@ -34,8 +39,9 @@ import static com.example.myapplication.R.id.action_profile;
 public class EventDetail extends AppCompatActivity {
 
     private FloatingActionButton btnNewPhoto;
-    Event event;
-    //Event event;
+    // Event event;
+    private HashMap<String, Boolean> attending;
+    private HashMap<String, Boolean> allPictures;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +54,12 @@ public class EventDetail extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        event = (Event) Parcels.unwrap(getIntent().getParcelableExtra("event"));
+        final Event event = (Event) Parcels.unwrap(getIntent().getParcelableExtra("event"));
 
+        attending = (HashMap) getIntent().getSerializableExtra("attending");
+        allPictures = (HashMap) getIntent().getSerializableExtra("allPictures");
 
         TextView textView = (TextView) toolbar.findViewById(R.id.toolbarTextView);
         textView.setText(event.title);
@@ -61,11 +68,12 @@ public class EventDetail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(EventDetail.this, CameraActivity.class);
+                intent.putExtra("event", Parcels.wrap(event));
                 startActivity(intent);
             }
         });
 
-/*
+
         final Fragment eventAlbum = new EventAlbumViewFragment();
 
         FragmentManager fm = getSupportFragmentManager();
@@ -81,23 +89,27 @@ public class EventDetail extends AppCompatActivity {
 
                 switch(checkedId) {
                     case R.id.rbMap:
-                        Log.d("Event Detail", "Map");
 
-                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.flEventContainer,new EventAlbumViewFragment());
-                        fragmentTransaction.commit();
+                        //FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        //fragmentTransaction.replace(R.id.flEventContainer,new EventAlbumViewFragment());
+                        //fragmentTransaction.commit();
 
                         break;
                     case R.id.rbAlbum:
-                        Log.d("Event Detail", "Album");
 
                         Fragment albumFragment = new EventAlbumViewFragment();
-                        FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction2.replace(R.id.flEventContainer,albumFragment);
 
                         Bundle bundle = new Bundle();
-                        bundle.putParcelable("event", (Parcelable) event);
+
+                        Event e = event;
+
+                        bundle.putParcelable("event", e);
+                        bundle.putSerializable("attending", (Serializable) attending);
+                        bundle.putSerializable("allPictures", (Serializable) allPictures);
                         albumFragment.setArguments(bundle);
+
+                        FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction2.replace(R.id.flEventContainer,albumFragment).addToBackStack(null);
 
                         fragmentTransaction2.commit();
 
@@ -107,7 +119,7 @@ public class EventDetail extends AppCompatActivity {
                 }
             }
         });
-*/
+
     }
 
 
