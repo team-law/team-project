@@ -144,7 +144,8 @@ public class LoginActivity extends AppCompatActivity {
                     //String mGroupId = usersRef.push().getKey();
                     Map<String, Picture> picturesTaken = new HashMap<>(1);
                     Map<String, Boolean> eventsAttending = new HashMap<>(1);
-                    UserNode userProfile = new UserNode(user.getUid(), picturesTaken, eventsAttending);
+                    String name = user.getDisplayName(); //might error if the user doesn't have a display name
+                    UserNode userProfile = new UserNode(user.getUid(), name, picturesTaken, eventsAttending);
                     usersRef.child(user.getUid()).setValue(userProfile); //creates the userNode in firebase
                 }
             }

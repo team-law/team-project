@@ -85,6 +85,7 @@ public class JoinEventFragment extends Fragment {
                         //for every event in Events
                         for (DataSnapshot snapshot: dataSnapshot.child("Events").getChildren()) {
 
+                            //TODO check to make sure they haven't already joined event as the host, otherwise it will change the value
                             if ((snapshot.getKey()).equals(code)) {
                                 DatabaseReference eventRef = myRef.child("Events").child(code);
                                 DatabaseReference dbRef = eventRef.child("attending");

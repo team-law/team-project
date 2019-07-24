@@ -14,6 +14,7 @@ import java.util.Map;
 public class UserNode {
 
     public String userId;
+    public String name;
     //public String invitedBy;
     //public String event;
     //public boolean isHost;
@@ -24,8 +25,9 @@ public class UserNode {
         // Default constructor required for calls to DataSnapshot.getValue(UserNode.class)
     }
 
-    public UserNode(String userId, Map<String, Picture> picturesTaken, Map<String, Boolean> eventsAttending) {
+    public UserNode(String userId, String name, Map<String, Picture> picturesTaken, Map<String, Boolean> eventsAttending) {
         this.userId = userId;
+        this.name = name;
         //this.invitedBy = invitedBy;
         //this.event = event;
         //this.isHost = isHost;
