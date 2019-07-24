@@ -40,7 +40,7 @@
         android:id="@+id/rgToggle"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/outline"
         android:checkedButton="@+id/rbMap"
         android:elevation="8dp"
@@ -58,7 +58,6 @@
             android:button="@null"
             android:gravity="center"
             android:text="Map"
-            android:onClick="onRadioButtonClicked"
             android:textColor="@drawable/switch_text"
             android:textSize="18sp" />
 
@@ -79,6 +78,7 @@
         android:id="@+id/flEventContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

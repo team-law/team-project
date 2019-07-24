@@ -1,17 +1,12 @@
 package com.example.myapplication.Fragments;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +41,7 @@ import java.util.Random;
 
 
 public class CreateEventFragment extends Fragment {
+
 
     private static final int PERMISSION_REQUEST_CODE = 1;
 
@@ -197,6 +193,7 @@ public class CreateEventFragment extends Fragment {
                 //add event to host list of events
                 DatabaseReference userEventRef = myRef.child("UserNodes").child(user.getUid()).child("eventsAttending");
                 userEventRef.child(accessCode).setValue(true); //adds the event to the user's list of events, marks true as them being the host
+
                 Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
 
                 //reset all the fields in the create fragment
@@ -204,6 +201,7 @@ public class CreateEventFragment extends Fragment {
                 etEventDescription.setText("");
                 etLocation.setText("");
                 numberPicker.setValue(2);
+
             }
         });
 
@@ -219,6 +217,7 @@ public class CreateEventFragment extends Fragment {
                 }
                 // send sms invite to users
                 sendInvite();
+
             }
         });
     }
@@ -231,25 +230,24 @@ public class CreateEventFragment extends Fragment {
         }
     }
 
-    private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS);
-        return result == PackageManager.PERMISSION_GRANTED;
-    }
 
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS}, PERMISSION_REQUEST_CODE);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getContext(), "SMS sent.", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
-            }
+    public String getCode() {
+        //generate randomized access code and check to see if it already exists
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder code = new StringBuilder();
+        Random rand = new Random();
+        while (code.length() < 7) { // length of the random string.
+            int index = rand.nextInt(characters.length());
+            code.append(characters.charAt(index));
         }
+        String finalCode = code.toString();
+        return finalCode;
     }
+
+    NumberPicker.OnValueChangeListener onValueChangeListener = new NumberPicker.OnValueChangeListener() {
+                @Override
+                public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                    numPics = numberPicker.getValue();
 
 
     public String getCode() {
@@ -270,6 +268,7 @@ public class CreateEventFragment extends Fragment {
                     if ((snapshot.getKey()).equals(finalCode)) {
                         getCode();
                     }
+
                 }
             }
             @Override
