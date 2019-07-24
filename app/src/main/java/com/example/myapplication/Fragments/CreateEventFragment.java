@@ -10,11 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-<<<<<<< Updated upstream
-=======
 import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
->>>>>>> Stashed changes
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -246,27 +243,6 @@ public class CreateEventFragment extends Fragment {
         }
     }
 
-<<<<<<< Updated upstream
-
-    public String getCode() {
-        //generate randomized access code and check to see if it already exists
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder code = new StringBuilder();
-        Random rand = new Random();
-        while (code.length() < 7) { // length of the random string.
-            int index = rand.nextInt(characters.length());
-            code.append(characters.charAt(index));
-        }
-        String finalCode = code.toString();
-        return finalCode;
-    }
-
-    NumberPicker.OnValueChangeListener onValueChangeListener = new NumberPicker.OnValueChangeListener() {
-                @Override
-                public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                    numPics = numberPicker.getValue();
-
-=======
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS);
         return result == PackageManager.PERMISSION_GRANTED;
@@ -286,7 +262,6 @@ public class CreateEventFragment extends Fragment {
             }
         }
     }
->>>>>>> Stashed changes
 
     public String getCode() {
         //generate randomized access code and check to see if it already exists
