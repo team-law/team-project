@@ -27,6 +27,9 @@ import com.firebase.ui.auth.data.model.User;
 
 import org.parceler.Parcels;
 
+import java.io.Serializable;
+import java.util.HashMap;
+
 import static com.example.myapplication.R.id.action_invites;
 import static com.example.myapplication.R.id.action_new_event;
 import static com.example.myapplication.R.id.action_profile;
@@ -35,6 +38,8 @@ public class EventDetail extends AppCompatActivity {
 
     private FloatingActionButton btnNewPhoto;
     // Event event;
+    private HashMap<String, Boolean> attending;
+    private HashMap<String, Boolean> allPictures;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +52,12 @@ public class EventDetail extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         final Event event = (Event) Parcels.unwrap(getIntent().getParcelableExtra("event"));
 
+        attending = (HashMap) getIntent().getSerializableExtra("attending");
+        allPictures = (HashMap) getIntent().getSerializableExtra("allPictures");
 
         TextView textView = (TextView) toolbar.findViewById(R.id.toolbarTextView);
         textView.setText(event.title);
@@ -96,6 +102,8 @@ public class EventDetail extends AppCompatActivity {
                         Event e = event;
 
                         bundle.putParcelable("event", e);
+                        bundle.putSerializable("attending", (Serializable) attending);
+                        bundle.putSerializable("allPictures", (Serializable) allPictures);
                         albumFragment.setArguments(bundle);
 
                         FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();

@@ -217,7 +217,7 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
         */
-        eventRef.child("allPictures").child("imgRef").setValue(true);
+        eventRef.child("allPictures").child(mPicId).setValue(true);
 
         Toast.makeText(this, "Picture object uploaded successfully!", Toast.LENGTH_SHORT).show();
 

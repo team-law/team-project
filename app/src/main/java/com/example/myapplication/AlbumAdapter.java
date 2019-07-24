@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import java.io.Serializable;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.Models.Event;
@@ -101,6 +103,8 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
 
                 // create intent for new activity
                 Intent intent = new Intent(context, EventDetail.class);
+                intent.putExtra("attending", (Serializable) event.attending);
+                intent.putExtra("allPictures", (Serializable) event.allPictures);
                 intent.putExtra("event", Parcels.wrap(event));
                 // show the activity
                  context.startActivity(intent);
