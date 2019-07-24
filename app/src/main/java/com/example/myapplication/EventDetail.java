@@ -65,7 +65,7 @@ public class EventDetail extends AppCompatActivity {
             }
         });
 
-/*
+
         final Fragment eventAlbum = new EventAlbumViewFragment();
 
         FragmentManager fm = getSupportFragmentManager();
@@ -81,23 +81,22 @@ public class EventDetail extends AppCompatActivity {
 
                 switch(checkedId) {
                     case R.id.rbMap:
-                        Log.d("Event Detail", "Map");
 
-                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.flEventContainer,new EventAlbumViewFragment());
-                        fragmentTransaction.commit();
+                        //FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        //fragmentTransaction.replace(R.id.flEventContainer,new EventAlbumViewFragment());
+                        //fragmentTransaction.commit();
 
                         break;
                     case R.id.rbAlbum:
-                        Log.d("Event Detail", "Album");
 
                         Fragment albumFragment = new EventAlbumViewFragment();
-                        FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction2.replace(R.id.flEventContainer,albumFragment);
-
+/*
                         Bundle bundle = new Bundle();
-                        bundle.putParcelable("event", (Parcelable) event);
+                        bundle.putParcelable("event", event);
                         albumFragment.setArguments(bundle);
+*/
+                        FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction2.replace(R.id.flEventContainer,albumFragment).addToBackStack(null);
 
                         fragmentTransaction2.commit();
 
@@ -107,7 +106,7 @@ public class EventDetail extends AppCompatActivity {
                 }
             }
         });
-*/
+
     }
 
 

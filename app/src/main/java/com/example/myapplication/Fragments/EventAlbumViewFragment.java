@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.myapplication.EventDetail;
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.R;
 
@@ -32,14 +33,19 @@ public class EventAlbumViewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rvEventPictures = view.findViewById(R.id.rvEventPictures);
 
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            event = bundle.getParcelable("event");
-        }
-        Log.d("AlbumViewFrag", event.accessCode);
+        /*
+        if (getArguments() != null) {
+         
+            event = getArguments().getParcelable("event");
+            Log.d("AlbumViewFrag", event.accessCode);
 
-        GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
-        rvEventPictures.setLayoutManager(mLayoutManager);
+        }
+        */
+
+//        Log.d("AlbumViewFrag", EventDetail.event);
+//
+//        GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),2);
+//        rvEventPictures.setLayoutManager(mLayoutManager);
 
 
     }

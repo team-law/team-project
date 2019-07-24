@@ -176,7 +176,7 @@ public class CreateEventFragment extends Fragment {
                 invited = new ArrayList<>(); //should be retrieved from the search view
                 Map<String, Boolean> attending = new HashMap<>(1);
                 attending.put(user.getUid(), true);
-                List<Picture> pics = new ArrayList<>();
+                Map<String, Boolean> pics = new HashMap<>(0);
                 String accessCode = getCode();
 
                 DatabaseReference eventsRef = myRef.child("Events");
