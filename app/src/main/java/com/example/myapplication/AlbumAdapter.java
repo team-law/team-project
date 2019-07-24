@@ -81,15 +81,15 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
         public void bind(final Event event) {
             tvTitle.setText(event.title);
             // TODO -- add ivAlbumPicture
-            // TODO -- pass in user ID from createEvent and call it here
+            tvHost.setText(event.hostName);
 
             /*
             if(image != null) {
                 Glide.with(context)
                         .load(image.getUrl())
-                        .into(ivImage);
-            }
-            */
+                        .into(ivAlbumPicture);
+            }*/
+
         }
 
         @Override

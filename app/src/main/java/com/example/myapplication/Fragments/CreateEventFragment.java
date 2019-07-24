@@ -24,7 +24,7 @@ import android.widget.SearchView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.myapplication.ContactsListActivity;
+//import com.example.myapplication.ContactsListActivity;
 import com.example.myapplication.HomeActivity;
 import com.example.myapplication.LoginActivity;
 import com.example.myapplication.Models.Event;
@@ -135,7 +135,7 @@ public class CreateEventFragment extends Fragment {
         btnInviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ContactsListActivity.class));
+                //startActivity(new Intent(getActivity(), ContactsListActivity.class));
             }
         });
 
@@ -200,7 +200,7 @@ public class CreateEventFragment extends Fragment {
 
                 DatabaseReference eventsRef = myRef.child("Events");
 
-                Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
+                Event event = new Event(user.getUid(), user.getDisplayName(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
                 eventsRef.child(accessCode).setValue(event); //creates the event in firebase
 
                 //add event to host list of events
