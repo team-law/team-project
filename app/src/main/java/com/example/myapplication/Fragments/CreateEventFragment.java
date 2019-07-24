@@ -185,10 +185,8 @@ public class CreateEventFragment extends Fragment {
                 Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
                 eventsRef.child(accessCode).setValue(event); //creates the event in firebase
 
-                //TODO: when a person logs in, then their user node must be created or pulled up - stores their events and profile info
-
                 //add event to host list of events
-                DatabaseReference userEventRef = myRef.child("UserNode").child(user.getUid()).child("Events");
+                DatabaseReference userEventRef = myRef.child("UserNodes").child(user.getUid()).child("eventsAttending");
                 userEventRef.child(accessCode).setValue(true); //adds the event to the user's list of events, marks true as them being the host
                 Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
 

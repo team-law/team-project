@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.content.Intent;
-import android.graphics.Picture;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +10,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.myapplication.Models.Picture;
 import com.example.myapplication.Models.UserNode;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -52,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
-    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,16 +119,19 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkUser() {
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth.AuthStateListener mAuthListener;
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
+        final FirebaseUser user;
+        user = mAuth.getCurrentUser();
 
         myRef.addValueEventListener(new ValueEventListener() {
+            DatabaseReference usersRef = myRef.child("UserNodes");
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 boolean userExists = false;
                 //for every user in Users
-                for (DataSnapshot snapshot : dataSnapshot.child("UserNode").getChildren()) {
+                for (DataSnapshot snapshot : dataSnapshot.child("UserNodes").getChildren()) {
                     if ((snapshot.getKey()).equals(user.getUid())) {
                         userExists = true;
                         break;
@@ -139,11 +141,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (!userExists) {
                     //create a new user class for that person
-                    DatabaseReference userRef = myRef.child("UserNode");
+                    //String mGroupId = usersRef.push().getKey();
                     Map<String, Picture> picturesTaken = new HashMap<>(1);
-                    Map<String, Boolean> events = new HashMap<>(1);
-                    UserNode userProfile = new UserNode(picturesTaken, events);
-                    userRef.child(user.getUid()).setValue(userProfile); //creates the userNode in firebase
+                    Map<String, Boolean> eventsAttending = new HashMap<>(1);
+                    UserNode userProfile = new UserNode(user.getUid(), picturesTaken, eventsAttending);
+                    usersRef.child(user.getUid()).setValue(userProfile); //creates the userNode in firebase
                 }
             }
             @Override
