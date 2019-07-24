@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -237,26 +238,6 @@ public class CreateEventFragment extends Fragment {
             smsManager.sendTextMessage("17874074524", null, message, null , null);
         }
     }
-
-
-    public String getCode() {
-        //generate randomized access code and check to see if it already exists
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder code = new StringBuilder();
-        Random rand = new Random();
-        while (code.length() < 7) { // length of the random string.
-            int index = rand.nextInt(characters.length());
-            code.append(characters.charAt(index));
-        }
-        String finalCode = code.toString();
-        return finalCode;
-    }
-
-    NumberPicker.OnValueChangeListener onValueChangeListener = new NumberPicker.OnValueChangeListener() {
-                @Override
-                public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                    numPics = numberPicker.getValue();
-
 
     public String getCode() {
         //generate randomized access code and check to see if it already exists
