@@ -24,7 +24,7 @@ import android.widget.SearchView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.myapplication.ContactsListActivity;
+// import com.example.myapplication.ContactsListActivity;
 import com.example.myapplication.HomeActivity;
 import com.example.myapplication.LoginActivity;
 import com.example.myapplication.Models.Event;
@@ -135,7 +135,7 @@ public class CreateEventFragment extends Fragment {
         btnInviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ContactsListActivity.class));
+              //  startActivity(new Intent(getActivity(), ContactsListActivity.class));
             }
         });
 

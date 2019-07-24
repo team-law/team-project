@@ -20,6 +20,7 @@ import com.example.myapplication.Models.Event;
 import com.example.myapplication.Models.Picture;
 import com.example.myapplication.PhotoAdapter;
 import com.example.myapplication.R;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +49,9 @@ public class EventAlbumViewFragment extends Fragment {
     // Get a reference to our posts
     private FirebaseDatabase database;
 
+    private SwipeRefreshLayout scEventDetail;
+    private EndlessRecyclerViewScrollListener scrollListener;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,23 +65,33 @@ public class EventAlbumViewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rvEventPictures = view.findViewById(R.id.rvEventPictures);
 
+        scEventDetail = (SwipeRefreshLayout) view.findViewById(R.id.scEventDetail);
+
+
+
+        // Configure the refreshing colors
+        scEventDetail.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         mPhotoRefs = new ArrayList<>();
         if (getArguments() != null) {
 
             event = getArguments().getParcelable("event");
-            attending = (HashMap) getArguments().getSerializable("attending");
-            allPictures = (HashMap) getArguments().getSerializable("allPictures");
-            Log.d("AlbumViewFrag", event.accessCode);
 
-        }
 
-        // all photo refs to mPhotoRef list
-        for (Map.Entry<String, Boolean> entry : allPictures.entrySet()) {
-            String s = entry.getKey();
-            mPhotoRefs.add(s);
+//            attending = (HashMap) getArguments().getSerializable("attending");
+//            allPictures = (HashMap) getArguments().getSerializable("allPictures");
+
+
         }
 
         database = FirebaseDatabase.getInstance();
+
+        networkCall();
+
+
 
         mPictures = new ArrayList<>();
         // create the adapter
@@ -88,12 +102,64 @@ public class EventAlbumViewFragment extends Fragment {
         GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
         rvEventPictures.setLayoutManager(mLayoutManager);
 
-        queryPics();
+        // Retain an instance so that you can call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                // loadNextDataFromApi();
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvEventPictures.addOnScrollListener(scrollListener);
 
+
+        scEventDetail.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                adapter.clear();
+                mPhotoRefs.clear();
+                networkCall();
+
+            }
+        });
+
+    }
+
+    protected void networkCall(){
+        DatabaseReference ref = database.getReference("Events/" + event.accessCode);
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Event ev = dataSnapshot.getValue(Event.class);
+                attending = (HashMap) ev.attending;
+                allPictures = (HashMap) ev.allPictures;
+
+                // all photo refs to mPhotoRef list
+                for (Map.Entry<String, Boolean> entry : allPictures.entrySet()) {
+                    String s = entry.getKey();
+                    mPhotoRefs.add(s);
+                }
+
+                queryPics();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+
+        });
 
     }
 
     protected void queryPics() {
+
 
         // DatabaseReference ref = database.getReference("Picture");
 
@@ -110,6 +176,7 @@ public class EventAlbumViewFragment extends Fragment {
                     Picture picture = dataSnapshot.getValue(Picture.class);
                     mPictures.add(picture);
                     adapter.notifyDataSetChanged();
+                    scEventDetail.setRefreshing(false);
                 }
 
                 @Override
