@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,10 @@ import java.util.Random;
 
 
 public class CreateEventFragment extends Fragment {
+
+
+    private static final int PERMISSION_REQUEST_CODE = 1;
+
     private final String TAG = "CreateEventFragment";
     private TimePicker picker;
     private DatePicker datePicker;
@@ -49,6 +54,7 @@ public class CreateEventFragment extends Fragment {
     private Button btnCreateEvent;
     private SearchView sVAddFriends;
     private NumberPicker numberPicker;
+    private Button btnSendInvite;
 
     public int hour, minute;
     public String am_pm;
@@ -76,7 +82,7 @@ public class CreateEventFragment extends Fragment {
     // Any view setup should occur here.  E.g., view lookups and attaching view listeners.
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-       super.onViewCreated(view, savedInstanceState);
+        super.onViewCreated(view, savedInstanceState);
 
         picker = view.findViewById(R.id.timePicker1);
         datePicker = view.findViewById(R.id.datePicker);
@@ -128,13 +134,13 @@ public class CreateEventFragment extends Fragment {
         sVAddFriends.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-            // do something on text submit
+                // do something on text submit
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-            // do something when text changes
+                // do something when text changes
                 String text = newText;
                 //adapter.filter(text);
                 return false;
@@ -183,6 +189,11 @@ public class CreateEventFragment extends Fragment {
 
                 Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
                 eventsRef.child(accessCode).setValue(event); //creates the event in firebase
+
+                //add event to host list of events
+                DatabaseReference userEventRef = myRef.child("UserNodes").child(user.getUid()).child("eventsAttending");
+                userEventRef.child(accessCode).setValue(true); //adds the event to the user's list of events, marks true as them being the host
+
                 Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
 
                 //reset all the fields in the create fragment
@@ -190,8 +201,33 @@ public class CreateEventFragment extends Fragment {
                 etEventDescription.setText("");
                 etLocation.setText("");
                 numberPicker.setValue(2);
+
             }
         });
+
+        // temporary button to send a text message
+        btnSendInvite = view.findViewById(R.id.btnSendInvite);
+        btnSendInvite.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if (checkPermission()) {
+                    Log.e("permission", "Permission already granted.");
+                } else {
+                    requestPermission();
+                }
+                // send sms invite to users
+                sendInvite();
+
+            }
+        });
+    }
+
+    private void sendInvite() {
+        if (checkPermission()) {
+            SmsManager smsManager = SmsManager.getDefault();
+            String message = "Welcome to Grapefruit";
+            smsManager.sendTextMessage("1234567890", null, message, null , null);
+        }
     }
 
 
@@ -212,7 +248,43 @@ public class CreateEventFragment extends Fragment {
                 @Override
                 public void onValueChange(NumberPicker numberPicker, int i, int i1) {
                     numPics = numberPicker.getValue();
+
+
+    public String getCode() {
+        //generate randomized access code and check to see if it already exists
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder code = new StringBuilder();
+        Random rand = new Random();
+        while (code.length() < 7) { // length of the random string.
+            int index = rand.nextInt(characters.length());
+            code.append(characters.charAt(index));
+        }
+        final String finalCode = code.toString();
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.child("Events").getChildren()) {
+                    if ((snapshot.getKey()).equals(finalCode)) {
+                        getCode();
+                    }
+
                 }
+            }
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                //Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        return finalCode;
+    }
+
+    NumberPicker.OnValueChangeListener onValueChangeListener = new NumberPicker.OnValueChangeListener() {
+        @Override
+        public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+            numPics = numberPicker.getValue();
+        }
     };
 
     @Override
