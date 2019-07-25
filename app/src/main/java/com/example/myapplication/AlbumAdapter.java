@@ -100,6 +100,7 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
                 tvHost.setText(event.hostName);
             }
 
+            
             //ivAlbumPicture
 
             // call network to get imgRef of first picture
