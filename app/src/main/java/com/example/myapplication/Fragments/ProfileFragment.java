@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -67,6 +69,7 @@ public class ProfileFragment extends Fragment {
     private ProfileAdapter adapter;
     private List<Picture> mPictures;
 
+    private SwipeRefreshLayout swipeContainer;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private Profile profile;
@@ -87,6 +90,13 @@ public class ProfileFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         profile = Profile.getCurrentProfile();
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         // Initialize objects in profile fragment
         ivProfilePicture = (ImageView) view.findViewById(R.id.ivProfilePicture);
@@ -100,7 +110,7 @@ public class ProfileFragment extends Fragment {
         mPictures = new ArrayList<>();
         adapter = new ProfileAdapter(getContext(), mPictures);
         rvProfilePosts.setAdapter(adapter);
-        rvProfilePosts.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvProfilePosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
         queryPosts();
 
         btnLogout = (Button) view.findViewById(R.id.btnLogout);
@@ -113,10 +123,25 @@ public class ProfileFragment extends Fragment {
             }
         });
         queryUserInfo();
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                adapter.clear();
+                mPictures.clear();
+                queryPosts();
+
+            }
+        });
     }
 
     //get all the pictures that are taken by the user
     protected void queryPosts() {
+        //TODO: add the posts in descending order
 
         DatabaseReference ref = database.getReference();
 
@@ -137,7 +162,7 @@ public class ProfileFragment extends Fragment {
                         mPictures.add(picture);
                         adapter.notifyDataSetChanged();
                     }
-                    //swipeContainer.setRefreshing(false);
+                    swipeContainer.setRefreshing(false);
                 }
                 Log.d(TAG, "loaded events correctly");
             }

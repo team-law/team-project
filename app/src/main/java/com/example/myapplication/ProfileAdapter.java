@@ -46,6 +46,16 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         return pictures.size();
     }
 
+    public void clear() {
+        pictures.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Picture> list) {
+        pictures.addAll(list);
+        notifyDataSetChanged();
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView ivEventPicture;
