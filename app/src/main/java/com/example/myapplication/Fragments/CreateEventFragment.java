@@ -135,7 +135,10 @@ public class CreateEventFragment extends Fragment {
         btnInviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ContactsListActivity.class));
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+                    startActivity(new Intent(getActivity(), ContactsListActivity.class));
+                }
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_CODE);
             }
         });
 
