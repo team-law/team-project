@@ -218,6 +218,8 @@ public class CameraActivity extends AppCompatActivity {
         });
         */
         eventRef.child("allPictures").child(mPicId).setValue(true);
+        myRef.child("UserNodes").child(user.getUid()).child("picturesTaken").child(mPicId).setValue(picture);
+        //TODO: setting the value to picture might error/make things complicated, change later
 
         Toast.makeText(this, "Picture object uploaded successfully!", Toast.LENGTH_SHORT).show();
 

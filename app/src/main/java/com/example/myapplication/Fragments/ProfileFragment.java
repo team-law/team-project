@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +23,10 @@ import com.bumptech.glide.Glide;
 import com.example.myapplication.FirebaseApp;
 import com.example.myapplication.HomeActivity;
 import com.example.myapplication.LoginActivity;
+import com.example.myapplication.Models.Event;
+import com.example.myapplication.Models.Picture;
+import com.example.myapplication.Models.UserNode;
+import com.example.myapplication.ProfileAdapter;
 import com.example.myapplication.R;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -31,6 +39,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +51,9 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ProfileFragment extends Fragment {
 
@@ -49,10 +65,15 @@ public class ProfileFragment extends Fragment {
     private TextView tvEmail;
     private TextView tvNumFriends;
     private TextView tvFriendList;
+    private RecyclerView rvProfilePosts;
+    private ProfileAdapter adapter;
+    private List<Picture> mPictures;
 
+    private SwipeRefreshLayout swipeContainer;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private Profile profile;
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     @Nullable
     @Override
@@ -69,6 +90,13 @@ public class ProfileFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         profile = Profile.getCurrentProfile();
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         // Initialize objects in profile fragment
         ivProfilePicture = (ImageView) view.findViewById(R.id.ivProfilePicture);
@@ -76,6 +104,14 @@ public class ProfileFragment extends Fragment {
         tvEmail = (TextView) view.findViewById(R.id.tvEmail);
         tvNumFriends = (TextView) view.findViewById(R.id.tvNumFriends);
         tvFriendList = (TextView) view.findViewById(R.id.tvFriendList);
+        rvProfilePosts = view.findViewById(R.id.rvProfilePosts);
+
+        //setting up the adapter and recycler view
+        mPictures = new ArrayList<>();
+        adapter = new ProfileAdapter(getContext(), mPictures);
+        rvProfilePosts.setAdapter(adapter);
+        rvProfilePosts.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        queryPosts();
 
         btnLogout = (Button) view.findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +123,56 @@ public class ProfileFragment extends Fragment {
             }
         });
         queryUserInfo();
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                adapter.clear();
+                mPictures.clear();
+                queryPosts();
+
+            }
+        });
+    }
+
+    //get all the pictures that are taken by the user
+    protected void queryPosts() {
+        //TODO: add the posts in descending order
+
+        DatabaseReference ref = database.getReference();
+
+        ref.addValueEventListener(new ValueEventListener() {
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            FirebaseUser user = mAuth.getCurrentUser();
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserNode userInfo = dataSnapshot.child("UserNodes").child(user.getUid()).getValue(UserNode.class);
+                Map<String, Picture> userPics = new HashMap<>(1);
+                userPics = userInfo.picturesTaken; //gets all the pictures the user has taken
+
+                for(DataSnapshot picSnapshot: dataSnapshot.child("Picture").getChildren()){
+                    Picture picture = picSnapshot.getValue(Picture.class);
+                    String key = picSnapshot.getKey();
+
+                    if (userPics.containsKey(key)) { //code from the push
+                        mPictures.add(0, picture);
+                        adapter.notifyDataSetChanged();
+                    }
+                    swipeContainer.setRefreshing(false);
+                }
+                Log.d(TAG, "loaded events correctly");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
     }
 
     private void queryUserInfo() {
