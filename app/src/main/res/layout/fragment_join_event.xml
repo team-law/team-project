@@ -5,28 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/ivOrange"
-        android:layout_width="501dp"
-        android:layout_height="395dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginBottom="64dp"
-        android:alpha="0.8"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/grapefruit_orange" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="680dp"
-        android:layout_height="817dp"
-        android:layout_marginTop="232dp"
-        android:alpha="0.6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tbJoinEvent"
-        app:srcCompat="@drawable/grapefruit_lightpink" />
-
     <Button
         android:id="@+id/btnJoin"
         android:layout_width="158dp"
@@ -44,6 +22,7 @@
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/border"
@@ -51,12 +30,10 @@
         android:hint=" Enter Event Code"
         android:inputType="textPersonName"
         android:paddingLeft="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tbJoinEvent"
-        app:layout_constraintVertical_bias="0.13" />
+        app:layout_constraintTop_toBottomOf="@+id/tbJoinEvent" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tbJoinEvent"
@@ -69,5 +46,16 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio=".83"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/joineventbg" />
 
 </android.support.constraint.ConstraintLayout>
