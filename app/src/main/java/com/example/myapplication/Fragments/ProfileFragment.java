@@ -110,7 +110,7 @@ public class ProfileFragment extends Fragment {
         mPictures = new ArrayList<>();
         adapter = new ProfileAdapter(getContext(), mPictures);
         rvProfilePosts.setAdapter(adapter);
-        rvProfilePosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        rvProfilePosts.setLayoutManager(new GridLayoutManager(getContext(), 2));
         queryPosts();
 
         btnLogout = (Button) view.findViewById(R.id.btnLogout);
@@ -159,7 +159,7 @@ public class ProfileFragment extends Fragment {
                     String key = picSnapshot.getKey();
 
                     if (userPics.containsKey(key)) { //code from the push
-                        mPictures.add(picture);
+                        mPictures.add(0, picture);
                         adapter.notifyDataSetChanged();
                     }
                     swipeContainer.setRefreshing(false);
