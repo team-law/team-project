@@ -144,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (!userExists) {
                     //create a new user class for that person
                     //String mGroupId = usersRef.push().getKey();
-                    Map<String, Picture> picturesTaken = new HashMap<>(1);
+                    Map<String, String> picturesTaken = new HashMap<>(1);
                     Map<String, Boolean> eventsAttending = new HashMap<>(1);
                     String name = user.getDisplayName(); //might error if the user doesn't have a display name
                     UserNode userProfile = new UserNode(user.getUid(), name, picturesTaken, eventsAttending);

@@ -25,12 +25,18 @@ import com.example.myapplication.Fragments.CreateEventFragment;
 import com.example.myapplication.Fragments.EventAlbumViewFragment;
 import com.example.myapplication.Fragments.ProfileFragment;
 import com.example.myapplication.Models.Event;
+import com.example.myapplication.Models.Picture;
 import com.firebase.ui.auth.data.model.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.parceler.Parcels;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 import static com.example.myapplication.R.id.action_invites;
 import static com.example.myapplication.R.id.action_new_event;
@@ -42,6 +48,7 @@ public class EventDetail extends AppCompatActivity {
     // Event event;
     private HashMap<String, Boolean> attending;
     private HashMap<String, Boolean> allPictures;
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +73,26 @@ public class EventDetail extends AppCompatActivity {
 
         btnNewPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EventDetail.this, CameraActivity.class);
-                intent.putExtra("event", Parcels.wrap(event));
-                startActivity(intent);
+            public void onClick(View v) {/*
+                DatabaseReference ref = database.getReference();
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                FirebaseUser user = mAuth.getCurrentUser();
+                int numPics = event.pics;
+                int count = 0;
+                Map<String, String> pictureData = ref.child("UserNodes").child(user.getUid());
+
+                //look through each picture and if the value is the current event ID then increment the count
+                for(String value : map.values()) {
+
+                }
+                if (count < numPics) { //if the user still has pictures they can take for an event
+                    Intent intent = new Intent(EventDetail.this, CameraActivity.class);
+                    intent.putExtra("event", Parcels.wrap(event));
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), "You have already reached the limit for the number of pictures you can take for this event!",
+                            Toast.LENGTH_LONG).show();
+                }*/
             }
         });
 

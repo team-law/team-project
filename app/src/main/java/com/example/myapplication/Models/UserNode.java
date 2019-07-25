@@ -19,13 +19,13 @@ public class UserNode {
     //public String event;
     //public boolean isHost;
     public Map<String, Boolean> eventsAttending = new HashMap<>(1);
-    public Map<String, Picture> picturesTaken = new HashMap<>(1); //maps the eventID with a picture taken
+    public Map<String, String> picturesTaken = new HashMap<>(1); //maps the pictureID with an eventID
 
     public UserNode() {
         // Default constructor required for calls to DataSnapshot.getValue(UserNode.class)
     }
 
-    public UserNode(String userId, String name, Map<String, Picture> picturesTaken, Map<String, Boolean> eventsAttending) {
+    public UserNode(String userId, String name, Map<String, String> picturesTaken, Map<String, Boolean> eventsAttending) {
         this.userId = userId;
         this.name = name;
         //this.invitedBy = invitedBy;
