@@ -4,6 +4,7 @@ public class Contact {
 
     private String name;
     private String phoneNumber;
+    private boolean selected;
 
     public void setName(String name) {
         this.name = name;
@@ -20,4 +21,8 @@ public class Contact {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
+    public boolean isSelected() { return selected; }
+
+    public void toggleSelected() { this.selected = !this.selected; }
 }
