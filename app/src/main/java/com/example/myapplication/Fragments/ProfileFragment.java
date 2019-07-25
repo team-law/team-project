@@ -141,8 +141,6 @@ public class ProfileFragment extends Fragment {
 
     //get all the pictures that are taken by the user
     protected void queryPosts() {
-        //TODO: add the posts in descending order
-
         DatabaseReference ref = database.getReference();
 
         ref.addValueEventListener(new ValueEventListener() {
@@ -151,7 +149,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserNode userInfo = dataSnapshot.child("UserNodes").child(user.getUid()).getValue(UserNode.class);
-                Map<String, Picture> userPics = new HashMap<>(1);
+                Map<String, String> userPics = new HashMap<>(1);
                 userPics = userInfo.picturesTaken; //gets all the pictures the user has taken
 
                 for(DataSnapshot picSnapshot: dataSnapshot.child("Picture").getChildren()){
