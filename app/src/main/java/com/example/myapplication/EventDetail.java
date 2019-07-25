@@ -26,11 +26,15 @@ import com.example.myapplication.Fragments.EventAlbumViewFragment;
 import com.example.myapplication.Fragments.ProfileFragment;
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.Models.Picture;
+import com.example.myapplication.Models.UserNode;
 import com.firebase.ui.auth.data.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.parceler.Parcels;
 
@@ -49,6 +53,8 @@ public class EventDetail extends AppCompatActivity {
     private HashMap<String, Boolean> attending;
     private HashMap<String, Boolean> allPictures;
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    boolean clicked;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,27 +78,48 @@ public class EventDetail extends AppCompatActivity {
         textView.setText(event.title);
 
         btnNewPhoto.setOnClickListener(new View.OnClickListener() {
+            int count = 0;
+            int numPics = event.pics;
             @Override
-            public void onClick(View v) {/*
-                DatabaseReference ref = database.getReference();
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                FirebaseUser user = mAuth.getCurrentUser();
-                int numPics = event.pics;
-                int count = 0;
-                Map<String, String> pictureData = ref.child("UserNodes").child(user.getUid());
+            public void onClick(View v) {
+                clicked = true;
+                final DatabaseReference ref = database.getReference();
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        UserNode userInfo = dataSnapshot.child("UserNodes").child(user.getUid()).getValue(UserNode.class);
+                        Map<String, String> userPics = new HashMap<>(1);
+                        userPics = userInfo.picturesTaken; //gets map of pictures the user has taken
 
-                //look through each picture and if the value is the current event ID then increment the count
-                for(String value : map.values()) {
+                        if(clicked) {
+                            //look through each picture and if the value is the current event ID then increment the count
+                            for (String value : userPics.values()) {
+                                if (value.equals(event.accessCode)) {
+                                    count++;
+                                }
+                            }
 
-                }
-                if (count < numPics) { //if the user still has pictures they can take for an event
-                    Intent intent = new Intent(EventDetail.this, CameraActivity.class);
-                    intent.putExtra("event", Parcels.wrap(event));
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getApplicationContext(), "You have already reached the limit for the number of pictures you can take for this event!",
-                            Toast.LENGTH_LONG).show();
-                }*/
+                            if (count < numPics) { //if the user still has pictures they can take for an event
+                                Intent intent = new Intent(EventDetail.this, CameraActivity.class);
+                                intent.putExtra("event", Parcels.wrap(event));
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(getApplicationContext(), "You have already reached the limit for the number of pictures you can take for this event!",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                            clicked = false;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        System.out.println("The read failed: " + databaseError.getCode());
+                    }
+                });
+
+
             }
         });
 
