@@ -200,7 +200,7 @@ public class CreateEventFragment extends Fragment {
 
                 DatabaseReference eventsRef = myRef.child("Events");
 
-                Event event = new Event(user.getUid(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
+                Event event = new Event(user.getUid(), user.getDisplayName(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
                 eventsRef.child(accessCode).setValue(event); //creates the event in firebase
 
                 //add event to host list of events
