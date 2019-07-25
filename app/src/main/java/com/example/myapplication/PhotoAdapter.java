@@ -94,6 +94,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
                 public void onSuccess(Uri uri) {
                    url = uri;
                     Glide.with(context)
+
                             .load(url)
                             .into(ivEventPicture);
                 }
