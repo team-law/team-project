@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -16,10 +17,21 @@ import java.io.Serializable;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.Models.Event;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.parceler.Parcels;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> {
     private Context context;
@@ -67,6 +79,9 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
         private ImageView ivAlbumPicture;
         private TextView tvTitle;
         private TextView tvHost;
+        private StorageReference mStorageRef;
+        private Uri url;
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
         public ViewHolder(View itemView){
@@ -81,7 +96,39 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
         public void bind(final Event event) {
             tvTitle.setText(event.title);
             // TODO -- add ivAlbumPicture
-            tvHost.setText(event.hostName);
+            if(event.hostName != null) {
+                tvHost.setText(event.hostName);
+            }
+
+            //ivAlbumPicture
+
+            // call network to get imgRef of first picture
+
+            if(event.allPictures.size() >= 1) {
+                // get imgID of first picture
+                Map.Entry<String, Boolean> entry = event.allPictures.entrySet().iterator().next();
+
+                String imgID = entry.getKey();
+
+                // get imgRef of first picture
+                DatabaseReference ref = database.getReference("Picture/" + imgID + "/imageRef");
+
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String imgRef = dataSnapshot.getValue(String.class);
+                        getImage(imgRef);
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        System.out.println("The read failed: " + databaseError.getCode());
+                    }
+
+                });
+
+
 
             /*
             if(image != null) {
@@ -89,7 +136,29 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
                         .load(image.getUrl())
                         .into(ivAlbumPicture);
             }*/
+            }
 
+        }
+
+        private void getImage(String imgRef){
+
+            mStorageRef = FirebaseStorage.getInstance().getReference("Images");
+            StorageReference storageRef = mStorageRef.child(imgRef);
+
+            storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    url = uri;
+                    Glide.with(context)
+                            .load(url)
+                            .into(ivAlbumPicture);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    exception.printStackTrace();
+                }
+            });
         }
 
         @Override

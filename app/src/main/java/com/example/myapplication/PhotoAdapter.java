@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.myapplication.Models.Picture;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -101,14 +103,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
                     exception.printStackTrace();
                 }
             });
-
-            // TODO -- add ivEventPicture
-
-//            if(picture != null) {
-//                Glide.with(context)
-//                        .load(url)
-//                        .into(ivEventPicture);
-//            }
 
         }
 
