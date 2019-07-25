@@ -221,6 +221,7 @@ public class CameraActivity extends AppCompatActivity {
 
         Toast.makeText(this, "Picture object uploaded successfully!", Toast.LENGTH_SHORT).show();
 
+        finish();
     }
 
 
