@@ -269,6 +269,7 @@ public class CreateEventFragment extends Fragment {
                 if (checkPermission()) {
                     Intent intent = new Intent(getActivity(), ContactsListActivity.class);
                     intent.putExtra(Event.class.getSimpleName(), Parcels.wrap(event));
+                    intent.putExtra("hostName", user.getDisplayName());
                     startActivity(intent);
                 } else {
                     requestPermission();

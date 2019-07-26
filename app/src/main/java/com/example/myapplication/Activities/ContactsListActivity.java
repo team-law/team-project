@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,10 @@ import com.example.myapplication.Fragments.CreateEventFragment;
 import com.example.myapplication.Models.Contact;
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.parceler.Parcels;
 
@@ -35,16 +40,41 @@ public class ContactsListActivity extends AppCompatActivity {
     public ArrayList<Contact> contacts;
     public ContactsAdapter adapter;
 
+    //Firebase things
+    private FirebaseDatabase mFirebaseDatabase;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference myRef;
+    FirebaseUser user;
+
+    String name;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts_list);
         btnSendInvites = findViewById(R.id.btnSendInvites);
+        final Event event = (Event) Parcels.unwrap(getIntent().getParcelableExtra(Event.class.getSimpleName()));
+        name = getIntent().getStringExtra("hostName");
+
+//        mAuthListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                user = firebaseAuth.getCurrentUser();
+//                name = user.getDisplayName();
+//                if (user != null) { //user is signed in
+//                } else {
+//                    name = null;
+//                }
+//            }
+//        };
+
         btnSendInvites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Event event = (Event) Parcels.unwrap(getIntent().getParcelableExtra(Event.class.getSimpleName()));
-                String message = event.hostName + " just invited you to " + event.title
+
+
+                String message = name + " just invited you to " + event.title
                         + "! Open or download Grapefruit to join the event! Access code: " + event.accessCode + ".";
                 // list of selected phone numbers
                 ArrayList<String> guestList = adapter.getInvitedList();
