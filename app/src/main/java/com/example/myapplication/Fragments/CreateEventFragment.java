@@ -1,10 +1,8 @@
 package com.example.myapplication.Fragments;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,17 +18,12 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
-import android.widget.SearchView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.myapplication.ContactsListActivity;
-import com.example.myapplication.HomeActivity;
-import com.example.myapplication.LoginActivity;
 import com.example.myapplication.Models.Event;
-import com.example.myapplication.Models.Picture;
 import com.example.myapplication.R;
-import android.widget.ListView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -135,10 +128,12 @@ public class CreateEventFragment extends Fragment {
         btnInviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
                     startActivity(new Intent(getActivity(), ContactsListActivity.class));
                 }
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_CODE);
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS,
+                        Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_CODE);
             }
         });
 
@@ -222,7 +217,7 @@ public class CreateEventFragment extends Fragment {
         });
 
         // temporary button to send a text message
-        btnSendInvite = view.findViewById(R.id.btnSendInvite);
+        btnSendInvite = view.findViewById(R.id.btnSendInvites);
         btnSendInvite.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {

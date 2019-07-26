@@ -42,6 +42,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     @Override
     public int getItemCount() { return contacts.size(); }
 
+    public ArrayList<String> getInvitedList() { return invited; }
+
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         Contact contact;

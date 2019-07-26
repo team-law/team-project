@@ -8,7 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.myapplication.Models.Contact;
 
@@ -18,6 +21,8 @@ public class ContactsListActivity extends AppCompatActivity {
 
     private static final String TAG = "ContactsListActivity";
 
+    private Button btnSendInvites;
+
     public RecyclerView rvContacts;
     public ArrayList<Contact> contacts;
     public ContactsAdapter adapter;
@@ -26,6 +31,19 @@ public class ContactsListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts_list);
+        btnSendInvites = findViewById(R.id.btnSendInvites);
+        btnSendInvites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // list of selected phone numbers
+                ArrayList<String> guestList = adapter.getInvitedList();
+                for (String phoneNumber: guestList) {
+                    SmsManager smsManager = SmsManager.getDefault();
+                    String message = "Welcome to Grapefruit";
+                    smsManager.sendTextMessage(phoneNumber, null, message, null , null);
+                }
+            }
+        });
         // initialize recycler view
         rvContacts = findViewById(R.id.rvContacts);
         // initialize the arraylist (data source)
@@ -56,4 +74,6 @@ public class ContactsListActivity extends AppCompatActivity {
         }
         phones.close();
     }
+
+
 }
