@@ -29,15 +29,17 @@ public class Event implements Parcelable /* implements Parcelable*/ {
     public String description;
     public String location; //location of event
     public int pics; // number of pics per person
+    public String hostName;
     public String accessCode;
     public Map<String, Boolean> allPictures = new HashMap<>(); //list of all pictures taken at event, needs to be updated when Picture class is made
 
     public Event() {
     }
 
-    public Event(String host, String title, String time, String date, String description, String location, int pics,
+    public Event(String host, String hostName, String title, String time, String date, String description, String location, int pics,
                  List<String> invited, Map<String, Boolean> attending, Map<String, Boolean> allPictures, String accessCode) {
         this.host = host;
+        this.hostName = hostName;
         this.title = title;
         this.host = host;
         this.time = time;
