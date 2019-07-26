@@ -62,9 +62,6 @@ public class ProfileFragment extends Fragment {
     private Button btnLogout;
     private ImageView ivProfilePicture;
     private TextView tvUsername;
-    private TextView tvEmail;
-    private TextView tvNumFriends;
-    private TextView tvFriendList;
     private RecyclerView rvProfilePosts;
     private ProfileAdapter adapter;
     private List<Picture> mPictures;
@@ -101,9 +98,9 @@ public class ProfileFragment extends Fragment {
         // Initialize objects in profile fragment
         ivProfilePicture = (ImageView) view.findViewById(R.id.ivProfilePicture);
         tvUsername = (TextView) view.findViewById(R.id.tvUsername);
-        tvEmail = (TextView) view.findViewById(R.id.tvEmail);
-        tvNumFriends = (TextView) view.findViewById(R.id.tvNumFriends);
-        tvFriendList = (TextView) view.findViewById(R.id.tvFriendList);
+//        tvEmail = (TextView) view.findViewById(R.id.tvEmail);
+//        tvNumFriends = (TextView) view.findViewById(R.id.tvNumFriends);
+//        tvFriendList = (TextView) view.findViewById(R.id.tvFriendList);
         rvProfilePosts = view.findViewById(R.id.rvProfilePosts);
 
         //setting up the adapter and recycler view
@@ -179,32 +176,32 @@ public class ProfileFragment extends Fragment {
 //        tvUsername.setText(profile.getName());
 //        Glide.with(this).load(user.getPhotoUrl()).into(ivProfilePicture);
         tvUsername.setText(user.getDisplayName());
-        tvEmail.setText(user.getEmail());
-        GraphRequest request = GraphRequest.newMeRequest(
-                AccessToken.getCurrentAccessToken(),
-                new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        try {
-                            Toast.makeText(getContext(), "Successfully queried fb friends", Toast.LENGTH_LONG).show();
-                            JSONArray friendList = object.getJSONObject("friends").getJSONArray("data");
-                            tvNumFriends.setText("Friends: " + friendList.length());
-                            for (int i = 0; i < friendList.length(); i++) {
-                                tvFriendList.append(friendList.getJSONObject(i).getString("name"));
-                            }
-                        } catch (JSONException e) {
-                            Toast.makeText(getContext(), "Error parsing json", Toast.LENGTH_LONG).show();
-                            Log.e(TAG, "Error parsing json", e);
-                            e.printStackTrace();
-                        }
+//        tvEmail.setText(user.getEmail());
+//        GraphRequest request = GraphRequest.newMeRequest(
+//                AccessToken.getCurrentAccessToken(),
+//                new GraphRequest.GraphJSONObjectCallback() {
+//                    @Override
+//                    public void onCompleted(JSONObject object, GraphResponse response) {
+//                        try {
+//                            Toast.makeText(getContext(), "Successfully queried fb friends", Toast.LENGTH_LONG).show();
+//                            JSONArray friendList = object.getJSONObject("friends").getJSONArray("data");
+//                            tvNumFriends.setText("Friends: " + friendList.length());
+//                            for (int i = 0; i < friendList.length(); i++) {
+//                                tvFriendList.append(friendList.getJSONObject(i).getString("name"));
+//                            }
+//                        } catch (JSONException e) {
+//                            Toast.makeText(getContext(), "Error parsing json", Toast.LENGTH_LONG).show();
+//                            Log.e(TAG, "Error parsing json", e);
+//                            e.printStackTrace();
+//                        }
+//
+//                    }
+//                });
 
-                    }
-                });
-
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "friends");
-        request.setParameters(parameters);
-        request.executeAsync();
+//        Bundle parameters = new Bundle();
+//        parameters.putString("fields", "friends");
+//        request.setParameters(parameters);
+//        request.executeAsync();
     }
 
     private void updateUI() {
