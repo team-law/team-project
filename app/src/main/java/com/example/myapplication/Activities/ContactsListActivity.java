@@ -1,7 +1,9 @@
 package com.example.myapplication.Activities;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,10 +13,15 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.myapplication.Adapters.ContactsAdapter;
+import com.example.myapplication.Fragments.CreateEventFragment;
 import com.example.myapplication.Models.Contact;
+import com.example.myapplication.Models.Event;
 import com.example.myapplication.R;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -36,13 +43,17 @@ public class ContactsListActivity extends AppCompatActivity {
         btnSendInvites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Event event = (Event) Parcels.unwrap(getIntent().getParcelableExtra(Event.class.getSimpleName()));
+                String message = event.hostName + " just invited you to " + event.title
+                        + "! Open or download Grapefruit to join the event! Access code: " + event.accessCode + ".";
                 // list of selected phone numbers
                 ArrayList<String> guestList = adapter.getInvitedList();
                 for (String phoneNumber: guestList) {
                     SmsManager smsManager = SmsManager.getDefault();
-                    String message = "Welcome to Grapefruit";
                     smsManager.sendTextMessage(phoneNumber, null, message, null , null);
                 }
+                Toast.makeText(ContactsListActivity.this, "Successfully created and invited people to event!", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(ContactsListActivity.this, HomeActivity.class));
             }
         });
         // initialize recycler view

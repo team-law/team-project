@@ -3,8 +3,11 @@ package com.example.myapplication.Fragments;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -23,6 +26,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 // import com.example.myapplication.Activities.ContactsListActivity;
+import com.example.myapplication.Activities.ContactsListActivity;
+import com.example.myapplication.Activities.HomeActivity;
 import com.example.myapplication.HorizontalNumberPicker;
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.R;
@@ -34,6 +39,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -259,6 +266,13 @@ public class CreateEventFragment extends Fragment {
                 userEventRef.child(accessCode).setValue(true); //adds the event to the user's list of events, marks true as them being the host
 
                 Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
+                if (checkPermission()) {
+                    Intent intent = new Intent(getActivity(), ContactsListActivity.class);
+                    intent.putExtra(Event.class.getSimpleName(), Parcels.wrap(event));
+                    startActivity(intent);
+                } else {
+                    requestPermission();
+                }
 
                 //reset all the fields in the create fragment
                 etEventTitle.setText("");
@@ -286,21 +300,14 @@ public class CreateEventFragment extends Fragment {
 //        });
     }
 
-    private void sendInvite() {
-        if (checkPermission()) {
-            SmsManager smsManager = SmsManager.getDefault();
-            String message = "Welcome to Grapefruit";
-            smsManager.sendTextMessage("17874074524", null, message, null, null);
-        }
-    }
-
     private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS);
-        return result == PackageManager.PERMISSION_GRANTED;
+        int smsResult = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS);
+        int contactsResult = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS);
+        return smsResult == PackageManager.PERMISSION_GRANTED && contactsResult == PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestPermission() {
-        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS}, PERMISSION_REQUEST_CODE);
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_CODE);
     }
 
     @Override
