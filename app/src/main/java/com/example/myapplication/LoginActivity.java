@@ -1,8 +1,10 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -51,6 +53,8 @@ public class LoginActivity extends AppCompatActivity {
     // UI Objects
     private Button btnFBLogin;
     private ProgressBar pb;
+    private ConstraintLayout clLogin;
+    private AnimationDrawable animationDrawable;
 
     // Database declaration
     private FirebaseAuth mAuth;
@@ -108,6 +112,15 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
+
+        clLogin = findViewById(R.id.clLogin);
+        // onCreate
+        animationDrawable =(AnimationDrawable) clLogin.getBackground();
+        animationDrawable.setEnterFadeDuration(5000);
+        animationDrawable.setExitFadeDuration(2000);
+        // onResume
+        animationDrawable.start();
+
     }
 
     private void updateUI() {
