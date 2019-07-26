@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import com.example.myapplication.Fragments.AlbumFragment;
 import com.example.myapplication.Fragments.CreateEventFragment;
 import com.example.myapplication.Fragments.JoinEventFragment;
 import com.example.myapplication.Fragments.ProfileFragment;
+import com.example.myapplication.R;
 
 import static com.example.myapplication.R.id.action_invites;
 import static com.example.myapplication.R.id.action_new_event;

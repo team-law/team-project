@@ -1,33 +1,22 @@
-package com.example.myapplication;
+package com.example.myapplication.Activities;
 
 import android.content.Intent;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
-import com.example.myapplication.Fragments.AlbumFragment;
-import com.example.myapplication.Fragments.CreateEventFragment;
 import com.example.myapplication.Fragments.EventAlbumViewFragment;
-import com.example.myapplication.Fragments.ProfileFragment;
 import com.example.myapplication.Models.Event;
-import com.example.myapplication.Models.Picture;
 import com.example.myapplication.Models.UserNode;
-import com.firebase.ui.auth.data.model.User;
+import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,10 +30,6 @@ import org.parceler.Parcels;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.example.myapplication.R.id.action_invites;
-import static com.example.myapplication.R.id.action_new_event;
-import static com.example.myapplication.R.id.action_profile;
 
 public class EventDetail extends AppCompatActivity {
 
