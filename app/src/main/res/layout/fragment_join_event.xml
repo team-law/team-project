@@ -6,26 +6,15 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/ivOrange"
-        android:layout_width="501dp"
-        android:layout_height="395dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginBottom="64dp"
-        android:alpha="0.8"
+        android:id="@+id/imageView4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/grapefruit_orange" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="680dp"
-        android:layout_height="817dp"
-        android:layout_marginTop="232dp"
-        android:alpha="0.6"
+        app:layout_constraintDimensionRatio=".83"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tbJoinEvent"
-        app:srcCompat="@drawable/grapefruit_lightpink" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/joineventbg" />
 
     <Button
         android:id="@+id/btnJoin"
@@ -34,9 +23,12 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
+        android:background="@drawable/button_selector_bg_darkpink"
         android:text="join the party!"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etEventCode" />
+        app:layout_constraintTop_toBottomOf="@+id/etEventCode"
+        android:elevation="8dp"/>
 
     <EditText
         android:id="@+id/etEventCode"
@@ -44,30 +36,56 @@
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/border"
         android:ems="10"
         android:hint=" Enter Event Code"
         android:inputType="textPersonName"
-        android:paddingLeft="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingLeft="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tbJoinEvent"
-        app:layout_constraintVertical_bias="0.13" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/tbJoinEvent"
+        android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@color/grapefruitPink"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="8dp">
+
+        <TextView
+            android:id="@+id/toolbarTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="Join Event"
+            android:textAppearance="@android:style/TextAppearance.WindowTitle"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="visible"
+            tools:layout_editor_absoluteX="179dp"
+            tools:layout_editor_absoluteY="18dp" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:srcCompat="@drawable/grapefruit_white"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="5dp" />
+
+    </android.support.v7.widget.Toolbar>
+
 
 </android.support.constraint.ConstraintLayout>

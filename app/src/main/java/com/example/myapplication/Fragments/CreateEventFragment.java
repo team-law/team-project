@@ -1,10 +1,9 @@
 package com.example.myapplication.Fragments;
 
 import android.Manifest;
-import android.annotation.TargetApi;
-import android.content.Intent;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,18 +18,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.NumberPicker;
-import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 // import com.example.myapplication.ContactsListActivity;
-import com.example.myapplication.HomeActivity;
-import com.example.myapplication.LoginActivity;
+import com.example.myapplication.HorizontalNumberPicker;
 import com.example.myapplication.Models.Event;
-import com.example.myapplication.Models.Picture;
 import com.example.myapplication.R;
-import android.widget.ListView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -40,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,22 +49,32 @@ public class CreateEventFragment extends Fragment {
     private static final int PERMISSION_REQUEST_CODE = 1;
 
     private final String TAG = "CreateEventFragment";
-    private TimePicker picker;
-    private DatePicker datePicker;
+    private TextView tvDatePicker;
+    private TextView tvTimePicker;
     private EditText etEventDescription;
     private EditText etEventTitle;
     private EditText etLocation;
     private Button btnCreateEvent;
-    private Button btnInviteFriends;
-    private NumberPicker numberPicker;
-    private Button btnSendInvite;
 
-    public int hour, minute;
+
+    Calendar cDate;
+    DatePickerDialog datepickerdialog;
+    private int iDay;
+    private int iMonth;
+    private int iYear;
+
+    Calendar cTime;
+    TimePickerDialog timePickerDialog;
+    private int iHour;
+    private int iMinute;
     public String am_pm;
-    public int numPics = 2;
+
+
+
+    private HorizontalNumberPicker np_channel_nr;
+
+    public int numPics = 1;
     public List<String> invited;
-    Map<String, Event> events = new HashMap<>();
-    //public FriendsAdapter adapter; //the adapter used for going through Facebook friends
 
     //Firebase things
     private FirebaseDatabase mFirebaseDatabase;
@@ -90,14 +97,13 @@ public class CreateEventFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        picker = view.findViewById(R.id.timePicker1);
-        datePicker = view.findViewById(R.id.datePicker);
+        tvDatePicker = view.findViewById(R.id.tvDatePicker);
         etEventDescription = view.findViewById(R.id.etDescription);
         etEventTitle = view.findViewById(R.id.etEventTitle);
         etLocation = view.findViewById(R.id.etLocation);
         btnCreateEvent = view.findViewById(R.id.btnCreateEvent);
-        btnInviteFriends = view.findViewById(R.id.btnInviteFriends);
-        numberPicker = view.findViewById(R.id.numberPicker);
+        np_channel_nr = view.findViewById(R.id.np_channel_nr);
+        tvTimePicker = view.findViewById(R.id.tvTimePicker);
 
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -114,6 +120,11 @@ public class CreateEventFragment extends Fragment {
                 }
             }
         };
+
+        // set number picker
+        np_channel_nr.setMax(5);
+
+        np_channel_nr.setMin(1);
 
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
@@ -132,12 +143,56 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
-        btnInviteFriends.setOnClickListener(new View.OnClickListener() {
+        tvDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              //  startActivity(new Intent(getActivity(), ContactsListActivity.class));
+                cDate = Calendar.getInstance();
+                int day = cDate.get(Calendar.DAY_OF_MONTH);
+                int month = cDate.get(Calendar.MONTH);
+                int year = cDate.get(Calendar.YEAR);
+
+                datepickerdialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                        tvDatePicker.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                        iDay = dayOfMonth;
+                        iMonth = month;
+                        iYear = year;
+                    }
+                }, day, month, year);
+                datepickerdialog.show();
             }
         });
+
+        tvTimePicker.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                cTime = Calendar.getInstance();
+                int hour = cTime.get(Calendar.HOUR_OF_DAY);
+                int minute = cTime.get(Calendar.MINUTE);
+
+                timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                       int hour;
+                        if (selectedHour > 12) {
+                            am_pm = "PM";
+                            hour = selectedHour - 12;
+                        } else {
+                            am_pm = "AM";
+                            hour = selectedHour;
+                        }
+                        tvTimePicker.setText( hour + ":" + selectedMinute);
+                        iHour = selectedHour;
+                        iMinute = selectedMinute;
+                    }
+                }, hour, minute, false);
+                timePickerDialog.show();
+            }
+        });
+
 
 //        //dealing with searchview
 //        sVAddFriends.setQueryHint("Search For Friends");
@@ -161,23 +216,17 @@ public class CreateEventFragment extends Fragment {
 //        });
 
         //assigning the exact time for the event, to display later and add to event object
-        picker.setIs24HourView(false);
-        hour = picker.getCurrentHour();
-        minute = picker.getCurrentMinute();
-        if(hour > 12) {
-            am_pm = "PM";
-            hour = hour - 12;
-        }
-        else {
-            am_pm="AM";
-        }
+//        picker.setIs24HourView(false);
+//        hour = picker.getCurrentHour();
+//        minute = picker.getCurrentMinute();
+//        if (hour > 12) {
+//            am_pm = "PM";
+//            hour = hour - 12;
+//        } else {
+//            am_pm = "AM";
+//        }
 
-        //adjust the number of pictures a user can choose
-        numberPicker.setMinValue(2);
-        numberPicker.setMaxValue(20);
-
-        numberPicker.setOnValueChangedListener(onValueChangeListener);
-
+        // TODO -- add logic so you can't choose a day in the past
 
         btnCreateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,17 +237,19 @@ public class CreateEventFragment extends Fragment {
 
                 String title = etEventTitle.getText().toString();
                 String description = etEventDescription.getText().toString();
-                String date = String.valueOf(datePicker.getMonth()) + String.valueOf(datePicker.getDayOfMonth())
-                        + String.valueOf(datePicker.getYear());
-                String time = String.valueOf(hour) + minute + am_pm;
+                String date = iMonth + "/" +iDay + "/" + iYear;
+                String time = String.valueOf(iHour) + ":" + iMinute + " "+ am_pm;
                 String location = etLocation.getText().toString();
                 invited = new ArrayList<>(); //should be retrieved from the search view
                 Map<String, Boolean> attending = new HashMap<>(1);
                 attending.put(user.getUid(), true);
                 Map<String, Boolean> pics = new HashMap<>(0);
                 String accessCode = getCode();
+                numPics = np_channel_nr.getValue();
 
                 DatabaseReference eventsRef = myRef.child("Events");
+
+
 
                 Event event = new Event(user.getUid(), user.getDisplayName(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
                 eventsRef.child(accessCode).setValue(event); //creates the event in firebase
@@ -213,33 +264,33 @@ public class CreateEventFragment extends Fragment {
                 etEventTitle.setText("");
                 etEventDescription.setText("");
                 etLocation.setText("");
-                numberPicker.setValue(2);
+               // numberPicker.setValue(2);
 
             }
         });
 
         // temporary button to send a text message
-        btnSendInvite = view.findViewById(R.id.btnSendInvite);
-        btnSendInvite.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                if (checkPermission()) {
-                    Log.e("permission", "Permission already granted.");
-                } else {
-                    requestPermission();
-                }
-                // send sms invite to users
-                sendInvite();
-
-            }
-        });
+//        btnSendInvite = view.findViewById(R.id.btnSendInvite);
+//        btnSendInvite.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View view) {
+//                if (checkPermission()) {
+//                    Log.e("permission", "Permission already granted.");
+//                } else {
+//                    requestPermission();
+//                }
+//                // send sms invite to users
+//                sendInvite();
+//
+//            }
+//        });
     }
 
     private void sendInvite() {
         if (checkPermission()) {
             SmsManager smsManager = SmsManager.getDefault();
             String message = "Welcome to Grapefruit";
-            smsManager.sendTextMessage("17874074524", null, message, null , null);
+            smsManager.sendTextMessage("17874074524", null, message, null, null);
         }
     }
 
@@ -284,6 +335,7 @@ public class CreateEventFragment extends Fragment {
 
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
@@ -293,12 +345,12 @@ public class CreateEventFragment extends Fragment {
         return finalCode;
     }
 
-    NumberPicker.OnValueChangeListener onValueChangeListener = new NumberPicker.OnValueChangeListener() {
-        @Override
-        public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-            numPics = numberPicker.getValue();
-        }
-    };
+//    NumberPicker.OnValueChangeListener onValueChangeListener = new NumberPicker.OnValueChangeListener() {
+//        @Override
+//        public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+//            numPics = numberPicker.getValue();
+//        }
+//    };
 
     @Override
     public void onStart() {
