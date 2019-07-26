@@ -1,8 +1,7 @@
-package com.example.myapplication;
+package com.example.myapplication.Activities;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +12,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.myapplication.Adapters.ContactsAdapter;
 import com.example.myapplication.Models.Contact;
+import com.example.myapplication.R;
 
 import java.util.ArrayList;
 

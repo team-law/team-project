@@ -22,7 +22,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-// import com.example.myapplication.ContactsListActivity;
+// import com.example.myapplication.Activities.ContactsListActivity;
 import com.example.myapplication.HorizontalNumberPicker;
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.R;
