@@ -140,6 +140,8 @@ public class CreateEventFragment extends Fragment {
 
         np_channel_nr.setMin(1);
 
+
+
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
