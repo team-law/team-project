@@ -26,7 +26,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 // import com.example.myapplication.Activities.ContactsListActivity;
+import com.example.myapplication.Activities.CameraActivity;
 import com.example.myapplication.Activities.ContactsListActivity;
+import com.example.myapplication.Activities.EventDetail;
 import com.example.myapplication.Activities.HomeActivity;
 import com.example.myapplication.HorizontalNumberPicker;
 import com.example.myapplication.Models.Event;
@@ -42,10 +44,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.parceler.Parcels;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -75,7 +79,9 @@ public class CreateEventFragment extends Fragment {
     TimePickerDialog timePickerDialog;
     private int iHour;
     private int iMinute;
-    public String am_pm;
+    public String am_pm = "am";
+
+    boolean createEventclicked;
 
 
 
@@ -168,8 +174,10 @@ public class CreateEventFragment extends Fragment {
                         iMonth = month;
                         iYear = year;
                     }
-                }, day, month, year);
+                }, year, month, day);
+
                 datepickerdialog.show();
+
             }
         });
 
@@ -179,12 +187,13 @@ public class CreateEventFragment extends Fragment {
             public void onClick(View v) {
                 cTime = Calendar.getInstance();
                 int hour = cTime.get(Calendar.HOUR_OF_DAY);
-                int minute = cTime.get(Calendar.MINUTE);
+                final int minute = cTime.get(Calendar.MINUTE);
 
                 timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                       int hour;
+                       int hour = selectedHour;
+/*
                         if (selectedHour > 12) {
                             am_pm = "PM";
                             hour = selectedHour - 12;
@@ -192,9 +201,29 @@ public class CreateEventFragment extends Fragment {
                             am_pm = "AM";
                             hour = selectedHour;
                         }
-                        tvTimePicker.setText( hour + ":" + selectedMinute);
+*/
+                        String mm_precede = "";
+                        if (selectedHour >= 12) {
+                            am_pm = " PM";
+                            if (selectedHour >=13 && selectedHour < 24) {
+                                hour -= 12;
+                            }
+                            else {
+                                hour = 12;
+                            }
+                        } else if (selectedHour == 0) {
+                            hour = 12;
+                        }
+                        if (selectedMinute < 10) {
+                            mm_precede = "0";
+                        }
+
+                        tvTimePicker.setText(hour + ":" + mm_precede + selectedMinute + " " + am_pm );
+
+
                         iHour = selectedHour;
                         iMinute = selectedMinute;
+
                     }
                 }, hour, minute, false);
                 timePickerDialog.show();
@@ -202,43 +231,14 @@ public class CreateEventFragment extends Fragment {
         });
 
 
-//        //dealing with searchview
-//        sVAddFriends.setQueryHint("Search For Friends");
-//        CharSequence query = sVAddFriends.getQuery();
-
-//        // perform set on query text listener event
-//        sVAddFriends.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                // do something on text submit
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                // do something when text changes
-//                String text = newText;
-//                //adapter.filter(text);
-//                return false;
-//            }
-//        });
-
-        //assigning the exact time for the event, to display later and add to event object
-//        picker.setIs24HourView(false);
-//        hour = picker.getCurrentHour();
-//        minute = picker.getCurrentMinute();
-//        if (hour > 12) {
-//            am_pm = "PM";
-//            hour = hour - 12;
-//        } else {
-//            am_pm = "AM";
-//        }
-
         // TODO -- add logic so you can't choose a day in the past
 
         btnCreateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                createEventclicked = true;
+
                 // read the index key
                 //Event event = new Event();
                 String mGroupId = myRef.push().getKey();
@@ -261,29 +261,39 @@ public class CreateEventFragment extends Fragment {
 
                 DatabaseReference eventsRef = myRef.child("Events");
 
+                if(createEventclicked) {
 
-                Event event = new Event(user.getUid(), user.getDisplayName(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
-                eventsRef.child(accessCode).setValue(event); //creates the event in firebase
+                    if (iYear <= Calendar.YEAR && iMonth <= Calendar.MONTH && iDay < Calendar.DAY_OF_MONTH - 1) { //if the user still has pictures they can take for an event
+                        Event event = new Event(user.getUid(), user.getDisplayName(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
+                        eventsRef.child(accessCode).setValue(event); //creates the event in firebase
 
-                //add event to host list of events
-                DatabaseReference userEventRef = myRef.child("UserNodes").child(user.getUid()).child("eventsAttending");
-                userEventRef.child(accessCode).setValue(true); //adds the event to the user's list of events, marks true as them being the host
+                        //add event to host list of events
+                        DatabaseReference userEventRef = myRef.child("UserNodes").child(user.getUid()).child("eventsAttending");
+                        userEventRef.child(accessCode).setValue(true); //adds the event to the user's list of events, marks true as them being the host
 
-                Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
-                if (checkPermission()) {
-                    Intent intent = new Intent(getActivity(), ContactsListActivity.class);
-                    intent.putExtra(Event.class.getSimpleName(), Parcels.wrap(event));
-                    intent.putExtra("hostName", user.getDisplayName());
-                    startActivity(intent);
-                } else {
-                    requestPermission();
+                        Toast.makeText(getActivity(), "Event created successfully!", Toast.LENGTH_SHORT).show();
+                        if (checkPermission()) {
+                            Intent intent = new Intent(getActivity(), ContactsListActivity.class);
+                            intent.putExtra(Event.class.getSimpleName(), Parcels.wrap(event));
+                            intent.putExtra("hostName", user.getDisplayName());
+                            startActivity(intent);
+                        } else {
+                            requestPermission();
+                        }
+
+                        //reset all the fields in the create fragment
+                        etEventTitle.setText("");
+                        etEventDescription.setText("");
+                        etLocation.setText("");
+                        // numberPicker.setValue(2);
+
+                    } else {
+                        Toast.makeText(getContext(), "Cannot choose date in the past",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    createEventclicked = false;
                 }
 
-                //reset all the fields in the create fragment
-                etEventTitle.setText("");
-                etEventDescription.setText("");
-                etLocation.setText("");
-               // numberPicker.setValue(2);
 
             }
         });
