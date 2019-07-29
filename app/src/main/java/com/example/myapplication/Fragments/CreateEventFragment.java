@@ -169,7 +169,7 @@ public class CreateEventFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                        tvDatePicker.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                        tvDatePicker.setText((month + 1) + "/" + dayOfMonth + "/" + year);
                         iDay = dayOfMonth;
                         iMonth = month;
                         iYear = year;
@@ -230,8 +230,8 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
-
-        // TODO -- add logic so you can't choose a day in the past
+        
+        //TODO cant create event if the required fields are empty
 
         btnCreateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,7 +263,8 @@ public class CreateEventFragment extends Fragment {
 
                 if(createEventclicked) {
 
-                    if (iYear <= Calendar.YEAR && iMonth <= Calendar.MONTH && iDay < Calendar.DAY_OF_MONTH - 1) { //if the user still has pictures they can take for an event
+                    if (checkDateValidity()) {
+
                         Event event = new Event(user.getUid(), user.getDisplayName(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
                         eventsRef.child(accessCode).setValue(event); //creates the event in firebase
 
@@ -313,6 +314,18 @@ public class CreateEventFragment extends Fragment {
 //
 //            }
 //        });
+    }
+
+    private boolean checkDateValidity() {
+        //if year + month + date is less than - no
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Calendar c = Calendar.getInstance();
+        String currentDate = sdf.format(c.getTime());
+
+        if (Integer.parseInt(currentDate) > Integer.parseInt(date)) {
+            return false;
+        }
+        return true;
     }
 
     private void configureDate (int value) {

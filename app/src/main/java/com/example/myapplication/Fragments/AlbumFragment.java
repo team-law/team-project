@@ -151,8 +151,7 @@ public class AlbumFragment extends Fragment {
             }
         });
 
-        //ordering by "smallest" first RN
-        //want it stored in the order: year, month, date //ADD ZEROS TO IT
+        //ordering by "smallest" first
         //get the list of events, go through the events and only publish the ones from the list
         myEventRef.orderByChild("date").addChildEventListener(new ChildEventListener() {
 
