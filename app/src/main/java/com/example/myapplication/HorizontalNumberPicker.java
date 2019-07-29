@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class HorizontalNumberPicker extends LinearLayout {
     private EditText et_number;
@@ -43,8 +44,10 @@ public class HorizontalNumberPicker extends LinearLayout {
             int newValue = getValue() + diff;
             if (newValue < min) {
                 newValue = min;
+                Toast.makeText(getContext(), "Cannot have less than 1 picture", Toast.LENGTH_SHORT).show();
             } else if (newValue > max) {
                 newValue = max;
+                Toast.makeText(getContext(), "Cannot have more than 5 pictures", Toast.LENGTH_SHORT).show();
             }
             et_number.setText(String.valueOf(newValue));
         }
