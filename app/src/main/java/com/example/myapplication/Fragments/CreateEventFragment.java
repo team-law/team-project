@@ -73,6 +73,7 @@ public class CreateEventFragment extends Fragment {
     private int iDay;
     private int iMonth;
     private int iYear;
+    private String date = "";
 
     Calendar cTime;
     TimePickerDialog timePickerDialog;
@@ -244,7 +245,7 @@ public class CreateEventFragment extends Fragment {
 
                 String title = etEventTitle.getText().toString();
                 String description = etEventDescription.getText().toString();
-                String date = iMonth + "/" +iDay + "/" + iYear;
+                date = String.valueOf(iYear);
                 String time = String.valueOf(iHour) + ":" + iMinute + " "+ am_pm;
                 String location = etLocation.getText().toString();
                 invited = new ArrayList<>(); //should be retrieved from the search view
@@ -254,8 +255,11 @@ public class CreateEventFragment extends Fragment {
                 String accessCode = getCode();
                 numPics = np_channel_nr.getValue();
 
-                DatabaseReference eventsRef = myRef.child("Events");
+                //get the date in the right format
+                configureDate(iMonth);
+                configureDate(iDay);
 
+                DatabaseReference eventsRef = myRef.child("Events");
 
                 if(createEventclicked) {
 
@@ -309,6 +313,15 @@ public class CreateEventFragment extends Fragment {
 //
 //            }
 //        });
+    }
+
+    private void configureDate (int value) {
+        if (value < 10) {
+            String valueStr = "0" + String.valueOf(value);
+            date += valueStr;
+        } else {
+            date += String.valueOf(value);
+        }
     }
 
     private boolean checkPermission() {

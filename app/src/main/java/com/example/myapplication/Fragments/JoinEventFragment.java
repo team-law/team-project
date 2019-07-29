@@ -76,7 +76,7 @@ public class JoinEventFragment extends Fragment {
                 user = mAuth.getCurrentUser();
                 // Read from the database
                 myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
+                        @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         boolean joined = false;
                         // This method is called once with the initial value and again
