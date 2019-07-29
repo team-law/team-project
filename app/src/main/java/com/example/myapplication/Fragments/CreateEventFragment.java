@@ -80,10 +80,12 @@ public class CreateEventFragment extends Fragment {
     private int iHour;
     private int iMinute;
     public String am_pm = "am";
+    private String title = "";
+    private String description = "";
+    private String location = "";
+    private String time = "";
 
     boolean createEventclicked;
-
-
 
     private HorizontalNumberPicker np_channel_nr;
 
@@ -230,9 +232,6 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
-        
-        //TODO cant create event if the required fields are empty
-
         btnCreateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -243,11 +242,11 @@ public class CreateEventFragment extends Fragment {
                 //Event event = new Event();
                 String mGroupId = myRef.push().getKey();
 
-                String title = etEventTitle.getText().toString();
-                String description = etEventDescription.getText().toString();
+                title = etEventTitle.getText().toString();
+                description = etEventDescription.getText().toString();
                 date = String.valueOf(iYear);
-                String time = String.valueOf(iHour) + ":" + iMinute + " "+ am_pm;
-                String location = etLocation.getText().toString();
+                time = String.valueOf(iHour) + ":" + iMinute + " "+ am_pm;
+                location = etLocation.getText().toString();
                 invited = new ArrayList<>(); //should be retrieved from the search view
                 Map<String, Boolean> attending = new HashMap<>(1);
                 attending.put(user.getUid(), true);
@@ -263,7 +262,7 @@ public class CreateEventFragment extends Fragment {
 
                 if(createEventclicked) {
 
-                    if (checkDateValidity()) {
+                    if (checkDateValidity() && checkEventValidity()) {
 
                         Event event = new Event(user.getUid(), user.getDisplayName(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
                         eventsRef.child(accessCode).setValue(event); //creates the event in firebase
@@ -288,9 +287,6 @@ public class CreateEventFragment extends Fragment {
                         etLocation.setText("");
                         // numberPicker.setValue(2);
 
-                    } else {
-                        Toast.makeText(getContext(), "Cannot choose date in the past",
-                                Toast.LENGTH_SHORT).show();
                     }
                     createEventclicked = false;
                 }
@@ -316,13 +312,26 @@ public class CreateEventFragment extends Fragment {
 //        });
     }
 
+    //makes sure the date is in the future
     private boolean checkDateValidity() {
-        //if year + month + date is less than - no
+        //if year + month + date is less than current - can't create event
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Calendar c = Calendar.getInstance();
         String currentDate = sdf.format(c.getTime());
 
         if (Integer.parseInt(currentDate) > Integer.parseInt(date)) {
+            Toast.makeText(getContext(), "Cannot choose date in the past",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+
+    //makes sure there's no empty required fields
+    private boolean checkEventValidity() {
+        if (time.equals("") || location.equals("") || description.equals("") || title.equals("") || date.equals("") || numPics == 0) {
+            Toast.makeText(getContext(), "Can't leave any required fields blank!", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
