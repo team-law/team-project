@@ -55,6 +55,8 @@ public class AlbumFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rvEvents = view.findViewById(R.id.rvEvents);
+        // disable double clicking on different posts
+        rvEvents.setMotionEventSplittingEnabled(true);
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
 
 

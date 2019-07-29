@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> {
+
     private Context context;
     private List<Event> events;
 
@@ -52,7 +53,6 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         Event event = events.get(i);
         viewHolder.bind(event);
-
     }
 
     // Clean all elements of the recycler
@@ -73,6 +73,10 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+        // helper variables to prevent double clicking
+        private static final long CLICK_TIME_INTERVAL = 300;
+        private long mLastClickTime = System.currentTimeMillis();
 
         private ImageView ivAlbumPicture;
         private TextView tvTitle;
@@ -162,6 +166,13 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
 
         @Override
         public void onClick(View v) {
+            // prevent double clicks
+            long now = System.currentTimeMillis();
+            if (now - mLastClickTime < CLICK_TIME_INTERVAL) {
+                return;
+            }
+            mLastClickTime = now;
+
             //gets item position
             int position = getAdapterPosition();
             // make sure the position is valid
@@ -175,7 +186,7 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
                 intent.putExtra("allPictures", (Serializable) event.allPictures);
                 intent.putExtra("event", Parcels.wrap(event));
                 // show the activity
-                 context.startActivity(intent);
+                context.startActivity(intent);
             }
         }
     }
