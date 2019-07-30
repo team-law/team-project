@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.example.myapplication.Fragments.EventAlbumViewFragment;
+import com.example.myapplication.Fragments.EventMapViewFragment;
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.Models.UserNode;
 import com.example.myapplication.R;
@@ -108,31 +109,23 @@ public class EventDetail extends AppCompatActivity {
             }
         });
 
-
-        final Fragment eventAlbum = new EventAlbumViewFragment();
-
-        FragmentManager fm = getSupportFragmentManager();
-        final FragmentTransaction transaction = fm.beginTransaction();
-
+        // initialize fragments
+        final Fragment mapFragment = new EventMapViewFragment();
+        final Fragment albumFragment = new EventAlbumViewFragment();
 
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.rgToggle);
-
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // checkedId is the RadioButton selected
-
                 switch(checkedId) {
                     case R.id.rbMap:
 
-                        //FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        //fragmentTransaction.replace(R.id.flEventContainer,new EventAlbumViewFragment());
-                        //fragmentTransaction.commit();
+                        FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction1.replace(R.id.flEventContainer, mapFragment);
+                        fragmentTransaction1.commit();
 
                         break;
                     case R.id.rbAlbum:
-
-                        Fragment albumFragment = new EventAlbumViewFragment();
 
                         Bundle bundle = new Bundle();
 
@@ -144,17 +137,13 @@ public class EventDetail extends AppCompatActivity {
                         albumFragment.setArguments(bundle);
 
                         FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction2.replace(R.id.flEventContainer,albumFragment).addToBackStack(null);
-
+                        fragmentTransaction2.replace(R.id.flEventContainer, albumFragment);
                         fragmentTransaction2.commit();
 
-                       // transaction.replace(R.id.flEventContainer, eventAlbum);
-                        //transaction.commit();
                         break;
                 }
             }
         });
-
     }
 
 
