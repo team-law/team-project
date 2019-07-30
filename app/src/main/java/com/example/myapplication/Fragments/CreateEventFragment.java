@@ -149,6 +149,8 @@ public class CreateEventFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
+                mAuth = FirebaseAuth.getInstance();
+                user = mAuth.getCurrentUser();
                 currentUser = dataSnapshot.child("UserNodes").child(user.getUid()).getValue(UserNode.class);
             }
 
@@ -264,7 +266,7 @@ public class CreateEventFragment extends Fragment {
 
                     if (checkDateValidity() && checkEventValidity()) {
 
-                        Event event = new Event(user.getUid(), user.getDisplayName(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
+                        Event event = new Event(user.getUid(), user.getDisplayName(), title, time, date, description, location, numPics, invited, attending, pics, accessCode, false);
                         eventsRef.child(accessCode).setValue(event); //creates the event in firebase
 
                         //add event to host list of events
