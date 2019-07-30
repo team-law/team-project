@@ -37,6 +37,7 @@ import java.io.FileOutputStream;
 
 import static com.example.myapplication.R.drawable.camera;
 import static com.example.myapplication.R.drawable.com_facebook_favicon_blue;
+import static com.example.myapplication.R.drawable.grapefruit_pink;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -78,7 +79,7 @@ public class CameraActivity extends AppCompatActivity {
         ivResult = (ImageView) findViewById(R.id.ivResult);
         btnCancel = (Button) findViewById(R.id.btnCancel);
 
-        // ivResult.setImageResource(com_facebook_favicon_blue);
+        ivResult.setImageResource(grapefruit_pink);
 
 
         View decorView = getWindow().getDecorView();
@@ -131,8 +132,8 @@ public class CameraActivity extends AppCompatActivity {
 
                             postImage = capturedImage;
 
-                            ivResult.setImageBitmap(Bitmap.createScaledBitmap(bmp, ivResult.getWidth(),
-                                    ivResult.getHeight(), false));
+                            ivResult.setImageBitmap(Bitmap.createScaledBitmap(bmp, cameraKitView.getWidth(),
+                                    cameraKitView.getHeight(), false));
 
 
                             ivResult.setVisibility(View.VISIBLE);
@@ -151,7 +152,7 @@ public class CameraActivity extends AppCompatActivity {
                     }
                 });
                 cameraKitView.setVisibility(View.INVISIBLE);
-
+                // ivResult.setVisibility(View.VISIBLE);
                 btnCapture.setVisibility(View.INVISIBLE);
                 btnUpload.setVisibility(View.VISIBLE);
                 btnCancel.setVisibility(View.VISIBLE);
