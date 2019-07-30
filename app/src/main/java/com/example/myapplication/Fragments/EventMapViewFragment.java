@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.facebook.Profile;
 import com.google.firebase.auth.FirebaseAuth;
@@ -80,8 +81,8 @@ public class EventMapViewFragment extends Fragment {
 
             @Override
             public void onBindViewHolder(ViewHolder viewHolder, Object data, int position) {
-                ((SimpleViewHolder)viewHolder).textView.setText(data.toString());
-                ((SimpleViewHolder)viewHolder).ivNodePic.setImageURI(Profile.getCurrentProfile().getLinkUri());
+                //((SimpleViewHolder)viewHolder).textView.setText(data.toString());
+                ((SimpleViewHolder)viewHolder).ivNodePic.setImageResource(R.drawable.grapefruit_lightpink);
             }
         };
         graphView.setAdapter(adapter);
@@ -101,12 +102,12 @@ public class EventMapViewFragment extends Fragment {
     }
 
     class SimpleViewHolder extends ViewHolder {
-        TextView textView;
+        //TextView textView;
         ImageView ivNodePic;
 
         SimpleViewHolder(View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.textView);
+            //textView = itemView.findViewById(R.id.textView);
             ivNodePic = itemView.findViewById(R.id.ivNodePic);
         }
     }
