@@ -36,6 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -156,7 +157,8 @@ public class LoginActivity extends AppCompatActivity {
                     Map<String, String> picturesTaken = new HashMap<>(1);
                     Map<String, Boolean> eventsAttending = new HashMap<>(1);
                     String name = user.getDisplayName(); //might error if the user doesn't have a display name
-                    UserNode userProfile = new UserNode(user.getUid(), name, picturesTaken, eventsAttending);
+                    String userCode = makeUserCode();
+                    UserNode userProfile = new UserNode(user.getUid(), name, userCode, picturesTaken, eventsAttending);
                     usersRef.child(user.getUid()).setValue(userProfile); //creates the userNode in firebase
                 }
             }
@@ -167,6 +169,37 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    private String makeUserCode() {
+        //generate randomized access code and check to see if it already exists
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder code = new StringBuilder();
+        Random rand = new Random();
+        while (code.length() < 4) { // length of the random string.
+            int index = rand.nextInt(characters.length());
+            code.append(characters.charAt(index));
+        }
+        final String finalCode = code.toString();
+
+        //if the user code already exists, make a new one
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.child("UserNodes").getChildren()) {
+                    UserNode userInfo = snapshot.getValue(UserNode.class);
+                    if ((userInfo.userCode).equals(finalCode)) {
+                        makeUserCode();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+            }
+        });
+        return finalCode;
     }
 
     @Override

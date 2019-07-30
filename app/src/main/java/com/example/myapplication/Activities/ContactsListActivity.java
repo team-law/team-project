@@ -48,6 +48,7 @@ public class ContactsListActivity extends AppCompatActivity {
     FirebaseUser user;
 
     String name;
+    String code;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +57,7 @@ public class ContactsListActivity extends AppCompatActivity {
         btnSendInvites = findViewById(R.id.btnSendInvites);
         final Event event = (Event) Parcels.unwrap(getIntent().getParcelableExtra(Event.class.getSimpleName()));
         name = getIntent().getStringExtra("hostName");
+        code = getIntent().getStringExtra("userCode");
 
 //        mAuthListener = new FirebaseAuth.AuthStateListener() {
 //            @Override
@@ -73,9 +75,9 @@ public class ContactsListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
+                //send the access code combined with the user code
                 String message = name + " just invited you to " + event.title
-                        + "! Open or download Grapefruit to join the event! Access code: " + event.accessCode + ".";
+                        + "! Open or download Grapefruit to join the event! Access code: " + event.accessCode + "-" + code + ".";
                 // list of selected phone numbers
                 ArrayList<String> guestList = adapter.getInvitedList();
                 for (String phoneNumber: guestList) {

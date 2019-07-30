@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.myapplication.Adapters.AlbumAdapter;
 import com.example.myapplication.EndlessRecyclerViewScrollListener;
@@ -27,7 +28,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +44,7 @@ public class AlbumFragment extends Fragment {
     Map<String, Boolean> userEvents = new HashMap<>(1);
     private SwipeRefreshLayout swipeContainer;
     private EndlessRecyclerViewScrollListener scrollListener;
+    private String todayDate;
 
     // Get a reference to our posts
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -132,7 +136,6 @@ public class AlbumFragment extends Fragment {
     protected void queryPosts() {
 
         DatabaseReference ref = database.getReference();
-        DatabaseReference myEventRef = ref.child("Events");
 
         // Generate a reference to a new location and add some data using push()
         // DatabaseReference pushedPostRef = postsRef.push();
@@ -143,7 +146,10 @@ public class AlbumFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserNode userInfo = dataSnapshot.child("UserNodes").child(user.getUid()).getValue(UserNode.class);
-                userEvents = userInfo.eventsAttending; //gets map of events the user is attending
+                if (userInfo.eventsAttending != null) {
+                    userEvents = userInfo.eventsAttending; //gets map of events the user is attending
+                    getEventInfo();
+                }
             }
 
             @Override
@@ -151,8 +157,18 @@ public class AlbumFragment extends Fragment {
             }
         });
 
-        //ordering by "smallest" first RN
-        //want it stored in the order: year, month, date //ADD ZEROS TO IT
+    }
+
+    public void getTodayDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Calendar c = Calendar.getInstance();
+        todayDate = sdf.format(c.getTime());
+    }
+
+    public void getEventInfo() {
+        getTodayDate();
+        final DatabaseReference myEventRef = database.getReference().child("Events");
+        //ordering by "smallest" first
         //get the list of events, go through the events and only publish the ones from the list
         myEventRef.orderByChild("date").addChildEventListener(new ChildEventListener() {
 
@@ -160,13 +176,21 @@ public class AlbumFragment extends Fragment {
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
 
                 //for(DataSnapshot eventSnapshot: dataSnapshot.getChildren()){
-                    Event event = dataSnapshot.getValue(Event.class);
+                Event event = dataSnapshot.getValue(Event.class);
 
-                    if (userEvents.containsKey(event.accessCode)) { //code from user list of events//
-                        mEvents.add(event);
-                        adapter.notifyDataSetChanged();
-                    }
-                    swipeContainer.setRefreshing(false);
+                //if the event is in the past then add it at the end of the adapter
+                if (Integer.parseInt(event.date) < Integer.parseInt(todayDate) && userEvents.containsKey(event.accessCode)) {
+                    mEvents.add(event);
+                    adapter.notifyDataSetChanged();
+                    myEventRef.child(event.accessCode).child("passed").setValue(true); //marks that the event is in the past
+                    event.passed = true;
+                }
+
+                if (userEvents.containsKey(event.accessCode)) { //code from user list of events//
+                    mEvents.add(event);
+                    adapter.notifyDataSetChanged();
+                }
+                swipeContainer.setRefreshing(false);
                 //}
                 Log.d(TAG, "loaded events correctly");
             }
@@ -191,7 +215,6 @@ public class AlbumFragment extends Fragment {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-
     }
 }
 

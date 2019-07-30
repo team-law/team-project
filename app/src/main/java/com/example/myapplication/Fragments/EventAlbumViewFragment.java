@@ -171,7 +171,6 @@ public class EventAlbumViewFragment extends Fragment {
                     Picture picture = dataSnapshot.getValue(Picture.class);
                     mPictures.add(picture);
                     adapter.notifyDataSetChanged();
-                    scEventDetail.setRefreshing(false);
                 }
 
                 @Override
@@ -181,6 +180,6 @@ public class EventAlbumViewFragment extends Fragment {
             });
 
         }
-
+        scEventDetail.setRefreshing(false);
     }
 }
