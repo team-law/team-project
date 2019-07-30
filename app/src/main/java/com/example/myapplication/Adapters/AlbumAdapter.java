@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,6 +107,14 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
             //ivAlbumPicture
 
             // call network to get imgRef of first picture
+
+            CardView card = new CardView(context);
+            if (event.passed) {
+                //if the event is in the past, switch the card view to be pink
+                card.setCardBackgroundColor(context.getResources().getColor(R.color.darkPink));
+            } else {
+                card.setCardBackgroundColor(context.getResources().getColor(R.color.dustyYellow));
+            }
 
             if(event.allPictures.size() >= 1) {
                 // get imgID of first picture

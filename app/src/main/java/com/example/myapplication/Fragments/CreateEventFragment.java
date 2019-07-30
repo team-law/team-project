@@ -32,6 +32,7 @@ import com.example.myapplication.Activities.EventDetail;
 import com.example.myapplication.Activities.HomeActivity;
 import com.example.myapplication.HorizontalNumberPicker;
 import com.example.myapplication.Models.Event;
+import com.example.myapplication.Models.UserNode;
 import com.example.myapplication.R;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -80,10 +81,12 @@ public class CreateEventFragment extends Fragment {
     private int iHour;
     private int iMinute;
     public String am_pm = "am";
+    private String title = "";
+    private String description = "";
+    private String location = "";
+    private String time = "";
 
     boolean createEventclicked;
-
-
 
     private HorizontalNumberPicker np_channel_nr;
 
@@ -96,7 +99,7 @@ public class CreateEventFragment extends Fragment {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference myRef;
     FirebaseUser user;
-    //might need to be using the FirebaseApp ones?
+    private UserNode currentUser;
 
     @Nullable
     @Override
@@ -149,8 +152,9 @@ public class CreateEventFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                Log.d(TAG, "Value is: " + map);
+                mAuth = FirebaseAuth.getInstance();
+                user = mAuth.getCurrentUser();
+                currentUser = dataSnapshot.child("UserNodes").child(user.getUid()).getValue(UserNode.class);
             }
 
             @Override
@@ -172,9 +176,9 @@ public class CreateEventFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                        tvDatePicker.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                        tvDatePicker.setText((month + 1) + "/" + dayOfMonth + "/" + year);
                         iDay = dayOfMonth;
-                        iMonth = month;
+                        iMonth = month + 1;
                         iYear = year;
                     }
                 }, year, month, day);
@@ -233,9 +237,6 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
-
-        // TODO -- add logic so you can't choose a day in the past
-
         btnCreateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -246,14 +247,14 @@ public class CreateEventFragment extends Fragment {
                 //Event event = new Event();
                 String mGroupId = myRef.push().getKey();
 
-                String title = etEventTitle.getText().toString();
-                String description = etEventDescription.getText().toString();
+                title = etEventTitle.getText().toString();
+                description = etEventDescription.getText().toString();
                 date = String.valueOf(iYear);
-                String time = String.valueOf(iHour) + ":" + iMinute + " "+ am_pm;
-                String location = etLocation.getText().toString();
+                time = String.valueOf(iHour) + ":" + iMinute + " "+ am_pm;
+                location = etLocation.getText().toString();
                 invited = new ArrayList<>(); //should be retrieved from the search view
-                Map<String, Boolean> attending = new HashMap<>(1);
-                attending.put(user.getUid(), true);
+                Map<String, String> attending = new HashMap<>(1);
+                attending.put(user.getUid(), user.getUid());
                 Map<String, Boolean> pics = new HashMap<>(0);
                 String accessCode = getCode();
                 numPics = np_channel_nr.getValue();
@@ -266,8 +267,9 @@ public class CreateEventFragment extends Fragment {
 
                 if(createEventclicked) {
 
-                    if (iYear <= Calendar.YEAR && iMonth <= Calendar.MONTH && iDay < Calendar.DAY_OF_MONTH - 1) { //if the user still has pictures they can take for an event
-                        Event event = new Event(user.getUid(), user.getDisplayName(), title, time, date, description, location, numPics, invited, attending, pics, accessCode);
+                    if (checkDateValidity() && checkEventValidity()) {
+
+                        Event event = new Event(user.getUid(), user.getDisplayName(), title, time, date, description, location, numPics, invited, attending, pics, accessCode, false);
                         eventsRef.child(accessCode).setValue(event); //creates the event in firebase
 
                         //add event to host list of events
@@ -278,6 +280,7 @@ public class CreateEventFragment extends Fragment {
                         if (checkPermission()) {
                             Intent intent = new Intent(getActivity(), ContactsListActivity.class);
                             intent.putExtra(Event.class.getSimpleName(), Parcels.wrap(event));
+                            intent.putExtra("userCode", currentUser.userCode);
                             intent.putExtra("hostName", user.getDisplayName());
                             startActivity(intent);
                         } else {
@@ -290,9 +293,6 @@ public class CreateEventFragment extends Fragment {
                         etLocation.setText("");
                         // numberPicker.setValue(2);
 
-                    } else {
-                        Toast.makeText(getContext(), "Cannot choose date in the past",
-                                Toast.LENGTH_SHORT).show();
                     }
                     createEventclicked = false;
                 }
@@ -316,6 +316,31 @@ public class CreateEventFragment extends Fragment {
 //
 //            }
 //        });
+    }
+
+    //makes sure the date is in the future
+    private boolean checkDateValidity() {
+        //if year + month + date is less than current - can't create event
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Calendar c = Calendar.getInstance();
+        String currentDate = sdf.format(c.getTime());
+
+        if (Integer.parseInt(currentDate) > Integer.parseInt(date)) {
+            Toast.makeText(getContext(), "Cannot choose date in the past",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+
+    //makes sure there's no empty required fields
+    private boolean checkEventValidity() {
+        if (time.equals("") || location.equals("") || description.equals("") || title.equals("") || date.equals("") || numPics == 0) {
+            Toast.makeText(getContext(), "Can't leave any required fields blank!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private void configureDate (int value) {
@@ -353,7 +378,7 @@ public class CreateEventFragment extends Fragment {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder code = new StringBuilder();
         Random rand = new Random();
-        while (code.length() < 7) { // length of the random string.
+        while (code.length() < 4) { // length of the random string.
             int index = rand.nextInt(characters.length());
             code.append(characters.charAt(index));
         }

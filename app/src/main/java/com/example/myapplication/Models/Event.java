@@ -21,7 +21,7 @@ import java.util.Map;
 @Parcel
 public class Event implements Parcelable /* implements Parcelable*/ {
     public List<String> invited; //everyone that's invited
-    public Map<String, Boolean> attending = new HashMap<>(); //list of everyone who has responsed "yes" to the invite
+    public Map<String, String> attending = new HashMap<>(); //list of everyone who has responsed "yes" to the invite
     public String title; //what the event is called
     public String host; //list of people in charge of event - maybe only a singular person?
     public String time; //time of date
@@ -31,13 +31,14 @@ public class Event implements Parcelable /* implements Parcelable*/ {
     public int pics; // number of pics per person
     public String hostName;
     public String accessCode;
+    public boolean passed;
     public Map<String, Boolean> allPictures = new HashMap<>(); //list of all pictures taken at event, needs to be updated when Picture class is made
 
     public Event() {
     }
 
     public Event(String host, String hostName, String title, String time, String date, String description, String location, int pics,
-                 List<String> invited, Map<String, Boolean> attending, Map<String, Boolean> allPictures, String accessCode) {
+                 List<String> invited, Map<String, String> attending, Map<String, Boolean> allPictures, String accessCode, boolean passed) {
         this.host = host;
         this.hostName = hostName;
         this.title = title;
@@ -50,6 +51,7 @@ public class Event implements Parcelable /* implements Parcelable*/ {
         this.attending = attending;
         this.allPictures = allPictures;
         this.accessCode = accessCode;
+        this.passed = passed;
     }
 
     public Event(android.os.Parcel in) {

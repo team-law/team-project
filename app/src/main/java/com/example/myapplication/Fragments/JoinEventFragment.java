@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.myapplication.Models.Event;
+import com.example.myapplication.Models.UserNode;
 import com.example.myapplication.R;
 import com.firebase.ui.auth.data.model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class JoinEventFragment extends Fragment {
     private final String TAG = "JoinEventFragment";
+    private String invitedBy = "";
 
     Button btnJoinEvent;
     EditText etEventCode;
@@ -54,7 +56,11 @@ public class JoinEventFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //get entered event code
-                final String code = etEventCode.getText().toString();
+                final String entered =  etEventCode.getText().toString();
+                //if the first 4 characters match an event code, add them to an event
+                final String code = entered.substring(0, 4);
+                //if the next 4 characters after the dash match a user code, map who they got invited by
+                final String userCode = entered.substring(5, 9);
 
                 //check through event database to see if there's an event that has that code
                 mAuth = FirebaseAuth.getInstance();
@@ -82,6 +88,14 @@ public class JoinEventFragment extends Fragment {
                         // This method is called once with the initial value and again
                         // whenever data at this location is updated.
 
+                            //for every userNode
+                        for (DataSnapshot snapshot: dataSnapshot.child("UserNodes").getChildren()) {
+                            UserNode userInfo = snapshot.getValue(UserNode.class);
+                            if ((userInfo.userCode).equals(userCode)) {
+                                invitedBy = userInfo.userId;
+                            }
+                        }
+
                         //for every event in Events
                         for (DataSnapshot snapshot: dataSnapshot.child("Events").getChildren()) {
 
@@ -90,7 +104,7 @@ public class JoinEventFragment extends Fragment {
                                 DatabaseReference eventRef = myRef.child("Events").child(code);
                                 DatabaseReference dbRef = eventRef.child("attending");
 
-                                dbRef.child(user.getUid()).setValue(true); //add user to guest list by their user ID
+                                dbRef.child(user.getUid()).setValue(invitedBy); //add user to guest list by their user ID
                                 //add event to userNode
                                 DatabaseReference userEventRef = myRef.child("UserNodes").child(user.getUid()).child("eventsAttending");
                                 userEventRef.child(code).setValue(false); //adds the event to the user's list of events
