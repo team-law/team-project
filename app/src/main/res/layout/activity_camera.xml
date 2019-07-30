@@ -6,14 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".Activities.CameraActivity">
 
-    <TextView
-        android:id="@+id/textView2"
+    <com.camerakit.CameraKitView
+        android:id="@+id/camera"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="222dp"
-        android:layout_marginLeft="222dp"
-        android:layout_marginTop="302dp"
-        android:text="vertical"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:keepScreenOn="true"
+        app:camera_aspectRatio="1.33"
+        app:camera_facing="back"
+        app:camera_flash="auto"
+        app:camera_focus="continuous"
+        app:camera_permissions="camera"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="0dp"
+        android:layout_height="103dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/circle_photo"
+        android:scaleX="1"
+        android:scaleY="1"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="@+id/camera"
+        tools:layout_editor_absoluteY="621dp" />
+
+
 </android.support.constraint.ConstraintLayout>

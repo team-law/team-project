@@ -137,6 +137,7 @@ public class CreateEventFragment extends Fragment {
 
         // set number picker
         np_channel_nr.setMax(5);
+        np_channel_nr.setValue(1);
 
         np_channel_nr.setMin(1);
 
