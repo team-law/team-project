@@ -48,7 +48,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         private TextView tvContactName;
         private TextView tvPhoneNumber;
         private ConstraintLayout clContact;
-        private boolean rowSelected = false;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
