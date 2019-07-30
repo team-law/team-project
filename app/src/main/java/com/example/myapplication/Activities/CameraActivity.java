@@ -35,12 +35,15 @@ import org.parceler.Parcels;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import static com.example.myapplication.R.drawable.camera;
 import static com.example.myapplication.R.drawable.com_facebook_favicon_blue;
+import static com.example.myapplication.R.drawable.grapefruit_pink;
 
 public class CameraActivity extends AppCompatActivity {
 
     private CameraKitView cameraKitView;
     private Button btnCapture;
+    private Button btnCancel;
     private ImageView ivResult;
     private StorageReference mStorageRef;
     private Button btnUpload;
@@ -74,8 +77,15 @@ public class CameraActivity extends AppCompatActivity {
         btnCapture = (Button) findViewById(R.id.btnCapture);
         btnUpload = (Button) findViewById(R.id.btnUpload);
         ivResult = (ImageView) findViewById(R.id.ivResult);
+        btnCancel = (Button) findViewById(R.id.btnCancel);
 
-        ivResult.setImageResource(com_facebook_favicon_blue);
+        ivResult.setImageResource(grapefruit_pink);
+
+
+        View decorView = getWindow().getDecorView();
+        // Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -122,12 +132,16 @@ public class CameraActivity extends AppCompatActivity {
 
                             postImage = capturedImage;
 
-                            ivResult.setImageBitmap(Bitmap.createScaledBitmap(bmp, ivResult.getWidth(),
-                                    ivResult.getHeight(), false));
+                            ivResult.setImageBitmap(Bitmap.createScaledBitmap(bmp, cameraKitView.getWidth(),
+                                    cameraKitView.getHeight(), false));
+
+
+                            ivResult.setVisibility(View.VISIBLE);
 
                             outputStream = openFileOutput(photoFileName, Context.MODE_PRIVATE);
                             outputStream.write(capturedImage);
                             outputStream.close();
+
 
 
                         } catch (java.io.IOException e) {
@@ -137,6 +151,11 @@ public class CameraActivity extends AppCompatActivity {
 
                     }
                 });
+                cameraKitView.setVisibility(View.INVISIBLE);
+                // ivResult.setVisibility(View.VISIBLE);
+                btnCapture.setVisibility(View.INVISIBLE);
+                btnUpload.setVisibility(View.VISIBLE);
+                btnCancel.setVisibility(View.VISIBLE);
             }
         });
 
@@ -144,6 +163,17 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 fileUploader();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                cameraKitView.setVisibility(View.VISIBLE);
+                ivResult.setVisibility(View.INVISIBLE);
+                btnCapture.setVisibility(View.VISIBLE);
+                btnUpload.setVisibility(View.INVISIBLE);
+                btnCancel.setVisibility(View.INVISIBLE);
             }
         });
     }
