@@ -63,7 +63,7 @@ public class EventDetail extends AppCompatActivity {
         textView.setText(event.title);
 
         btnNewPhoto.setOnClickListener(new View.OnClickListener() {
-            int count = 0;
+            //int count = 0;
             int numPics = event.pics;
             @Override
             public void onClick(View v) {
@@ -79,6 +79,7 @@ public class EventDetail extends AppCompatActivity {
                         userPics = userInfo.picturesTaken; //gets map of pictures the user has taken
 
                         if(clicked) {
+                            int count = 0;
                             //look through each picture and if the value is the current event ID then increment the count
                             for (String value : userPics.values()) {
                                 if (value.equals(event.accessCode)) {

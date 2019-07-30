@@ -32,6 +32,7 @@ import com.example.myapplication.Activities.EventDetail;
 import com.example.myapplication.Activities.HomeActivity;
 import com.example.myapplication.HorizontalNumberPicker;
 import com.example.myapplication.Models.Event;
+import com.example.myapplication.Models.UserNode;
 import com.example.myapplication.R;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -98,7 +99,7 @@ public class CreateEventFragment extends Fragment {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference myRef;
     FirebaseUser user;
-    //might need to be using the FirebaseApp ones?
+    private UserNode currentUser;
 
     @Nullable
     @Override
@@ -148,8 +149,7 @@ public class CreateEventFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                Log.d(TAG, "Value is: " + map);
+                currentUser = dataSnapshot.child("UserNodes").child(user.getUid()).getValue(UserNode.class);
             }
 
             @Override
@@ -173,7 +173,7 @@ public class CreateEventFragment extends Fragment {
 
                         tvDatePicker.setText((month + 1) + "/" + dayOfMonth + "/" + year);
                         iDay = dayOfMonth;
-                        iMonth = month;
+                        iMonth = month + 1;
                         iYear = year;
                     }
                 }, year, month, day);
@@ -248,8 +248,8 @@ public class CreateEventFragment extends Fragment {
                 time = String.valueOf(iHour) + ":" + iMinute + " "+ am_pm;
                 location = etLocation.getText().toString();
                 invited = new ArrayList<>(); //should be retrieved from the search view
-                Map<String, Boolean> attending = new HashMap<>(1);
-                attending.put(user.getUid(), true);
+                Map<String, String> attending = new HashMap<>(1);
+                attending.put(user.getUid(), user.getUid());
                 Map<String, Boolean> pics = new HashMap<>(0);
                 String accessCode = getCode();
                 numPics = np_channel_nr.getValue();
@@ -275,6 +275,7 @@ public class CreateEventFragment extends Fragment {
                         if (checkPermission()) {
                             Intent intent = new Intent(getActivity(), ContactsListActivity.class);
                             intent.putExtra(Event.class.getSimpleName(), Parcels.wrap(event));
+                            intent.putExtra("userCode", currentUser.userCode);
                             intent.putExtra("hostName", user.getDisplayName());
                             startActivity(intent);
                         } else {
@@ -372,7 +373,7 @@ public class CreateEventFragment extends Fragment {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder code = new StringBuilder();
         Random rand = new Random();
-        while (code.length() < 7) { // length of the random string.
+        while (code.length() < 4) { // length of the random string.
             int index = rand.nextInt(characters.length());
             code.append(characters.charAt(index));
         }

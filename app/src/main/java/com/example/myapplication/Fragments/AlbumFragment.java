@@ -132,7 +132,6 @@ public class AlbumFragment extends Fragment {
     protected void queryPosts() {
 
         DatabaseReference ref = database.getReference();
-        DatabaseReference myEventRef = ref.child("Events");
 
         // Generate a reference to a new location and add some data using push()
         // DatabaseReference pushedPostRef = postsRef.push();
@@ -144,6 +143,7 @@ public class AlbumFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserNode userInfo = dataSnapshot.child("UserNodes").child(user.getUid()).getValue(UserNode.class);
                 userEvents = userInfo.eventsAttending; //gets map of events the user is attending
+                getEventInfo();
             }
 
             @Override
@@ -151,6 +151,10 @@ public class AlbumFragment extends Fragment {
             }
         });
 
+    }
+
+    public void getEventInfo() {
+        DatabaseReference myEventRef = database.getReference().child("Events");
         //ordering by "smallest" first
         //get the list of events, go through the events and only publish the ones from the list
         myEventRef.orderByChild("date").addChildEventListener(new ChildEventListener() {
@@ -159,13 +163,13 @@ public class AlbumFragment extends Fragment {
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
 
                 //for(DataSnapshot eventSnapshot: dataSnapshot.getChildren()){
-                    Event event = dataSnapshot.getValue(Event.class);
+                Event event = dataSnapshot.getValue(Event.class);
 
-                    if (userEvents.containsKey(event.accessCode)) { //code from user list of events//
-                        mEvents.add(event);
-                        adapter.notifyDataSetChanged();
-                    }
-                    swipeContainer.setRefreshing(false);
+                if (userEvents.containsKey(event.accessCode)) { //code from user list of events//
+                    mEvents.add(event);
+                    adapter.notifyDataSetChanged();
+                }
+                swipeContainer.setRefreshing(false);
                 //}
                 Log.d(TAG, "loaded events correctly");
             }
@@ -190,7 +194,6 @@ public class AlbumFragment extends Fragment {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-
     }
 }
 

@@ -21,7 +21,7 @@ import java.util.Map;
 @Parcel
 public class Event implements Parcelable /* implements Parcelable*/ {
     public List<String> invited; //everyone that's invited
-    public Map<String, Boolean> attending = new HashMap<>(); //list of everyone who has responsed "yes" to the invite
+    public Map<String, String> attending = new HashMap<>(); //list of everyone who has responsed "yes" to the invite
     public String title; //what the event is called
     public String host; //list of people in charge of event - maybe only a singular person?
     public String time; //time of date
@@ -37,7 +37,7 @@ public class Event implements Parcelable /* implements Parcelable*/ {
     }
 
     public Event(String host, String hostName, String title, String time, String date, String description, String location, int pics,
-                 List<String> invited, Map<String, Boolean> attending, Map<String, Boolean> allPictures, String accessCode) {
+                 List<String> invited, Map<String, String> attending, Map<String, Boolean> allPictures, String accessCode) {
         this.host = host;
         this.hostName = hostName;
         this.title = title;
