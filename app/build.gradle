@@ -57,5 +57,5 @@ dependencies {
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
     implementation 'jp.wasabeef:glide-transformations:3.3.0'
     // API for map view
-    implementation 'de.blox:graphview:0.6.0'
+
 }
