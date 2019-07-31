@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
@@ -40,6 +42,7 @@ public class EventDetail extends AppCompatActivity {
     private HashMap<String, Boolean> allPictures;
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     boolean clicked;
+    private Button btnDetails;
 
 
     @Override
@@ -48,6 +51,7 @@ public class EventDetail extends AppCompatActivity {
         setContentView(R.layout.activity_event_detail);
 
         btnNewPhoto = (FloatingActionButton) findViewById(R.id.btnNewPhoto);
+        btnDetails = (Button) findViewById(R.id.btnDetails);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -63,7 +67,16 @@ public class EventDetail extends AppCompatActivity {
         TextView textView = (TextView) toolbar.findViewById(R.id.toolbarTextView);
         textView.setText(event.title);
 
-        btnNewPhoto.setOnClickListener(new View.OnClickListener() {
+        btnDetails.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EventDetail.this, EventDetailDescription.class);
+                intent.putExtra("event", Parcels.wrap(event));
+                startActivity(intent);
+            }
+        });
+
+        btnNewPhoto.setOnClickListener(new OnClickListener() {
             //int count = 0;
             int numPics = event.pics;
             @Override

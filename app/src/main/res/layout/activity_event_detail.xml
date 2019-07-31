@@ -7,34 +7,66 @@
     tools:context=".Activities.EventDetail"
     android:background="@color/lightGray">
 
+
+
+
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/grapefruitPink"
+        android:elevation="8dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:elevation="8dp">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/toolbarTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:textColor="@color/white"
-            android:text="Title"
-            android:textAppearance="@android:style/TextAppearance.WindowTitle"
-            android:textSize="18sp"
-            android:visibility="visible"
-            tools:layout_editor_absoluteX="179dp"
-            tools:layout_editor_absoluteY="18dp" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="23dp"
+            tools:layout_editor_absoluteY="8dp">
+
+            <TextView
+                android:id="@+id/toolbarTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="Title"
+                android:textAppearance="@android:style/TextAppearance.WindowTitle"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btnDetails"
+                android:layout_width="37dp"
+                android:layout_height="0dp"
+                android:layout_gravity="right"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/ic_info_outline_black_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.Toolbar>
+
 
     <RadioGroup
         android:id="@+id/rgToggle"
