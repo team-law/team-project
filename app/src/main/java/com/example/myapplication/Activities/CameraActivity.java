@@ -186,8 +186,6 @@ public class CameraActivity extends AppCompatActivity {
 
     private void fileUploader() {
 
-
-
 //
        photoFile = getPhotoFileUri(photoFileName);
         //Uri file = FileProvider.getUriForFile(this, "com.codepath.fileprovider", photoFile);
