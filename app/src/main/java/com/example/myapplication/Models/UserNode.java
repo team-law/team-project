@@ -15,6 +15,7 @@ public class UserNode {
 
     public String userId;
     public String name;
+    public String fbId;
     public String userCode;
     //public String invitedBy;
     //public String event;
@@ -26,10 +27,11 @@ public class UserNode {
         // Default constructor required for calls to DataSnapshot.getValue(UserNode.class)
     }
 
-    public UserNode(String userId, String name, String userCode, Map<String, String> picturesTaken, Map<String, Boolean> eventsAttending) {
+    public UserNode(String userId, String name, String fbId, String userCode, Map<String, String> picturesTaken, Map<String, Boolean> eventsAttending) {
         this.userId = userId;
         this.name = name;
         this.userCode = userCode;
+        this.fbId = fbId;
         //this.invitedBy = invitedBy;
         //this.event = event;
         //this.isHost = isHost;

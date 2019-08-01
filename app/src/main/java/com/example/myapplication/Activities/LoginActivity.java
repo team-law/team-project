@@ -18,6 +18,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -158,7 +159,8 @@ public class LoginActivity extends AppCompatActivity {
                     Map<String, Boolean> eventsAttending = new HashMap<>(1);
                     String name = user.getDisplayName(); //might error if the user doesn't have a display name
                     String userCode = makeUserCode();
-                    UserNode userProfile = new UserNode(user.getUid(), name, userCode, picturesTaken, eventsAttending);
+                    String fbId = Profile.getCurrentProfile().getId();
+                    UserNode userProfile = new UserNode(user.getUid(), name, fbId, userCode, picturesTaken, eventsAttending);
                     usersRef.child(user.getUid()).setValue(userProfile); //creates the userNode in firebase
 
                 }
