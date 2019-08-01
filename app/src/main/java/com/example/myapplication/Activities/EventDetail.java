@@ -135,7 +135,8 @@ public class EventDetail extends AppCompatActivity {
                     case R.id.rbMap:
 
                         Bundle b = new Bundle();
-                        b.putParcelable(Event.class.getSimpleName(), event);
+                        b.putParcelable("event", event);
+                        b.putSerializable("attending", (Serializable) attending);
                         mapFragment.setArguments(b);
 
                         FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
