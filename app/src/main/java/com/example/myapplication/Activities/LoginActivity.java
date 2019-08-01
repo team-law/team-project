@@ -160,6 +160,7 @@ public class LoginActivity extends AppCompatActivity {
                     String userCode = makeUserCode();
                     UserNode userProfile = new UserNode(user.getUid(), name, userCode, picturesTaken, eventsAttending);
                     usersRef.child(user.getUid()).setValue(userProfile); //creates the userNode in firebase
+
                 }
             }
             @Override
