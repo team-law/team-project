@@ -172,7 +172,7 @@ public class AlbumFragment extends Fragment {
         //ordering by "smallest" first
         //get the list of events, go through the events and only publish the ones from the list
         myEventRef.orderByChild("date").addChildEventListener(new ChildEventListener() {
-
+            int pastAdded = 0;
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
 
@@ -181,16 +181,16 @@ public class AlbumFragment extends Fragment {
 
                 //if the event is in the past then add it at the end of the adapter
                 if (Integer.parseInt(event.date) < Integer.parseInt(todayDate) && userEvents.containsKey(event.accessCode)) {
-                    mEvents.add(event);
+                    mEvents.add(mEvents.size() - pastAdded, event);
                     adapter.notifyDataSetChanged();
                     myEventRef.child(event.accessCode).child("passed").setValue(true); //marks that the event is in the past
                     event.passed = true;
-                }
-
-                if (userEvents.containsKey(event.accessCode)) { //code from user list of events//
-                    mEvents.add(event);
+                    pastAdded++;
+                } else if (userEvents.containsKey(event.accessCode)) { //code from user list of events//
+                    mEvents.add(mEvents.size() - pastAdded, event);
                     adapter.notifyDataSetChanged();
                 }
+
                 swipeContainer.setRefreshing(false);
                 //}
                 Log.d(TAG, "loaded events correctly");

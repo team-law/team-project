@@ -2,6 +2,7 @@ package com.example.myapplication.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -84,6 +85,7 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
         private TextView tvHost;
         private StorageReference mStorageRef;
         private Uri url;
+        private CardView card;
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
@@ -92,6 +94,7 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
             ivAlbumPicture = (ImageView) itemView.findViewById(R.id.ivAlbumPicture);
             tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
             tvHost = (TextView) itemView.findViewById(R.id.tvHostName);
+            card = (CardView) itemView.findViewById(R.id.cardView2);
             itemView.setOnClickListener(this);
 
         }
@@ -108,10 +111,10 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
 
             // call network to get imgRef of first picture
 
-            CardView card = new CardView(context);
+            //CardView card = new CardView(context);
             if (event.passed) {
                 //if the event is in the past, switch the card view to be pink
-                card.setCardBackgroundColor(context.getResources().getColor(R.color.darkPink));
+                card.setCardBackgroundColor(context.getResources().getColor(R.color.grapefruitPink));
             } else {
                 card.setCardBackgroundColor(context.getResources().getColor(R.color.dustyYellow));
             }
@@ -130,6 +133,7 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String imgRef = dataSnapshot.getValue(String.class);
                         getImage(imgRef);
+                        imgRef = "";
 
                     }
 
