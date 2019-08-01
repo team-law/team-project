@@ -47,7 +47,7 @@ public class AlbumFragment extends Fragment {
     private String todayDate;
 
     // Get a reference to our posts
-    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
     @Nullable
@@ -135,6 +135,7 @@ public class AlbumFragment extends Fragment {
 
     protected void queryPosts() {
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
         // Generate a reference to a new location and add some data using push()
@@ -146,7 +147,7 @@ public class AlbumFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserNode userInfo = dataSnapshot.child("UserNodes").child(user.getUid()).getValue(UserNode.class);
-                if (userInfo.eventsAttending != null) {
+                if (userInfo != null && userInfo.eventsAttending != null)  {
                     userEvents = userInfo.eventsAttending; //gets map of events the user is attending
                     getEventInfo();
                 }
