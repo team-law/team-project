@@ -12,9 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication.Models.Event;
 import com.example.myapplication.R;
 import com.facebook.Profile;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 import de.blox.graphview.BaseGraphAdapter;
 import de.blox.graphview.Graph;
@@ -29,7 +34,11 @@ import de.blox.graphview.tree.BuchheimWalkerConfiguration;
 
 public class EventMapViewFragment extends Fragment {
 
+    private Graph graph;
     private int nodeCount = 1;
+
+    // Initialize database
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     @Nullable
     @Override
@@ -43,7 +52,8 @@ public class EventMapViewFragment extends Fragment {
         GraphView graphView = view.findViewById(R.id.graph);
 
         // example tree
-        final Graph graph = new Graph();
+        graph = new Graph();
+        createNodes();
         final Node node1 = new Node(getNodeText());
         final Node node2 = new Node(getNodeText());
         final Node node3 = new Node(getNodeText());
@@ -81,8 +91,9 @@ public class EventMapViewFragment extends Fragment {
 
             @Override
             public void onBindViewHolder(ViewHolder viewHolder, Object data, int position) {
-                //((SimpleViewHolder)viewHolder).textView.setText(data.toString());
-                ((SimpleViewHolder)viewHolder).ivNodePic.setImageResource(R.drawable.grapefruit_lightpink);
+                ((SimpleViewHolder)viewHolder).textView.setText(data.toString());
+//                ((SimpleViewHolder)viewHolder).ivNodePic.setImageResource(R.drawable.grapefruit_lightpink);
+
             }
         };
         graphView.setAdapter(adapter);
@@ -97,18 +108,27 @@ public class EventMapViewFragment extends Fragment {
         adapter.setAlgorithm(new BuchheimWalkerAlgorithm(configuration));
     }
 
+    private void createNodes() {
+        Event event = getArguments().getParcelable(Event.class.getSimpleName());
+        HashMap<String, String> attending = (HashMap<String, String>) event.attending;
+        final DatabaseReference reference = database.getReference().child("UserNodes");
+        for (String user: attending.keySet()) {
+
+        }
+    }
+
     private String getNodeText() {
         return "Node " + nodeCount++;
     }
 
     class SimpleViewHolder extends ViewHolder {
-        //TextView textView;
-        ImageView ivNodePic;
+        TextView textView;
+//        ImageView ivNodePic;
 
         SimpleViewHolder(View itemView) {
             super(itemView);
-            //textView = itemView.findViewById(R.id.textView);
-            ivNodePic = itemView.findViewById(R.id.ivNodePic);
+            textView = itemView.findViewById(R.id.textView);
+            //ivNodePic = itemView.findViewById(R.id.ivNodePic);
         }
     }
 }
