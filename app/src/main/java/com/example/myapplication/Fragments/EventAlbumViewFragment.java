@@ -128,7 +128,7 @@ public class EventAlbumViewFragment extends Fragment {
     protected void networkCall(){
         DatabaseReference ref = database.getReference("Events/" + event.accessCode);
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Event ev = dataSnapshot.getValue(Event.class);
