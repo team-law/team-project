@@ -1,5 +1,7 @@
 package com.example.myapplication.Models;
 
+import android.net.Uri;
+
 import com.example.myapplication.Models.Picture;
 
 import com.google.firebase.auth.FirebaseUser;
@@ -17,6 +19,7 @@ public class UserNode {
     public String name;
     public String fbId;
     public String userCode;
+    public String profilePic;
     //public String invitedBy;
     //public String event;
     //public boolean isHost;
@@ -27,11 +30,12 @@ public class UserNode {
         // Default constructor required for calls to DataSnapshot.getValue(UserNode.class)
     }
 
-    public UserNode(String userId, String name, String fbId, String userCode, Map<String, String> picturesTaken, Map<String, Boolean> eventsAttending) {
+    public UserNode(String userId, String name, String fbId, String userCode, String profilePic, Map<String, String> picturesTaken, Map<String, Boolean> eventsAttending) {
         this.userId = userId;
         this.name = name;
         this.userCode = userCode;
         this.fbId = fbId;
+        this.profilePic = profilePic;
         //this.invitedBy = invitedBy;
         //this.event = event;
         //this.isHost = isHost;

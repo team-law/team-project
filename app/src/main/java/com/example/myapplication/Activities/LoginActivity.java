@@ -2,6 +2,7 @@ package com.example.myapplication.Activities;
 
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -160,9 +161,9 @@ public class LoginActivity extends AppCompatActivity {
                     String name = user.getDisplayName(); //might error if the user doesn't have a display name
                     String userCode = makeUserCode();
                     String fbId = Profile.getCurrentProfile().getId();
-                    UserNode userProfile = new UserNode(user.getUid(), name, fbId, userCode, picturesTaken, eventsAttending);
+                    String profilePic = Profile.getCurrentProfile().getProfilePictureUri(100, 100).toString();
+                    UserNode userProfile = new UserNode(user.getUid(), name, fbId, userCode, profilePic, picturesTaken, eventsAttending);
                     usersRef.child(user.getUid()).setValue(userProfile); //creates the userNode in firebase
-
                 }
             }
             @Override
