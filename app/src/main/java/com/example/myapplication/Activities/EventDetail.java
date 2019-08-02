@@ -127,6 +127,19 @@ public class EventDetail extends AppCompatActivity {
         final Fragment mapFragment = new EventMapViewFragment();
         final Fragment albumFragment = new EventAlbumViewFragment();
 
+        Bundle bundle = new Bundle();
+
+        Event e = event;
+
+        bundle.putParcelable("event", e);
+        bundle.putSerializable("attending", (Serializable) attending);
+        bundle.putSerializable("allPictures", (Serializable) allPictures);
+        albumFragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction2.replace(R.id.flEventContainer, albumFragment);
+        fragmentTransaction2.commit();
+
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.rgToggle);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
