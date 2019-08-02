@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.camerakit.CameraKit;
 import com.camerakit.CameraKitView;
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.Models.Picture;
@@ -78,6 +79,9 @@ public class CameraActivity extends AppCompatActivity {
         btnUpload = (Button) findViewById(R.id.btnUpload);
         ivResult = (ImageView) findViewById(R.id.ivResult);
         btnCancel = (Button) findViewById(R.id.btnCancel);
+
+        cameraKitView.setPreviewEffect(CameraKit.PREVIEW_EFFECT_SOLARIZE);
+
 
         ivResult.setImageResource(grapefruit_pink);
 
