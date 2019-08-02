@@ -45,6 +45,7 @@ public class AlbumFragment extends Fragment {
     private SwipeRefreshLayout swipeContainer;
     private EndlessRecyclerViewScrollListener scrollListener;
     private String todayDate;
+    int page = 0;
 
     // Get a reference to our posts
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -93,6 +94,7 @@ public class AlbumFragment extends Fragment {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
                 // loadNextDataFromApi();
+                //queryPosts(page);
             }
         };
 
@@ -100,7 +102,7 @@ public class AlbumFragment extends Fragment {
         // Adds the scroll listener to RecyclerView
         rvEvents.addOnScrollListener(scrollListener);
 
-         queryPosts();
+         queryPosts(page);
 
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -111,7 +113,7 @@ public class AlbumFragment extends Fragment {
                 // once the network request has completed successfully.
                 adapter.clear();
                 mEvents.clear();
-                queryPosts();
+                queryPosts(page);
 
             }
         });
@@ -133,7 +135,7 @@ public class AlbumFragment extends Fragment {
     }
     */
 
-    protected void queryPosts() {
+    protected void queryPosts(int page) {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
@@ -171,6 +173,7 @@ public class AlbumFragment extends Fragment {
         final DatabaseReference myEventRef = database.getReference().child("Events");
         //ordering by "smallest" first
         //get the list of events, go through the events and only publish the ones from the list
+        //String date = "";
         myEventRef.orderByChild("date").addChildEventListener(new ChildEventListener() {
             int pastAdded = 0;
             @Override
@@ -180,15 +183,17 @@ public class AlbumFragment extends Fragment {
                 Event event = dataSnapshot.getValue(Event.class);
 
                 //if the event is in the past then add it at the end of the adapter
-                if (Integer.parseInt(event.date) < Integer.parseInt(todayDate) && userEvents.containsKey(event.accessCode)) {
-                    mEvents.add(mEvents.size() - pastAdded, event);
-                    adapter.notifyDataSetChanged();
-                    myEventRef.child(event.accessCode).child("passed").setValue(true); //marks that the event is in the past
-                    event.passed = true;
-                    pastAdded++;
-                } else if (userEvents.containsKey(event.accessCode)) { //code from user list of events//
-                    mEvents.add(mEvents.size() - pastAdded, event);
-                    adapter.notifyDataSetChanged();
+                if(!mEvents.contains(event)) {
+                    if (Integer.parseInt(event.date) < Integer.parseInt(todayDate) && userEvents.containsKey(event.accessCode)) {
+                        mEvents.add(mEvents.size() - pastAdded, event);
+                        adapter.notifyDataSetChanged();
+                        myEventRef.child(event.accessCode).child("passed").setValue(true); //marks that the event is in the past
+                        event.passed = true;
+                        pastAdded++;
+                    } else if (userEvents.containsKey(event.accessCode)) { //code from user list of events//
+                        mEvents.add(mEvents.size() - pastAdded, event);
+                        adapter.notifyDataSetChanged();
+                    }
                 }
 
                 swipeContainer.setRefreshing(false);

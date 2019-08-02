@@ -134,6 +134,11 @@ public class EventDetail extends AppCompatActivity {
                 switch(checkedId) {
                     case R.id.rbMap:
 
+                        Bundle b = new Bundle();
+                        b.putParcelable("event", event);
+                        b.putSerializable("attending", (Serializable) attending);
+                        mapFragment.setArguments(b);
+
                         FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
                         fragmentTransaction1.replace(R.id.flEventContainer, mapFragment);
                         fragmentTransaction1.commit();

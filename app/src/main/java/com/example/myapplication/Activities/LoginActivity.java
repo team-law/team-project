@@ -1,11 +1,15 @@
 package com.example.myapplication.Activities;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +22,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +38,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -158,7 +165,8 @@ public class LoginActivity extends AppCompatActivity {
                     Map<String, Boolean> eventsAttending = new HashMap<>(1);
                     String name = user.getDisplayName(); //might error if the user doesn't have a display name
                     String userCode = makeUserCode();
-                    UserNode userProfile = new UserNode(user.getUid(), name, userCode, picturesTaken, eventsAttending);
+                    String fbId = Profile.getCurrentProfile().getId();
+                    UserNode userProfile = new UserNode(user.getUid(), name, fbId, userCode, picturesTaken, eventsAttending);
                     usersRef.child(user.getUid()).setValue(userProfile); //creates the userNode in firebase
 
                 }

@@ -96,6 +96,24 @@ public class Event implements Parcelable /* implements Parcelable*/ {
         dest.writeString(accessCode);
     }
 
+    @Override
+    public boolean equals(Object o){
+        if(this == o)
+            return true;
+        if(!( o instanceof Event))
+            return false;
+
+        Event f = (Event) o;
+        if(this.accessCode.equals(f.accessCode))
+            return true;
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return accessCode.hashCode();
+    }
+
 /*
     protected Event(android.os.Parcel in) {
         invited = in.createStringArrayList();
