@@ -1,6 +1,7 @@
 package com.example.myapplication.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -10,12 +11,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication.Activities.PictureDetail;
 import com.example.myapplication.Models.Picture;
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -57,7 +61,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         notifyDataSetChanged();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView ivEventPicture;
         private StorageReference mStorageRef;
@@ -66,10 +70,10 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         public ViewHolder(View itemView) {
             super(itemView);
             ivEventPicture = itemView.findViewById(R.id.ivEventPicture);
+            itemView.setOnClickListener(this);
         }
 
         public void bind (Picture picture) {
-            //TODO finish this - load the picture in
             String imgRef = picture.imageRef;
 
             mStorageRef = FirebaseStorage.getInstance().getReference("Images");
@@ -89,6 +93,24 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                     exception.printStackTrace();
                 }
             });
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            //gets item position
+            int position = getAdapterPosition();
+            // make sure the position is valid
+            if (position != RecyclerView.NO_POSITION) {
+                // get the movie at the position
+                Picture picture = pictures.get(position);
+
+                // create intent for new activity
+                Intent intent = new Intent(context, PictureDetail.class);
+                intent.putExtra(Picture.class.getSimpleName(), Parcels.wrap(picture));
+                // show the activity
+                context.startActivity(intent);
+            }
         }
 
     }

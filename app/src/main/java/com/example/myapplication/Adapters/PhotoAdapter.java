@@ -1,6 +1,7 @@
 package com.example.myapplication.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -10,12 +11,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication.Activities.EventDetail;
+import com.example.myapplication.Activities.PictureDetail;
 import com.example.myapplication.Models.Picture;
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -102,20 +107,20 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
 
         @Override
         public void onClick(View v) {
-/*
-        //gets item position
-        int position = getAdapterPosition();
-        // make sure the position is valid
-        if (position != RecyclerView.NO_POSITION) {
-            // get the movie at the position
-            Event event = events.get(position);
 
-            // create intent for new activity
-            Intent intent = new Intent(context, EventDetail.class);
-            intent.putExtra("event", Parcels.wrap(event));
-            // show the activity
-            context.startActivity(intent);
-            */
+            //gets item position
+            int position = getAdapterPosition();
+            // make sure the position is valid
+            if (position != RecyclerView.NO_POSITION) {
+                // get the movie at the position
+                Picture picture = pictures.get(position);
+
+                // create intent for new activity
+                Intent intent = new Intent(context, PictureDetail.class);
+                intent.putExtra(Picture.class.getSimpleName(), Parcels.wrap(picture));
+                // show the activity
+                context.startActivity(intent);
+            }
         }
 
     }
