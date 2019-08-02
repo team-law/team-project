@@ -64,7 +64,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private Event event;
 
-    List<Filter> filters = FilterPack.getFilterPack(CameraActivity.this);
+//    List<Filter> filters = FilterPack.getFilterPack(CameraActivity.this);
 
 
 
