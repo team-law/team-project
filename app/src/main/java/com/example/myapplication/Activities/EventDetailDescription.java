@@ -11,6 +11,11 @@ import com.example.myapplication.R;
 import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
+import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class EventDetailDescription extends AppCompatActivity {
 
     private TextView tvTitleDetailDescription;
@@ -40,10 +45,25 @@ public class EventDetailDescription extends AppCompatActivity {
         tvDescription.setText(event.description);
         tvLocation.setText(event.location);
         tvTimeDetail.setText(event.time);
-        tvDateDetail.setText(event.date);
         int n = event.pics;
         tvPPP.setText(String.valueOf(n));
+        String dateString = getDate(event.date);
+        tvDateDetail.setText(dateString);
+    }
 
-        
+    private String getDate(String time) {
+        String date = "";
+        String year = time.substring(0,4);
+        int month = Integer.parseInt(time.substring(4, 6)) - 1;
+        String day = time.substring(6, 8);
+
+        String m = "";
+        DateFormatSymbols dfs = new DateFormatSymbols();
+        String[] months = dfs.getMonths();
+        if (month >= 0 && month <= 11 ) {
+            m = months[month];
+        }
+        date += m + " " + day + ", " + year;
+        return date;
     }
 }
