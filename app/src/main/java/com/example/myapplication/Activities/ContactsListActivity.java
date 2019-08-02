@@ -84,8 +84,9 @@ public class ContactsListActivity extends AppCompatActivity {
                     SmsManager smsManager = SmsManager.getDefault();
                     smsManager.sendTextMessage(phoneNumber, null, message, null , null);
                 }
-                Toast.makeText(ContactsListActivity.this, "Successfully created and invited people to event!", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(ContactsListActivity.this, HomeActivity.class));
+                Toast.makeText(ContactsListActivity.this, "Successfully invited people to event!", Toast.LENGTH_LONG).show();
+                finish();
+                // startActivity(new Intent(ContactsListActivity.this, HomeActivity.class));
             }
         });
         // initialize recycler view

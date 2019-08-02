@@ -1,5 +1,6 @@
 package com.example.myapplication.Fragments;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -11,11 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.Models.UserNode;
 import com.example.myapplication.R;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.firebase.ui.auth.data.model.User;
 import com.google.android.gms.common.util.Strings;
@@ -27,6 +32,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.snapshot.StringNode;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -70,30 +79,6 @@ public class EventMapViewFragment extends Fragment {
         // example tree
         graph = new Graph();
         createNodes();
-//        final Node node1 = new Node(getNodeText());
-//        final Node node2 = new Node(getNodeText());
-//        final Node node3 = new Node(getNodeText());
-//        final Node node4 = new Node(getNodeText());
-//        final Node node5 = new Node(getNodeText());
-//        final Node node6 = new Node(getNodeText());
-//        final Node node8 = new Node(getNodeText());
-//        final Node node7 = new Node(getNodeText());
-//        final Node node9 = new Node(getNodeText());
-//        final Node node10 = new Node(getNodeText());
-//        final Node node11 = new Node(getNodeText());
-//        final Node node12 = new Node(getNodeText());
-
-//        graph.addEdge(node1, node2);
-//        graph.addEdge(node1, node3);
-//        graph.addEdge(node1, node4);
-//        graph.addEdge(node2, node5);
-//        graph.addEdge(node2, node6);
-//        graph.addEdge(node6, node7);
-//        graph.addEdge(node6, node8);
-//        graph.addEdge(node4, node9);
-//        graph.addEdge(node4, node10);
-//        graph.addEdge(node4, node11);
-//        graph.addEdge(node11, node12);
 
         // you can set the graph via the constructor or use the adapter.setGraph(Graph) method
         final BaseGraphAdapter<ViewHolder> adapter = new BaseGraphAdapter<ViewHolder>(graph) {
@@ -108,7 +93,7 @@ public class EventMapViewFragment extends Fragment {
             @Override
             public void onBindViewHolder(ViewHolder viewHolder, Object data, int position) {
                 ((SimpleViewHolder)viewHolder).textView.setText(data.toString());
-//                ((SimpleViewHolder)viewHolder).ivNodePic.setImageResource(R.drawable.grapefruit_lightpink);
+//                ((SimpleViewHolder)viewHolder).ivNodePic.setImageURI();
 
             }
         };
@@ -170,12 +155,12 @@ public class EventMapViewFragment extends Fragment {
 
     class SimpleViewHolder extends ViewHolder {
         TextView textView;
-//        ImageView ivNodePic;
+        ImageView ivNodePic;
 
         SimpleViewHolder(View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.textView);
-            //ivNodePic = itemView.findViewById(R.id.ivNodePic);
+            ivNodePic = itemView.findViewById(R.id.ivNodePic);
         }
     }
 }
