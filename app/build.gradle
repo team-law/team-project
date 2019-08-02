@@ -59,4 +59,9 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:3.3.0'
     // API for map view
 //    implementation 'de.blox:graphview:0.6.0'
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // ...
+
+    implementation 'info.androidhive:imagefilters:1.0.7'
 }

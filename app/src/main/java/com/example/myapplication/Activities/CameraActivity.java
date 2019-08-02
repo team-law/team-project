@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Camera;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -30,19 +31,28 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.zomato.photofilters.FilterPack;
+import com.zomato.photofilters.imageprocessors.Filter;
+import com.zomato.photofilters.utils.ThumbnailItem;
+import com.zomato.photofilters.utils.ThumbnailsManager;
 
 import org.parceler.Parcels;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.List;
 
 import static com.example.myapplication.R.drawable.camera;
 import static com.example.myapplication.R.drawable.com_facebook_favicon_blue;
 import static com.example.myapplication.R.drawable.grapefruit_pink;
 
 public class CameraActivity extends AppCompatActivity {
+    static
+    {
+        System.loadLibrary("NativeImageProcessor");
+    }
 
-    private CameraKitView cameraKitView;
+    private CameraKitView ckv;
     private Button btnCapture;
     private Button btnCancel;
     private ImageView ivResult;
@@ -53,6 +63,9 @@ public class CameraActivity extends AppCompatActivity {
     private byte[] postImage;
 
     private Event event;
+
+    List<Filter> filters = FilterPack.getFilterPack(CameraActivity.this);
+
 
 
     private final String TAG = "CameraActivity";
@@ -74,13 +87,44 @@ public class CameraActivity extends AppCompatActivity {
 
         mStorageRef = FirebaseStorage.getInstance().getReference("Images");
 
-        cameraKitView = (CameraKitView) findViewById(R.id.camera);
+        ckv = (CameraKitView) findViewById(R.id.camera);
         btnCapture = (Button) findViewById(R.id.btnCapture);
         btnUpload = (Button) findViewById(R.id.btnUpload);
         ivResult = (ImageView) findViewById(R.id.ivResult);
         btnCancel = (Button) findViewById(R.id.btnCancel);
 
-        cameraKitView.setPreviewEffect(CameraKit.PREVIEW_EFFECT_SOLARIZE);
+
+
+
+
+        ckv.setGestureListener(new CameraKitView.GestureListener() {
+            @Override
+            public void onTap(CameraKitView cameraKitView, float v, float v1) {
+
+            }
+
+            @Override
+            public void onLongTap(CameraKitView cameraKitView, float v, float v1) {
+
+            }
+
+            @Override
+            public void onDoubleTap(CameraKitView cameraKitView, float v, float v1) {
+                if(cameraKitView.getFacing() == CameraKit.FACING_BACK) {
+                    cameraKitView.setFacing(CameraKit.FACING_FRONT);
+                }
+                else{
+                    cameraKitView.setFacing(CameraKit.FACING_BACK);
+                }
+
+            }
+
+            @Override
+            public void onPinch(CameraKitView cameraKitView, float v, float v1, float v2) {
+
+            }
+        });
+
 
 
         ivResult.setImageResource(grapefruit_pink);
@@ -124,7 +168,7 @@ public class CameraActivity extends AppCompatActivity {
         btnCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cameraKitView.captureImage(new CameraKitView.ImageCallback() {
+                ckv.captureImage(new CameraKitView.ImageCallback() {
                     @Override
                     public void onImage(CameraKitView cameraKitView, final byte[] capturedImage) {
 
@@ -155,7 +199,7 @@ public class CameraActivity extends AppCompatActivity {
 
                     }
                 });
-                cameraKitView.setVisibility(View.INVISIBLE);
+                ckv.setVisibility(View.INVISIBLE);
                 // ivResult.setVisibility(View.VISIBLE);
                 btnCapture.setVisibility(View.INVISIBLE);
                 btnUpload.setVisibility(View.VISIBLE);
@@ -173,7 +217,7 @@ public class CameraActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                cameraKitView.setVisibility(View.VISIBLE);
+                ckv.setVisibility(View.VISIBLE);
                 ivResult.setVisibility(View.INVISIBLE);
                 btnCapture.setVisibility(View.VISIBLE);
                 btnUpload.setVisibility(View.INVISIBLE);
@@ -274,22 +318,22 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        cameraKitView.onStart();
+        ckv.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
     @Override
     protected void onResume() {
         super.onResume();
-        cameraKitView.onResume();
+        ckv.onResume();
     }
     @Override
     protected void onPause() {
-        cameraKitView.onPause();
+        ckv.onPause();
         super.onPause();
     }
     @Override
     protected void onStop() {
-        cameraKitView.onStop();
+        ckv.onStop();
         super.onStop();
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
@@ -298,7 +342,7 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        cameraKitView.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        ckv.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /*
