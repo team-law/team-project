@@ -1,8 +1,11 @@
 package com.example.myapplication.Fragments;
 
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -50,6 +53,8 @@ import de.blox.graphview.layered.SugiyamaConfiguration;
 import de.blox.graphview.tree.BuchheimWalkerAlgorithm;
 import de.blox.graphview.tree.BuchheimWalkerConfiguration;
 
+import static android.net.Uri.parse;
+
 public class EventMapViewFragment extends Fragment {
 
     private Event event;
@@ -83,18 +88,23 @@ public class EventMapViewFragment extends Fragment {
         // you can set the graph via the constructor or use the adapter.setGraph(Graph) method
         final BaseGraphAdapter<ViewHolder> adapter = new BaseGraphAdapter<ViewHolder>(graph) {
 
+//            private ImageView ivNodePic;
+
             @NonNull
             @Override
             public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.node, parent, false);
+//                ivNodePic = parent.findViewById(R.id.ivNodePic);
                 return new SimpleViewHolder(view);
             }
 
             @Override
             public void onBindViewHolder(ViewHolder viewHolder, Object data, int position) {
-                ((SimpleViewHolder)viewHolder).textView.setText(data.toString());
-//                ((SimpleViewHolder)viewHolder).ivNodePic.setImageURI();
-
+//                ((SimpleViewHolder)viewHolder).textView.setText(data.toString());
+//                Uri profilePic = Uri.parse(data.toString());
+                ImageView ivNodePic = ((SimpleViewHolder)viewHolder).ivNodePic;
+                Glide.with(EventMapViewFragment.this).load(Uri.parse(data.toString())).into(ivNodePic);
+//                ((SimpleViewHolder)viewHolder).ivNodePic.setImageURI(Profile.getCurrentProfile().getProfilePictureUri(100, 100));
             }
         };
         graphView.setAdapter(adapter);
@@ -122,7 +132,7 @@ public class EventMapViewFragment extends Fragment {
                     if (nodes.containsKey(guest.name)) {
                         guestNode = nodes.get(guest.name);
                     } else {
-                        guestNode = new Node(guest.name);
+                        guestNode = new Node(guest.profilePic);
                         nodes.put(guest.name, guestNode);
                     }
                     // Check that guest didn't invite itself (isn't host)
@@ -134,7 +144,8 @@ public class EventMapViewFragment extends Fragment {
                         if (nodes.containsKey(invitedBy.name)) {
                             invitedByNode = nodes.get(invitedBy.name);
                         } else {
-                            invitedByNode = new Node(invitedBy.name);
+                            invitedByNode = new Node(invitedBy.profilePic
+                            );
                             nodes.put(invitedBy.name, invitedByNode);
                         }
                         graph.addEdge(invitedByNode, guestNode);
@@ -154,12 +165,12 @@ public class EventMapViewFragment extends Fragment {
     }
 
     class SimpleViewHolder extends ViewHolder {
-        TextView textView;
+//        TextView textView;
         ImageView ivNodePic;
 
         SimpleViewHolder(View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.textView);
+//            textView = itemView.findViewById(R.id.textView);
             ivNodePic = itemView.findViewById(R.id.ivNodePic);
         }
     }
