@@ -42,6 +42,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import de.blox.graphview.Algorithm;
 import de.blox.graphview.BaseGraphAdapter;
 import de.blox.graphview.Graph;
 import de.blox.graphview.GraphView;
@@ -105,6 +106,8 @@ public class EventMapViewFragment extends Fragment {
                 Glide.with(EventMapViewFragment.this).load(Uri.parse(data.toString())).into(ivNodePic);
 //                ((SimpleViewHolder)viewHolder).ivNodePic.setImageURI(Profile.getCurrentProfile().getProfilePictureUri(100, 100));
             }
+
+
         };
         graphView.setAdapter(adapter);
 
