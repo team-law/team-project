@@ -49,6 +49,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import de.blox.graphview.Algorithm;
 import de.blox.graphview.BaseGraphAdapter;
 import de.blox.graphview.Graph;
 import de.blox.graphview.GraphView;
@@ -130,6 +131,8 @@ public class EventMapViewFragment extends Fragment {
             public Node getNode(int position) {
                 return graph != null ? graph.getNode(position) : null;
             }
+
+
         };
         graphView.setAdapter(adapter);
 
