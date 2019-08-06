@@ -87,7 +87,6 @@ public class EventMapViewFragment extends Fragment {
 
         // you can set the graph via the constructor or use the adapter.setGraph(Graph) method
         final BaseGraphAdapter<ViewHolder> adapter = new BaseGraphAdapter<ViewHolder>(graph) {
-
 //            private ImageView ivNodePic;
 
             @NonNull
@@ -144,8 +143,7 @@ public class EventMapViewFragment extends Fragment {
                         if (nodes.containsKey(invitedBy.name)) {
                             invitedByNode = nodes.get(invitedBy.name);
                         } else {
-                            invitedByNode = new Node(invitedBy.profilePic
-                            );
+                            invitedByNode = new Node(invitedBy.profilePic);
                             nodes.put(invitedBy.name, invitedByNode);
                         }
                         graph.addEdge(invitedByNode, guestNode);
