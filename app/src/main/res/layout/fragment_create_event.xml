@@ -25,7 +25,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:text="Profile"
+            android:text="Create Event"
             android:textAppearance="@android:style/TextAppearance.WindowTitle"
             android:textColor="@color/white"
             android:textSize="18sp"
