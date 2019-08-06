@@ -55,6 +55,7 @@ public class CameraActivity extends AppCompatActivity {
     private CameraKitView ckv;
     private Button btnCapture;
     private Button btnCancel;
+    private Button btnReverse;
     private ImageView ivResult;
     private StorageReference mStorageRef;
     private Button btnUpload;
@@ -64,7 +65,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private Event event;
 
-    List<Filter> filters = FilterPack.getFilterPack(CameraActivity.this);
+//    List<Filter> filters = FilterPack.getFilterPack(CameraActivity.this);
 
 
 
@@ -92,9 +93,20 @@ public class CameraActivity extends AppCompatActivity {
         btnUpload = (Button) findViewById(R.id.btnUpload);
         ivResult = (ImageView) findViewById(R.id.ivResult);
         btnCancel = (Button) findViewById(R.id.btnCancel);
+        btnReverse = (Button) findViewById(R.id.btnReverse);
 
 
-
+        btnReverse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ckv.getFacing() == CameraKit.FACING_BACK) {
+                    ckv.setFacing(CameraKit.FACING_FRONT);
+                }
+                else{
+                    ckv.setFacing(CameraKit.FACING_BACK);
+                }
+            }
+        });
 
 
         ckv.setGestureListener(new CameraKitView.GestureListener() {
@@ -121,7 +133,7 @@ public class CameraActivity extends AppCompatActivity {
 
             @Override
             public void onPinch(CameraKitView cameraKitView, float v, float v1, float v2) {
-
+                cameraKitView.setZoomFactor(v + v1 + v2);
             }
         });
 
