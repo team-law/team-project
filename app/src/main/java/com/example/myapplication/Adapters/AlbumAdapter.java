@@ -37,6 +37,7 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
 
     private Context context;
     private List<Event> events;
+    boolean entered = false;
 
     public AlbumAdapter (Context context, List<Event> events) {
         this.context = context;
@@ -100,6 +101,7 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
         }
 
         public void bind(final Event event) {
+            entered = false;
             tvTitle.setText(event.title);
             // TODO -- add ivAlbumPicture
             if(event.hostName != null) {
@@ -120,6 +122,7 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
             }
 
             if(event.allPictures.size() >= 1) {
+                entered = true;
                 // get imgID of first picture
                 Map.Entry<String, Boolean> entry = event.allPictures.entrySet().iterator().next();
 
@@ -152,6 +155,8 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
                         .load(image.getUrl())
                         .into(ivAlbumPicture);
             }*/
+            } else if (!entered){
+                ivAlbumPicture.setImageResource(android.R.color.transparent);
             }
 
         }
@@ -168,6 +173,7 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
                     Glide.with(context)
                             .load(url)
                             .into(ivAlbumPicture);
+                    url = null;
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -175,6 +181,7 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
                     exception.printStackTrace();
                 }
             });
+            mStorageRef = null;
         }
 
         @Override

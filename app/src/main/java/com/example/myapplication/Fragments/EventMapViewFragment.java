@@ -1,5 +1,6 @@
 package com.example.myapplication.Fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
@@ -9,15 +10,19 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication.Activities.EventDetail;
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.Models.UserNode;
 import com.example.myapplication.R;
@@ -37,7 +42,9 @@ import com.google.firebase.database.snapshot.StringNode;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,6 +70,7 @@ public class EventMapViewFragment extends Fragment {
     private HashMap<String, Node> nodes;
     private Graph graph;
     private int nodeCount = 1;
+    GraphView graphView;
 
     // Initialize database
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -76,7 +84,7 @@ public class EventMapViewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        GraphView graphView = view.findViewById(R.id.graph);
+        graphView = view.findViewById(R.id.graph);
 
         event = getArguments().getParcelable("event");
         attending = (HashMap<String, String>) getArguments().getSerializable("attending");
@@ -105,6 +113,23 @@ public class EventMapViewFragment extends Fragment {
                 ImageView ivNodePic = ((SimpleViewHolder)viewHolder).ivNodePic;
                 Glide.with(EventMapViewFragment.this).load(Uri.parse(data.toString())).into(ivNodePic);
 //                ((SimpleViewHolder)viewHolder).ivNodePic.setImageURI(Profile.getCurrentProfile().getProfilePictureUri(100, 100));
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), EventDetail.class);
+                        intent.putExtra("attending", (Serializable) event.attending);
+                        intent.putExtra("allPictures", (Serializable) event.allPictures);
+                        intent.putExtra("event", Parcels.wrap(event));
+                        getActivity().startActivity(intent);
+                        //startActivity(new Intent(getActivity(), graphItem.clazz));
+                    }
+                });
+
+            }
+
+            @Override
+            public Node getNode(int position) {
+                return graph != null ? graph.getNode(position) : null;
             }
 
 
@@ -165,7 +190,7 @@ public class EventMapViewFragment extends Fragment {
         return "Node " + nodeCount++;
     }
 
-    class SimpleViewHolder extends ViewHolder {
+    class SimpleViewHolder extends ViewHolder{
 //        TextView textView;
         ImageView ivNodePic;
 
