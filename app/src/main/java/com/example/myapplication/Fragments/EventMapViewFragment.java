@@ -2,6 +2,7 @@ package com.example.myapplication.Fragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,17 +14,20 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.Activities.EventDetail;
 import com.example.myapplication.Models.Event;
+import com.example.myapplication.Models.Picture;
 import com.example.myapplication.Models.UserNode;
 import com.example.myapplication.R;
 import com.facebook.AccessToken;
@@ -33,6 +37,7 @@ import com.facebook.Profile;
 import com.firebase.ui.auth.data.model.User;
 import com.google.android.gms.common.util.Strings;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +53,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import de.blox.graphview.Algorithm;
 import de.blox.graphview.BaseGraphAdapter;
@@ -111,17 +117,14 @@ public class EventMapViewFragment extends Fragment {
 //                ((SimpleViewHolder)viewHolder).textView.setText(data.toString());
 //                Uri profilePic = Uri.parse(data.toString());
                 ImageView ivNodePic = ((SimpleViewHolder)viewHolder).ivNodePic;
-                Glide.with(EventMapViewFragment.this).load(Uri.parse(data.toString())).into(ivNodePic);
+                UserNode clicked = (UserNode) data;
+                Glide.with(EventMapViewFragment.this).load(Uri.parse(clicked.profilePic)).into(ivNodePic);
 //                ((SimpleViewHolder)viewHolder).ivNodePic.setImageURI(Profile.getCurrentProfile().getProfilePictureUri(100, 100));
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), EventDetail.class);
-                        intent.putExtra("attending", (Serializable) event.attending);
-                        intent.putExtra("allPictures", (Serializable) event.allPictures);
-                        intent.putExtra("event", Parcels.wrap(event));
-                        getActivity().startActivity(intent);
-                        //startActivity(new Intent(getActivity(), graphItem.clazz));
+                        Node n = getNode(position);
+                       //showPopup(v, n);
                     }
                 });
 
@@ -156,11 +159,11 @@ public class EventMapViewFragment extends Fragment {
                     UserNode guest = dataSnapshot.child(user).getValue(UserNode.class);
                     Node guestNode;
                     // Check that guest doesn't already have a node
-                    if (nodes.containsKey(guest.name)) {
-                        guestNode = nodes.get(guest.name);
+                    if (nodes.containsKey(guest.userId)) {
+                        guestNode = nodes.get(guest.userId);
                     } else {
-                        guestNode = new Node(guest.profilePic);
-                        nodes.put(guest.name, guestNode);
+                        guestNode = new Node(guest);
+                        nodes.put(guest.userId, guestNode);
                     }
                     // Check that guest didn't invite itself (isn't host)
                     if (!user.equals(event.host)) {
@@ -168,11 +171,11 @@ public class EventMapViewFragment extends Fragment {
                         UserNode invitedBy = dataSnapshot.child(attending.get(user)).getValue(UserNode.class);
                         Node invitedByNode;
                         // if the node has already been created
-                        if (nodes.containsKey(invitedBy.name)) {
-                            invitedByNode = nodes.get(invitedBy.name);
+                        if (nodes.containsKey(invitedBy.userId)) {
+                            invitedByNode = nodes.get(invitedBy.userId);
                         } else {
-                            invitedByNode = new Node(invitedBy.profilePic);
-                            nodes.put(invitedBy.name, invitedByNode);
+                            invitedByNode = new Node(invitedBy);
+                            nodes.put(invitedBy.userId, invitedByNode);
                         }
                         graph.addEdge(invitedByNode, guestNode);
                     }

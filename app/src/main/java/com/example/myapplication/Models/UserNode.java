@@ -43,4 +43,8 @@ public class UserNode {
         this.picturesTaken = picturesTaken;
     }
 
+    public String getProfile() {
+        return "";
+    }
+
 }
