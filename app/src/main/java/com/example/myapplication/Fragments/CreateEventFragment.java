@@ -87,6 +87,9 @@ public class CreateEventFragment extends Fragment {
     private String time = "";
     private String mm_precede = "";
 
+    private String dateString = "MM/DD/YYYY";
+    private String timeString = "00:00 AM";
+
     boolean createEventclicked;
 
     private HorizontalNumberPicker np_channel_nr;
@@ -145,6 +148,8 @@ public class CreateEventFragment extends Fragment {
 
         np_channel_nr.setMin(1);
 
+        tvTimePicker.setText(timeString);
+        tvDatePicker.setText(dateString);
 
 
         // Read from the database
@@ -178,6 +183,7 @@ public class CreateEventFragment extends Fragment {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
                         tvDatePicker.setText((month + 1) + "/" + dayOfMonth + "/" + year);
+                        dateString = (month + 1) + "/" + dayOfMonth + "/" + year;
                         iDay = dayOfMonth;
                         iMonth = month + 1;
                         iYear = year;
@@ -226,7 +232,7 @@ public class CreateEventFragment extends Fragment {
                         }
 
                         tvTimePicker.setText(hour + ":" + mm_precede + selectedMinute + " " + am_pm );
-
+                        timeString = hour + ":" + mm_precede + selectedMinute + " " + am_pm;
 
                         iHour = hour;
                         iMinute = selectedMinute;
