@@ -167,7 +167,7 @@ public class LoginActivity extends AppCompatActivity {
                     String name = user.getDisplayName(); //might error if the user doesn't have a display name
                     String userCode = makeUserCode();
                     String fbId = Profile.getCurrentProfile().getId();
-                    String profilePic = Profile.getCurrentProfile().getProfilePictureUri(100, 100).toString();
+                    String profilePic = Profile.getCurrentProfile().getProfilePictureUri(400, 400).toString();
                     UserNode userProfile = new UserNode(user.getUid(), name, fbId, userCode, profilePic, picturesTaken, eventsAttending);
                     usersRef.child(user.getUid()).setValue(userProfile); //creates the userNode in firebase
                 }

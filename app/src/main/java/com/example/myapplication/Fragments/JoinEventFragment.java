@@ -56,7 +56,7 @@ public class JoinEventFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //get entered event code
-                final String entered =  etEventCode.getText().toString();
+                final String entered =  etEventCode.getText().toString().toUpperCase();
                 //if the first 4 characters match an event code, add them to an event
                 final String code = entered.substring(0, 4);
                 //if the next 4 characters after the dash match a user code, map who they got invited by
@@ -100,7 +100,7 @@ public class JoinEventFragment extends Fragment {
                         for (DataSnapshot snapshot: dataSnapshot.child("Events").getChildren()) {
 
                             //TODO check to make sure they haven't already joined event as the host, otherwise it will change the value
-                            if ((snapshot.getKey()).equals(code)) {
+                            if ((snapshot.getKey()).equals(code) && !invitedBy.equals("")) {
                                 DatabaseReference eventRef = myRef.child("Events").child(code);
                                 DatabaseReference dbRef = eventRef.child("attending");
 

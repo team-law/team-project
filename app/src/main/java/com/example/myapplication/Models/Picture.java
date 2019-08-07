@@ -23,4 +23,22 @@ public class Picture {
         this.createdAt = createdAt;
     }
 
+    @Override
+    public boolean equals(Object o){
+        if(this == o)
+            return true;
+        if(!( o instanceof Picture))
+            return false;
+
+        Picture f = (Picture) o;
+        if(this.imageRef.equals(f.imageRef))
+            return true;
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return imageRef.hashCode();
+    }
+
 }
