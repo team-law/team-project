@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -159,10 +161,10 @@ public class EventMapViewFragment extends Fragment {
     //popup list of pictures taken by user from the event
     public void showPopup(View anchorView, Node clicked) {
 
-        View popupView = getActivity().getLayoutInflater().inflate(R.layout.user_pics_popup, null);
+        View popupView = getLayoutInflater().inflate(R.layout.user_pics_popup, null);
 
         PopupWindow popupWindow = new PopupWindow(popupView,
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         //want to get only the pictures from that person from that event
 
@@ -176,14 +178,8 @@ public class EventMapViewFragment extends Fragment {
         mPictures = new ArrayList<>();
         adapter = new ProfileAdapter(getContext(), mPictures);
         rvPopupPics.setAdapter(adapter);
-        rvPopupPics.setLayoutManager(new GridLayoutManager(getContext(), 2)); //TODO make horizontal recycler view
+        rvPopupPics.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         queryPosts((UserNode) clicked.getData());
-
-        //TextView tv = (TextView) popupView.findViewById(R.id.tv);
-
-        //tv.setText(....);
-
-        // Initialize more widgets from `popup_layout.xml`
 
         // If the PopupWindow should be focusable
         popupWindow.setFocusable(true);
@@ -197,8 +193,7 @@ public class EventMapViewFragment extends Fragment {
         anchorView.getLocationOnScreen(location);
 
         // Using location, the PopupWindow will be displayed right under anchorView
-        popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY,
-                location[0], location[1] + anchorView.getHeight());
+        popupWindow.showAtLocation(anchorView,Gravity.NO_GRAVITY, location[0], location[1] + anchorView.getHeight());
 
     }
 
