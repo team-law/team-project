@@ -4,16 +4,11 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.myapplication.Adapters.ContactsAdapter;
-import com.example.myapplication.Adapters.GuestAdapter;
-import com.example.myapplication.Models.Contact;
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.Models.UserNode;
 import com.example.myapplication.R;
@@ -28,9 +23,10 @@ import com.google.firebase.database.ValueEventListener;
 import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class EventDetailDescription extends AppCompatActivity {
 
@@ -44,9 +40,7 @@ public class EventDetailDescription extends AppCompatActivity {
 
     final String TAG = "EventDetailDescription";
 
-    public RecyclerView rvGuestList;
-    public ArrayList<UserNode> guests;
-    public GuestAdapter adapter;
+
 
     //Firebase things
     private FirebaseDatabase mFirebaseDatabase;
@@ -72,6 +66,7 @@ public class EventDetailDescription extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
+
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -110,9 +105,10 @@ public class EventDetailDescription extends AppCompatActivity {
         tvDescription.setText(event.description);
         tvLocation.setText(event.location);
         tvTimeDetail.setText(event.time);
-        tvDateDetail.setText(event.date);
         int n = event.pics;
         tvPPP.setText(String.valueOf(n));
+        String dateString = getDate(event.date);
+        tvDateDetail.setText(dateString);
 
         btnInvite.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,38 +120,21 @@ public class EventDetailDescription extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        // initialize recycler view
-        rvGuestList = (RecyclerView) findViewById(R.id.rvGuestList);
-        // initialize the arraylist (data source)
-        guests = new ArrayList<>();
-        // construct the adapter from this datasource
-        adapter = new GuestAdapter(this, guests);
-        // set the adapter on the recycler view
-        rvGuestList.setAdapter(adapter);
-        rvGuestList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        // populate contacts list
-        populateGuestList(event);
     }
 
-    public void populateGuestList(Event event) {
-        // Read from database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Event e = (Event) dataSnapshot.child("Events").child(event.accessCode).getValue(Event.class);
-                for (String guestId: e.attending.keySet()) {
-                    UserNode guestNode = (UserNode) dataSnapshot.child("UserNodes").child(guestId).getValue(UserNode.class);
-                    guests.add(guestNode);
-                    adapter.notifyItemInserted(guests.size() - 1);
-                }
-            }
+    private String getDate(String time) {
+        String date = "";
+        String year = time.substring(0,4);
+        int month = Integer.parseInt(time.substring(4, 6)) - 1;
+        String day = time.substring(6, 8);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Failed to read value
-                Log.e(TAG, "Failed to read value.", databaseError.toException());
-            }
-        });
+        String m = "";
+        DateFormatSymbols dfs = new DateFormatSymbols();
+        String[] months = dfs.getMonths();
+        if (month >= 0 && month <= 11 ) {
+            m = months[month];
+        }
+        date += m + " " + day + ", " + year;
+        return date;
     }
 }

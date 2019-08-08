@@ -136,7 +136,7 @@ public class ProfileFragment extends Fragment {
                     Picture picture = picSnapshot.getValue(Picture.class);
                     String key = picSnapshot.getKey();
 
-                    if (userPics.containsKey(key)) { //code from the push
+                    if (userPics.containsKey(key) && !mPictures.contains(picture)) { //code from the push
                         mPictures.add(0, picture);
                         adapter.notifyDataSetChanged();
                     }
