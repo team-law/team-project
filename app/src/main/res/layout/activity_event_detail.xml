@@ -89,7 +89,7 @@
             android:background="@drawable/switch_map"
             android:button="@null"
             android:gravity="center"
-            android:text="Map"
+            android:text="Friend Map"
             android:textColor="@drawable/switch_text"
             android:textSize="18sp" />
 

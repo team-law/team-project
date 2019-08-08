@@ -45,6 +45,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.parceler.Parcels;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -87,8 +88,8 @@ public class CreateEventFragment extends Fragment {
     private String time = "";
     private String mm_precede = "";
 
-    private String dateString = "MM/DD/YYYY";
-    private String timeString = "00:00 AM";
+    private String dateString;
+    private String timeString;
 
     boolean createEventclicked;
 
@@ -144,9 +145,14 @@ public class CreateEventFragment extends Fragment {
 
         // set number picker
         np_channel_nr.setMax(5);
-        np_channel_nr.setValue(1);
+        np_channel_nr.setValue(3);
 
         np_channel_nr.setMin(1);
+
+        Calendar cal = Calendar.getInstance();
+        dateString = DateFormat.getDateInstance(DateFormat.MEDIUM).format(cal.getTime());
+        DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+        timeString = timeFormat.format(cal.getTime());
 
         tvTimePicker.setText(timeString);
         tvDatePicker.setText(dateString);
@@ -182,8 +188,11 @@ public class CreateEventFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                        tvDatePicker.setText((month + 1) + "/" + dayOfMonth + "/" + year);
-                        dateString = (month + 1) + "/" + dayOfMonth + "/" + year;
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(year, month, dayOfMonth);
+                        dateString = DateFormat.getDateInstance(DateFormat.MEDIUM).format(calendar.getTime());
+                        tvDatePicker.setText(dateString);
+
                         iDay = dayOfMonth;
                         iMonth = month + 1;
                         iYear = year;
@@ -207,15 +216,7 @@ public class CreateEventFragment extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                        int hour = selectedHour;
-/*
-                        if (selectedHour > 12) {
-                            am_pm = "PM";
-                            hour = selectedHour - 12;
-                        } else {
-                            am_pm = "AM";
-                            hour = selectedHour;
-                        }
-*/
+
                         if (selectedHour >= 12) {
                             am_pm = " PM";
                             if (selectedHour >=13 && selectedHour < 24) {
@@ -297,8 +298,10 @@ public class CreateEventFragment extends Fragment {
                         etEventTitle.setText("");
                         etEventDescription.setText("");
                         etLocation.setText("");
-                        dateString = "MM/DD/YYYY";
-                        timeString = "00:00 AM";
+                        dateString = DateFormat.getDateInstance(DateFormat.SHORT).format(cal.getTime());
+                        DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+                        timeString = timeFormat.format(cal.getTime());
+
                         // numberPicker.setValue(2);
 
                     }
@@ -309,21 +312,6 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
-        // temporary button to send a text message
-//        btnSendInvite = view.findViewById(R.id.btnSendInvite);
-//        btnSendInvite.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view) {
-//                if (checkPermission()) {
-//                    Log.e("permission", "Permission already granted.");
-//                } else {
-//                    requestPermission();
-//                }
-//                // send sms invite to users
-//                sendInvite();
-//
-//            }
-//        });
     }
 
     //makes sure the date is in the future
@@ -412,12 +400,6 @@ public class CreateEventFragment extends Fragment {
         return finalCode;
     }
 
-//    NumberPicker.OnValueChangeListener onValueChangeListener = new NumberPicker.OnValueChangeListener() {
-//        @Override
-//        public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-//            numPics = numberPicker.getValue();
-//        }
-//    };
 
     @Override
     public void onStart() {
