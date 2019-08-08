@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#fa9696</color>
+    <color name="colorPrimary">#FA9696</color>
     <color name="dustyYellow">#f1ba37</color>
     <color name="pressedDustyYellow">#d6a42d</color>
     <color name="grapefruitPink">#fa9696</color>
@@ -10,7 +10,7 @@
     <color name="darkPink">#d13d73</color>
     <color name="pressedDarkPink">#ad3d66</color>
     <color name="lightGray">#f2f2f2</color>
-    <color name="white">#ffffff </color>
+    <color name="white">#FFFFFF</color>
     <color name="mediumLightGray">#c4c4c4</color>
     <color name="mediumDarkGray">#707070</color>
     <color name="darkGray">#4a4a4a</color>
