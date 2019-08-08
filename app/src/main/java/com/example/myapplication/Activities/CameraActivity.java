@@ -15,6 +15,7 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.camerakit.CameraKit;
@@ -62,7 +63,7 @@ public class CameraActivity extends AppCompatActivity {
     public String photoFileName = "photo.jpg";
     private File photoFile;
     private byte[] postImage;
-
+    private TextView tvPicsLeft;
     private Event event;
 
 //    List<Filter> filters = FilterPack.getFilterPack(CameraActivity.this);
@@ -94,6 +95,7 @@ public class CameraActivity extends AppCompatActivity {
         ivResult = (ImageView) findViewById(R.id.ivResult);
         btnCancel = (Button) findViewById(R.id.btnCancel);
         btnReverse = (Button) findViewById(R.id.btnReverse);
+        tvPicsLeft = (TextView) findViewById(R.id.tvPicsLeft);
 
         ckv.setFacing(CameraKit.FACING_BACK);
 
@@ -158,6 +160,8 @@ public class CameraActivity extends AppCompatActivity {
         myRef = mFirebaseDatabase.getReference();
 
         event = (Event) Parcels.unwrap(getIntent().getParcelableExtra("event"));
+        int num = getIntent().getIntExtra("picsLeft", 0);
+        tvPicsLeft.setText(Integer.toString(num));
 
 
         eventRef = mFirebaseDatabase.getReference("Events/" + event.accessCode);
@@ -174,59 +178,8 @@ public class CameraActivity extends AppCompatActivity {
             }
         };
 
-//        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.common_google_signin_btn_icon_light_normal);
-//        ivResult.setImageBitmap(b);
-
-//        Bitmap bmp = BitmapFactory.decodeByteArray(capturedImage, 0, capturedImage.length);
-//
-//        ivResult.setImageBitmap(Bitmap.createScaledBitmap(bmp, ivResult.getWidth(),
-//                ivResult.getHeight(), false));
 
         btnCapture.setOnClickListener(photoOnClickListener);
-
-        /*
-        btnCapture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ckv.captureImage(new CameraKitView.ImageCallback() {
-                    @Override
-                    public void onImage(CameraKitView cameraKitView, final byte[] capturedImage) {
-
-                        // FileOutputStream outputStream;
-
-
-//                        try {
-                            Bitmap bmp = BitmapFactory.decodeByteArray(capturedImage, 0, capturedImage.length);
-
-                            postImage = capturedImage;
-
-                            ivResult.setImageBitmap(Bitmap.createScaledBitmap(bmp, cameraKitView.getWidth(),
-                                    cameraKitView.getHeight(), false));
-
-
-                            ivResult.setVisibility(View.VISIBLE);
-
-//                            outputStream = openFileOutput(photoFileName, Context.MODE_PRIVATE);
-//                            outputStream.write(capturedImage);
-//                            outputStream.close();
-
-//
-//
-//                        } catch (java.io.IOException e) {
-//                            e.printStackTrace();
-//                        }
-
-
-                    }
-                });
-                ckv.setVisibility(View.INVISIBLE);
-                // ivResult.setVisibility(View.VISIBLE);
-                btnCapture.setVisibility(View.INVISIBLE);
-                btnUpload.setVisibility(View.VISIBLE);
-                btnCancel.setVisibility(View.VISIBLE);
-            }
-        });
-        */
 
         btnUpload.setOnClickListener(new View.OnClickListener(){
             @Override

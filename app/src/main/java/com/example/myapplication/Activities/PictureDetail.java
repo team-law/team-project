@@ -21,21 +21,30 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.Models.Picture;
+import com.example.myapplication.Models.UserNode;
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import org.parceler.Parcels;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,6 +55,8 @@ import java.util.Random;
 public class PictureDetail extends AppCompatActivity {
 
     private ImageView ivPictureDetail;
+    private ImageView ivAttributePic;
+    private TextView tvAttributeName;
     private StorageReference mStorageRef;
     private Uri url;
     private Button btnSaveImage;
@@ -61,7 +72,13 @@ public class PictureDetail extends AppCompatActivity {
 
         final Picture picture = (Picture) Parcels.unwrap(getIntent().getParcelableExtra(Picture.class.getSimpleName()));
         ivPictureDetail = (ImageView) findViewById(R.id.ivPictureDetail);
+        ivAttributePic = (ImageView) findViewById(R.id.ivAttributePic);
+        tvAttributeName = (TextView) findViewById(R.id.tvAttributeName);
         btnSaveImage = (Button) findViewById(R.id.btnSaveImage);
+
+        // set the display name and profile pic
+        // of user in the top left corner
+        setAttributes(picture);
 
         imgRef = picture.imageRef;
         final Context mContext = this;
@@ -159,6 +176,23 @@ public class PictureDetail extends AppCompatActivity {
             Toast.makeText(this, "Image Saved", Toast.LENGTH_LONG).show();
         }
         return savedImagePath;
+    }
+
+    private void setAttributes(Picture picture) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("UserNodes").child(picture.user);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserNode user = dataSnapshot.getValue(UserNode.class);
+                tvAttributeName.setText(user.name);
+                Glide.with(PictureDetail.this).load(Uri.parse(user.profilePic)).apply(RequestOptions.circleCropTransform()).into(ivAttributePic);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("PhotoAdapter", "Error reading database", databaseError.toException());
+            }
+        });
     }
 
     private void galleryAddPic(String imagePath) {

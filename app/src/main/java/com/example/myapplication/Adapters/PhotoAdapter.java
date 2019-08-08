@@ -5,18 +5,26 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.Activities.EventDetail;
 import com.example.myapplication.Activities.PictureDetail;
 import com.example.myapplication.Models.Picture;
+import com.example.myapplication.Models.UserNode;
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -69,6 +77,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView ivEventPicture;
+        private TextView tvDisplayName;
         private StorageReference mStorageRef;
         private Uri url;
 
@@ -76,8 +85,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         public ViewHolder(View itemView) {
             super(itemView);
             ivEventPicture = (ImageView) itemView.findViewById(R.id.ivEventPicture);
+            tvDisplayName = (TextView) itemView.findViewById(R.id.tvDisplayName);
             itemView.setOnClickListener(this);
-
         }
 
         public void bind(final Picture picture) {
@@ -92,7 +101,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
                 public void onSuccess(Uri uri) {
                    url = uri;
                     Glide.with(context)
-
                             .load(url)
                             .into(ivEventPicture);
                 }
@@ -103,6 +111,19 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
                 }
             });
 
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("UserNodes").child(picture.user);
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    UserNode user = dataSnapshot.getValue(UserNode.class);
+                    tvDisplayName.setText(user.name);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("PhotoAdapter", "Error reading database", databaseError.toException());
+                }
+            });
         }
 
         @Override
