@@ -166,12 +166,6 @@ public class EventMapViewFragment extends Fragment {
         PopupWindow popupWindow = new PopupWindow(popupView,
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        //want to get only the pictures from that person from that event
-
-        //go through allPictures list of the node that is clicked on
-        //if the picture value matches the event access code then add pic to adapter
-
-        // Example: If you have a TextView inside `popup_layout.xml`
         rvPopupPics = popupView.findViewById(R.id.rvPopupPics);
 
         //setting up the adapter and recycler view
@@ -192,18 +186,21 @@ public class EventMapViewFragment extends Fragment {
         // Get the View's(the one that was clicked in the Fragment) location
         anchorView.getLocationOnScreen(location);
 
-        // Using location, the PopupWindow will be displayed right under anchorView
-        popupWindow.showAtLocation(anchorView,Gravity.NO_GRAVITY, location[0], location[1] + anchorView.getHeight());
+        //display the PopUp
+        popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY, location[0], location[1] + anchorView.getHeight());
 
     }
 
+
+    //want to get only the pictures from that person from that event
+    //go through allPictures list of the node that is clicked on
+    //if the picture value matches the event access code then add pic to adapter
     protected void queryPosts(UserNode clickedNode) {
         DatabaseReference ref = database.getReference();
 
 
         ref.addValueEventListener(new ValueEventListener() {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            FirebaseUser user = mAuth.getCurrentUser();
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //UserNode userInfo = dataSnapshot.child("UserNodes").child(us.getUid()).getValue(UserNode.class);
