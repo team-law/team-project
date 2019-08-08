@@ -104,6 +104,7 @@ public class EventDetail extends AppCompatActivity {
                             if (count < numPics) { //if the user still has pictures they can take for an event
                                 Intent intent = new Intent(EventDetail.this, CameraActivity.class);
                                 intent.putExtra("event", Parcels.wrap(event));
+                                intent.putExtra("picsLeft", count);
                                 startActivity(intent);
                             } else {
                                 Toast.makeText(getApplicationContext(), "You have already reached the limit for the number of pictures you can take for this event!",

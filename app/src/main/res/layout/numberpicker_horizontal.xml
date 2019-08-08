@@ -28,7 +28,7 @@
         android:layout_width="0sp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/button_selector_bg"
+        android:background="@drawable/button_selector_bg_yellow"
         android:text="+"
         android:textColor="#FFFFFF"
         android:textSize="24sp" />
