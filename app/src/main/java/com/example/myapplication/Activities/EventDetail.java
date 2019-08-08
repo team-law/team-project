@@ -43,6 +43,7 @@ public class EventDetail extends AppCompatActivity {
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     boolean clicked;
     private Button btnDetails;
+    private Button btnBack;
 
 
     @Override
@@ -52,6 +53,7 @@ public class EventDetail extends AppCompatActivity {
 
         btnNewPhoto = (FloatingActionButton) findViewById(R.id.btnNewPhoto);
         btnDetails = (Button) findViewById(R.id.btnDetails);
+        btnBack = (Button) findViewById(R.id.btnBack);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -66,6 +68,13 @@ public class EventDetail extends AppCompatActivity {
 
         TextView textView = (TextView) toolbar.findViewById(R.id.toolbarTextView);
         textView.setText(event.title);
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         btnDetails.setOnClickListener(new OnClickListener() {
             @Override
