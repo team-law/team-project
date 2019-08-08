@@ -41,6 +41,7 @@ public class AlbumFragment extends Fragment {
     public static final String TAG = "AlbumFragment";
     protected AlbumAdapter adapter;
     protected List<Event> mEvents;
+    protected List<Event> mUpcomingEvents;
     Map<String, Boolean> userEvents = new HashMap<>(1);
     private SwipeRefreshLayout swipeContainer;
     private EndlessRecyclerViewScrollListener scrollListener;
@@ -67,8 +68,6 @@ public class AlbumFragment extends Fragment {
         rvEvents.setMotionEventSplittingEnabled(true);
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
 
-
-
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -78,10 +77,12 @@ public class AlbumFragment extends Fragment {
 
         // create the data source
         mEvents = new ArrayList<>();
+        mUpcomingEvents = new ArrayList<>();
         // create the adapter
-        adapter = new AlbumAdapter(getContext(), mEvents);
+        adapter = new AlbumAdapter(getContext(), mEvents, R.layout.item_album);
         // set the adapter on the recycler view
         rvEvents.setAdapter(adapter);
+
         // set the layout manager on the recycler view
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
@@ -113,6 +114,7 @@ public class AlbumFragment extends Fragment {
                 // once the network request has completed successfully.
                 adapter.clear();
                 mEvents.clear();
+                mUpcomingEvents.clear();
                 queryPosts(page);
 
             }
@@ -183,15 +185,18 @@ public class AlbumFragment extends Fragment {
                 Event event = dataSnapshot.getValue(Event.class);
 
                 //if the event is in the past then add it at the end of the adapter
-                if(!mEvents.contains(event)) {
-                    if (Integer.parseInt(event.date) < Integer.parseInt(todayDate) && userEvents.containsKey(event.accessCode)) {
-                        mEvents.add(mEvents.size() - pastAdded, event);
+                if(!mEvents.contains(event) && !mUpcomingEvents.contains(event)) {
+                    if (Integer.parseInt(event.date) <= Integer.parseInt(todayDate) && userEvents.containsKey(event.accessCode)) {
+                        //mEvents.add(mEvents.size() - pastAdded, event);
+                        mEvents.add(0, event);
                         adapter.notifyDataSetChanged();
                         myEventRef.child(event.accessCode).child("passed").setValue(true); //marks that the event is in the past
                         event.passed = true;
                         pastAdded++;
                     } else if (userEvents.containsKey(event.accessCode)) { //code from user list of events//
-                        mEvents.add(mEvents.size() - pastAdded, event);
+                        //mEvents.add(mEvents.size() - pastAdded, event);
+                        mUpcomingEvents.add(event); //if it hasn't happened yet, add it to the top
+                        adapter.setSubList(mUpcomingEvents);
                         adapter.notifyDataSetChanged();
                     }
                 }
