@@ -110,24 +110,20 @@ public class EventMapViewFragment extends Fragment {
 
         // you can set the graph via the constructor or use the adapter.setGraph(Graph) method
         final BaseGraphAdapter<ViewHolder> adapter = new BaseGraphAdapter<ViewHolder>(graph) {
-//            private ImageView ivNodePic;
 
             @NonNull
             @Override
             public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.node, parent, false);
-//                ivNodePic = parent.findViewById(R.id.ivNodePic);
                 return new SimpleViewHolder(view);
             }
 
             @Override
             public void onBindViewHolder(ViewHolder viewHolder, Object data, int position) {
-//                ((SimpleViewHolder)viewHolder).textView.setText(data.toString());
-//                Uri profilePic = Uri.parse(data.toString());
                 ImageView ivNodePic = ((SimpleViewHolder)viewHolder).ivNodePic;
                 UserNode clicked = (UserNode) data;
                 Glide.with(EventMapViewFragment.this).load(Uri.parse(clicked.profilePic)).into(ivNodePic);
-//                ((SimpleViewHolder)viewHolder).ivNodePic.setImageURI(Profile.getCurrentProfile().getProfilePictureUri(100, 100));
+                ((SimpleViewHolder)viewHolder).tvNodeName.setText(clicked.name);
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -281,12 +277,12 @@ public class EventMapViewFragment extends Fragment {
     }
 
     class SimpleViewHolder extends ViewHolder{
-//        TextView textView;
+        TextView tvNodeName;
         ImageView ivNodePic;
 
         SimpleViewHolder(View itemView) {
             super(itemView);
-//            textView = itemView.findViewById(R.id.textView);
+            tvNodeName = itemView.findViewById(R.id.tvNodeName);
             ivNodePic = itemView.findViewById(R.id.ivNodePic);
         }
     }
