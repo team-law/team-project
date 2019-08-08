@@ -45,7 +45,7 @@ public class EventDetailDescription extends AppCompatActivity {
     final String TAG = "EventDetailDescription";
 
     public RecyclerView rvGuestList;
-    public ArrayList<String> guests;
+    public ArrayList<UserNode> guests;
     public GuestAdapter adapter;
 
     //Firebase things
@@ -130,10 +130,10 @@ public class EventDetailDescription extends AppCompatActivity {
         // initialize the arraylist (data source)
         guests = new ArrayList<>();
         // construct the adapter from this datasource
-        adapter = new GuestAdapter(guests);
+        adapter = new GuestAdapter(this, guests);
         // set the adapter on the recycler view
         rvGuestList.setAdapter(adapter);
-        rvGuestList.setLayoutManager(new LinearLayoutManager(this));
+        rvGuestList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         // populate contacts list
         populateGuestList(event);
     }
@@ -146,7 +146,7 @@ public class EventDetailDescription extends AppCompatActivity {
                 Event e = (Event) dataSnapshot.child("Events").child(event.accessCode).getValue(Event.class);
                 for (String guestId: e.attending.keySet()) {
                     UserNode guestNode = (UserNode) dataSnapshot.child("UserNodes").child(guestId).getValue(UserNode.class);
-                    guests.add(guestNode.name);
+                    guests.add(guestNode);
                     adapter.notifyItemInserted(guests.size() - 1);
                 }
             }
