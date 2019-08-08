@@ -297,6 +297,8 @@ public class CreateEventFragment extends Fragment {
                         etEventTitle.setText("");
                         etEventDescription.setText("");
                         etLocation.setText("");
+                        dateString = "MM/DD/YYYY";
+                        timeString = "00:00 AM";
                         // numberPicker.setValue(2);
 
                     }
