@@ -170,7 +170,15 @@ public class LoginActivity extends AppCompatActivity {
                     String profilePic = Profile.getCurrentProfile().getProfilePictureUri(400, 400).toString();
                     UserNode userProfile = new UserNode(user.getUid(), name, fbId, userCode, profilePic, picturesTaken, eventsAttending);
                     usersRef.child(user.getUid()).setValue(userProfile); //creates the userNode in firebase
+                } else {
+                    // update user data
+                    HashMap<String, Object> update = new HashMap<>();
+                    update.put("name", user.getDisplayName());
+                    update.put("fbId", Profile.getCurrentProfile().getId());
+                    update.put("profilePic", Profile.getCurrentProfile().getProfilePictureUri(400, 400).toString());
+                    usersRef.child(user.getUid()).updateChildren(update);
                 }
+
             }
             @Override
             public void onCancelled(DatabaseError error) {

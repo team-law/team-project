@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.myapplication.Adapters.GuestAdapter;
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.Models.UserNode;
 import com.example.myapplication.R;
@@ -19,14 +22,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import org.parceler.Parcels;
 import org.w3c.dom.Text;
-
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 
 public class EventDetailDescription extends AppCompatActivity {
 
@@ -40,7 +45,9 @@ public class EventDetailDescription extends AppCompatActivity {
 
     final String TAG = "EventDetailDescription";
 
-
+    public RecyclerView rvGuestList;
+    public ArrayList<UserNode> guests;
+    public GuestAdapter adapter;
 
     //Firebase things
     private FirebaseDatabase mFirebaseDatabase;
@@ -120,6 +127,18 @@ public class EventDetailDescription extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // initialize recycler view
+        rvGuestList = (RecyclerView) findViewById(R.id.rvGuestList);
+        // initialize the arraylist (data source)
+        guests = new ArrayList<>();
+        // construct the adapter from this datasource
+        adapter = new GuestAdapter(this, guests);
+        // set the adapter on the recycler view
+        rvGuestList.setAdapter(adapter);
+        rvGuestList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        // populate contacts list
+        populateGuestList(event);
     }
 
     private String getDate(String time) {
@@ -136,5 +155,26 @@ public class EventDetailDescription extends AppCompatActivity {
         }
         date += m + " " + day + ", " + year;
         return date;
+    }
+
+    public void populateGuestList(Event event) {
+        // Read from database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Event e = (Event) dataSnapshot.child("Events").child(event.accessCode).getValue(Event.class);
+                for (String guestId : e.attending.keySet()) {
+                    UserNode guestNode = (UserNode) dataSnapshot.child("UserNodes").child(guestId).getValue(UserNode.class);
+                    guests.add(guestNode);
+                    adapter.notifyItemInserted(guests.size() - 1);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Failed to read value
+                Log.e(TAG, "Failed to read value.", databaseError.toException());
+            }
+        });
     }
 }
