@@ -61,4 +61,5 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // ...
     implementation 'info.androidhive:imagefilters:1.0.7'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 }
