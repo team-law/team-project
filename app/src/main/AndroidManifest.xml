@@ -22,7 +22,8 @@
         <activity
             android:name=".Activities.CameraActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".Activities.HomeActivity" />
+        <activity android:name=".Activities.HomeActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".Activities.EventDetail"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
