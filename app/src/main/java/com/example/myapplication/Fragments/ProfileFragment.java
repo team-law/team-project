@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.Activities.LoginActivity;
 import com.example.myapplication.Models.Picture;
 import com.example.myapplication.Models.UserNode;
@@ -155,7 +156,7 @@ public class ProfileFragment extends Fragment {
 
     private void queryUserInfo() {
         // Fetch Facebook information and to insert in objects
-        Glide.with(this).load(profile.getProfilePictureUri(400, 400)).into(ivProfilePicture);
+        Glide.with(this).load(profile.getProfilePictureUri(400, 400)).apply(RequestOptions.circleCropTransform()).into(ivProfilePicture);
 //        tvUsername.setText(profile.getName());
 //        Glide.with(this).load(user.getPhotoUrl()).into(ivProfilePicture);
         tvUsername.setText(user.getDisplayName());
