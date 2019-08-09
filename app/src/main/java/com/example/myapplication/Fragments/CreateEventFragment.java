@@ -235,9 +235,9 @@ public class CreateEventFragment extends Fragment {
                         if (selectedMinute < 10) {
                             mm_precede = "0";
                         }
-
-                        tvTimePicker.setText(hour + ":" + mm_precede + selectedMinute + " " + am_pm );
                         timeString = hour + ":" + mm_precede + selectedMinute + " " + am_pm;
+                        tvTimePicker.setText(timeString);
+
 
                         iHour = hour;
                         iMinute = selectedMinute;
@@ -261,7 +261,7 @@ public class CreateEventFragment extends Fragment {
                 title = etEventTitle.getText().toString();
                 description = etEventDescription.getText().toString();
                 date = String.valueOf(iYear);
-                time = iHour + ":" + mm_precede + iMinute + " " + am_pm;
+                time = timeString;
                 location = etLocation.getText().toString();
                 invited = new ArrayList<>(); //should be retrieved from the search view
                 Map<String, String> attending = new HashMap<>(1);

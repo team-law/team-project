@@ -45,17 +45,25 @@
                     android:scaleType="centerCrop"
                     tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="143dp"
+                    android:layout_gravity="bottom"
+                    android:background="#81000000"
+                    android:foregroundGravity="bottom" />
+
                 <TextView
                     android:id="@+id/tvHostName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|center_vertical"
+                    android:layout_gravity="bottom|center|center_vertical"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
-                    android:layout_marginBottom="-75dp"
+                    android:layout_marginBottom="60dp"
                     android:gravity="center"
                     android:text="HostName"
                     android:textColor="#FFFFFF" />
@@ -64,15 +72,25 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
-                    android:layout_gravity="center"
+                    android:layout_gravity="bottom|center"
                     android:layout_marginTop="0dp"
-                    android:layout_marginBottom="-50dp"
+                    android:layout_marginBottom="85dp"
                     android:gravity="center"
                     android:text="Title"
                     android:textAllCaps="true"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDateTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="35dp"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="@color/white" />
 
             </FrameLayout>
 
