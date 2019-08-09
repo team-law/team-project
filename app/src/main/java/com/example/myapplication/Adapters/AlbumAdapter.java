@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +70,7 @@ public class AlbumAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == EVENT_TYPE) {
             View view = LayoutInflater.from(context).inflate(itemLayoutRes, parent, false);
             return new EventViewHolder(view);
@@ -82,7 +81,7 @@ public class AlbumAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         if (getItemViewType(i) == EVENT_TYPE) {
             Event event = events.get(isContainSubList ? i-1 : i);
             ((EventViewHolder) viewHolder).bind(event);
@@ -171,7 +170,7 @@ public class AlbumAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             tvDateTime.setText(getDate(event.date)+ "       " + event.time);
 
-            
+
             //ivAlbumPicture
 
             // call network to get imgRef of first picture
