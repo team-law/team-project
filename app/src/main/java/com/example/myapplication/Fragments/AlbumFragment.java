@@ -189,9 +189,9 @@ public class AlbumFragment extends Fragment {
                 if(!mEvents.contains(event) && !mUpcomingEvents.contains(event)) {
                     if (Integer.parseInt(event.date) <= Integer.parseInt(todayDate) && userEvents.containsKey(event.accessCode)) {
                         //mEvents.add(mEvents.size() - pastAdded, event);
-                        if (pastAdded == 0) {
-                            adapter.setText("Past Events");
-                        }
+//                        if (pastAdded == 0) {
+//                            adapter.setText("Past Events");
+//                        }
                         mEvents.add(0, event);
                         adapter.notifyDataSetChanged();
                         myEventRef.child(event.accessCode).child("passed").setValue(true); //marks that the event is in the past
@@ -199,9 +199,9 @@ public class AlbumFragment extends Fragment {
                         pastAdded++;
                     } else if (userEvents.containsKey(event.accessCode)) { //code from user list of events//
                         //mEvents.add(mEvents.size() - pastAdded, event);
-                        if (futureAdded == 0) {
-                            adapter.setText("Upcoming Events");
-                        }
+//                        if (futureAdded == 0) {
+//                            adapter.setText("Upcoming Events");
+//                        }
                         mUpcomingEvents.add(event); //if it hasn't happened yet, add it to the top
                         adapter.setSubList(mUpcomingEvents);
                         adapter.notifyDataSetChanged();

@@ -48,9 +48,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     boolean isContainSubList = false;
     boolean entered = false;
     private List<Event> subListEvents;
-    private String message;
     int itemLayoutRes;
-    int textCount = 0;
 
     public AlbumAdapter (Context context, List<Event> events, int itemLayoutRes) {
         this.context = context;
@@ -64,21 +62,29 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    public void setText(String message) {
-        this.message = "";
-        this.message = message;
-        textCount++;
-        notifyDataSetChanged();
-    }
+//    public void setText(String message) {
+//        this.message = "";
+//        this.message = message;
+//        textCount++;
+//        notifyDataSetChanged();
+//    }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 || position == 2) { //this will be the textview labelling upcoming events
-            return TEXT_TYPE;
-        } else if (position == 1 && isContainSubList) {
-            return LIST_TYPE;
+        if (isContainSubList) {
+            if (position == 0 || position == 2) {
+                return TEXT_TYPE;
+            } else if (position == 1) {
+                return LIST_TYPE;
+            }
+            return EVENT_TYPE;
+        } else {
+            // if this is the vertical list
+            if (itemLayoutRes == R.layout.item_album && position == 0) {
+                return TEXT_TYPE;
+            }
+            return EVENT_TYPE;
         }
-        return EVENT_TYPE;
     }
 
     @NonNull
@@ -99,12 +105,34 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         if (getItemViewType(i) == EVENT_TYPE) {
-            Event event = events.get(isContainSubList ? i-3 : i);
+            Event event = events.get(getEventIndex(i));
             ((EventViewHolder) viewHolder).bind(event);
         } else if (getItemViewType(i) == TEXT_TYPE) {
-            ((TextViewHolder) viewHolder).bindText(message);
+            ((TextViewHolder) viewHolder).bindText(getText(i));
         } else {
             ((ListViewHolder) viewHolder).bindEvents(subListEvents);
+        }
+    }
+
+    private String getText(int i) {
+        if (isContainSubList) {
+            if (i == 0) {
+                return "Upcoming Events";
+            }
+            return "Past Events";
+        }
+        return "Past Events";
+    }
+
+    private int getEventIndex(int pos) {
+        if (itemLayoutRes == R.layout.item_album) {
+            // if there isn't future event?
+            if (!isContainSubList) {
+                return pos - 1;
+            }
+            return pos - 3;
+        } else {
+            return pos;
         }
     }
 
@@ -129,7 +157,11 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() { //TODO maybe fix this to include the texts?
-        return events.size() + (isContainSubList ? 1 : 0) + textCount;
+        if (itemLayoutRes == R.layout.item_album) {
+            return events.size() + (events.size() != 0 ? 1 : 0) + (isContainSubList ? 2 : 0);
+        } else {
+            return events.size();
+        }
     }
 
     class TextViewHolder extends RecyclerView.ViewHolder {
@@ -142,7 +174,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         public void bindText(String text) {
             tvMessage.setText(text);
-            message = "";
         }
     }
 
@@ -302,15 +333,11 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mLastClickTime = now;
 
             int position = getAdapterPosition();
-            //gets item position
-            if (isContainSubList) {
-                position -= 1;
-            }
 
             // make sure the position is valid
             if (position != RecyclerView.NO_POSITION) {
                 // get the movie at the position
-                Event event = events.get(position);
+                Event event = events.get(getEventIndex(position));
 
                 // create intent for new activity
                 Intent intent = new Intent(context, EventDetail.class);
