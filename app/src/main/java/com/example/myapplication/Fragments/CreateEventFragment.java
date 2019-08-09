@@ -366,9 +366,9 @@ public class CreateEventFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(), "SMS sent.", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
             }
         }
     }
