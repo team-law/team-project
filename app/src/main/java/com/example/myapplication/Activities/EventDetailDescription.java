@@ -42,6 +42,7 @@ public class EventDetailDescription extends AppCompatActivity {
     private TextView tvDateDetail;
     private TextView tvPPP;
     private Button btnInvite;
+    private Button btnBackDetail;
 
     final String TAG = "EventDetailDescription";
 
@@ -69,6 +70,7 @@ public class EventDetailDescription extends AppCompatActivity {
         tvDateDetail = (TextView) findViewById(R.id.tvDateDetail);
         tvPPP = (TextView) findViewById(R.id.tvPPP);
         btnInvite = (Button) findViewById(R.id.btnInvite);
+        btnBackDetail = (Button) findViewById(R.id.btnBackDetail);
 
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -102,6 +104,13 @@ public class EventDetailDescription extends AppCompatActivity {
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
                 Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+        btnBackDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
