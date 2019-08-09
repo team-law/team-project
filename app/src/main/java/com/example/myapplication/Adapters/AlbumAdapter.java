@@ -6,7 +6,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,37 +33,75 @@ import com.google.firebase.storage.StorageReference;
 import org.parceler.Parcels;
 
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> {
+public class AlbumAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    static final int EVENT_TYPE = 1;
+    static final int LIST_TYPE = 0;
 
     private Context context;
     private List<Event> events;
+    boolean isContainSubList = false;
     boolean entered = false;
+    private List<Event> subListEvents;
+    int itemLayoutRes;
 
-    public AlbumAdapter (Context context, List<Event> events) {
+    public AlbumAdapter (Context context, List<Event> events, int itemLayoutRes) {
         this.context = context;
         this.events = events;
+        this.itemLayoutRes = itemLayoutRes;
     }
 
+    public void setSubList(List<Event> subListEvents) {
+        this.subListEvents = subListEvents;
+        this.isContainSubList = true;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0 && isContainSubList) {
+            return LIST_TYPE;
+        }
+        return EVENT_TYPE;
+    }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_album, parent, false);
-        return new ViewHolder(view);
+        if (viewType == EVENT_TYPE) {
+            View view = LayoutInflater.from(context).inflate(itemLayoutRes, parent, false);
+            return new EventViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_list, parent, false);
+            return new ListViewHolder(view);
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Event event = events.get(i);
-        viewHolder.bind(event);
+        if (getItemViewType(i) == EVENT_TYPE) {
+            Event event = events.get(isContainSubList ? i-1 : i);
+            ((EventViewHolder) viewHolder).bind(event);
+        }
+        else {
+            ((ListViewHolder) viewHolder).bindEvents(subListEvents);
+        }
     }
 
     // Clean all elements of the recycler
     public void clear() {
         events.clear();
+        notifyDataSetChanged();
+    }
+
+    // Add a list of items -- change to type used
+    public void set(List<Event> list) {
+        events.clear();
+        events.addAll(list);
         notifyDataSetChanged();
     }
 
@@ -73,10 +113,28 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return events.size();
+        return events.size() + (isContainSubList ? 1 : 0);
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class ListViewHolder extends RecyclerView.ViewHolder {
+        RecyclerView rvUpcomingEvents;
+        AlbumAdapter upcomingEventAdapter;
+
+        public ListViewHolder(@NonNull View itemView) {
+            super(itemView);
+            rvUpcomingEvents = (RecyclerView) itemView;
+            rvUpcomingEvents.setMotionEventSplittingEnabled(true);
+            rvUpcomingEvents.setLayoutManager(new LinearLayoutManager(rvUpcomingEvents.getContext(), LinearLayoutManager.HORIZONTAL, false));
+            upcomingEventAdapter = new AlbumAdapter(rvUpcomingEvents.getContext(), new ArrayList<>(), R.layout.item_small_album);
+            rvUpcomingEvents.setAdapter(upcomingEventAdapter);
+        }
+
+        public void bindEvents(List<Event> events) {
+            upcomingEventAdapter.set(events);
+        }
+    }
+
+    class EventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         // helper variables to prevent double clicking
         private static final long CLICK_TIME_INTERVAL = 300;
@@ -92,7 +150,7 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
-        public ViewHolder(View itemView){
+        public EventViewHolder(View itemView){
             super(itemView);
             ivAlbumPicture = (ImageView) itemView.findViewById(R.id.ivAlbumPicture);
             tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
