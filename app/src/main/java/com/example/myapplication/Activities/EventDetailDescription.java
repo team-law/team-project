@@ -1,7 +1,11 @@
 package com.example.myapplication.Activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +38,8 @@ import java.util.HashMap;
 
 
 public class EventDetailDescription extends AppCompatActivity {
+
+    private static final int PERMISSION_REQUEST_CODE = 1;
 
     private TextView tvTitleDetailDescription;
     private TextView tvDescription;
@@ -129,11 +135,16 @@ public class EventDetailDescription extends AppCompatActivity {
         btnInvite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EventDetailDescription.this, ContactsListActivity.class);
-                intent.putExtra(Event.class.getSimpleName(), Parcels.wrap(event));
-                intent.putExtra("hostName", currentUser.name);
-                intent.putExtra("userCode", currentUser.userCode);
-                startActivity(intent);
+                if (checkPermission()) {
+                    Intent intent = new Intent(EventDetailDescription.this, ContactsListActivity.class);
+                    intent.putExtra(Event.class.getSimpleName(), Parcels.wrap(event));
+                    intent.putExtra("hostName", currentUser.name);
+                    intent.putExtra("userCode", currentUser.userCode);
+                    startActivity(intent);
+                } else {
+                    requestPermission();
+                }
+
             }
         });
 
@@ -164,6 +175,16 @@ public class EventDetailDescription extends AppCompatActivity {
         }
         date += m + " " + day + ", " + year;
         return date;
+    }
+
+    private boolean checkPermission() {
+        int smsResult = ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS);
+        int contactsResult = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
+        return smsResult == PackageManager.PERMISSION_GRANTED && contactsResult == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(EventDetailDescription.this, new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_CODE);
     }
 
     public void populateGuestList(Event event) {
