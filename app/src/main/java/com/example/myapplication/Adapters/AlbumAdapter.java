@@ -331,9 +331,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 return;
             }
             mLastClickTime = now;
-
+            
             int position = getAdapterPosition();
-
             // make sure the position is valid
             if (position != RecyclerView.NO_POSITION) {
                 // get the movie at the position

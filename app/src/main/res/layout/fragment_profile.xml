@@ -54,7 +54,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
-        android:background="@color/darkPink"
+        android:background="@drawable/button_selector_bg"
         android:onClick="onClick"
         android:text="ACCOUNT LOGOUT"
         android:textColor="@android:color/white"

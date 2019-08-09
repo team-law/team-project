@@ -66,7 +66,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="-15dp"
                     android:layout_marginBottom="0dp"
-                    android:gravity="center"
+                    android:gravity="center|top"
                     android:text="Title"
                     android:textAllCaps="true"
                     android:textColor="#FFFFFF"
