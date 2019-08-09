@@ -272,7 +272,8 @@ public class AlbumAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             mLastClickTime = now;
 
             //gets item position
-            int position = getAdapterPosition();
+            int i = getAdapterPosition();
+            int position = (isContainSubList ? i-1 : i);
             // make sure the position is valid
             if (position != RecyclerView.NO_POSITION) {
                 // get the movie at the position

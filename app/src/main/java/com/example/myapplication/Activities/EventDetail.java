@@ -102,15 +102,15 @@ public class EventDetail extends AppCompatActivity {
                         userPics = userInfo.picturesTaken; //gets map of pictures the user has taken
 
                         if(clicked) {
-                            int count = 0;
+                            int count = numPics;
                             //look through each picture and if the value is the current event ID then increment the count
                             for (String value : userPics.values()) {
                                 if (value.equals(event.accessCode)) {
-                                    count++;
+                                    count--;
                                 }
                             }
 
-                            if (count < numPics) { //if the user still has pictures they can take for an event
+                            if (count > 0) { //if the user still has pictures they can take for an event
                                 Intent intent = new Intent(EventDetail.this, CameraActivity.class);
                                 intent.putExtra("event", Parcels.wrap(event));
                                 intent.putExtra("picsLeft", count);
