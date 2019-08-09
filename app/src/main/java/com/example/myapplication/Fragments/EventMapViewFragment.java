@@ -261,7 +261,7 @@ public class EventMapViewFragment extends Fragment {
                             nodes.put(invitedBy.userId, invitedByNode);
                         }
                         graph.addEdge(invitedByNode, guestNode);
-                    }
+                    } 
                 }
             }
 

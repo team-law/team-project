@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,8 @@ import com.google.firebase.storage.StorageReference;
 
 import org.parceler.Parcels;
 
+
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == EVENT_TYPE) {
             View view = LayoutInflater.from(context).inflate(itemLayoutRes, parent, false);
             return new EventViewHolder(view);
@@ -96,7 +97,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         if (getItemViewType(i) == EVENT_TYPE) {
             Event event = events.get(isContainSubList ? i-3 : i);
             ((EventViewHolder) viewHolder).bind(event);
@@ -172,6 +173,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private ImageView ivAlbumPicture;
         private TextView tvTitle;
         private TextView tvHost;
+        private TextView tvDateTime;
         private StorageReference mStorageRef;
         private Uri url;
         private CardView card;
@@ -183,6 +185,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             ivAlbumPicture = (ImageView) itemView.findViewById(R.id.ivAlbumPicture);
             tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
             tvHost = (TextView) itemView.findViewById(R.id.tvHostName);
+            tvDateTime = (TextView) itemView.findViewById(R.id.tvDateTime);
             card = (CardView) itemView.findViewById(R.id.cardView2);
             itemView.setOnClickListener(this);
 
@@ -191,12 +194,12 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public void bind(final Event event) {
             entered = false;
             tvTitle.setText(event.title);
-            // TODO -- add ivAlbumPicture
+
+            tvDateTime.setText(getDate(event.date) + "\n" + event.time);
+
             if(event.hostName != null) {
                 tvHost.setText(event.hostName);
             }
-
-            
             //ivAlbumPicture
 
             // call network to get imgRef of first picture
@@ -206,7 +209,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 //if the event is in the past, switch the card view to be pink
                 card.setCardBackgroundColor(context.getResources().getColor(R.color.grapefruitPink));
             } else {
-                card.setCardBackgroundColor(context.getResources().getColor(R.color.dustyYellow));
+                card.setCardBackgroundColor(context.getResources().getColor(R.color.pressedDustyYellow));
             }
 
             if(event.allPictures.size() >= 1) {
@@ -247,6 +250,23 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 ivAlbumPicture.setImageResource(android.R.color.transparent);
             }
 
+        }
+
+
+        private String getDate(String time) {
+            String date = "";
+            String year = time.substring(0,4);
+            int month = Integer.parseInt(time.substring(4, 6)) - 1;
+            String day = time.substring(6, 8);
+
+            String m = "";
+            DateFormatSymbols dfs = new DateFormatSymbols();
+            String[] months = dfs.getMonths();
+            if (month >= 0 && month <= 11 ) {
+                m = months[month];
+            }
+            date += m + " " + day + ", " + year;
+            return date;
         }
 
         private void getImage(String imgRef){

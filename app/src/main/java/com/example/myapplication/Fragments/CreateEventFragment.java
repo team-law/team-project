@@ -154,6 +154,10 @@ public class CreateEventFragment extends Fragment {
         DateFormat timeFormat = new SimpleDateFormat("hh:mm a");
         timeString = timeFormat.format(cal.getTime());
 
+        iYear = cal.get(Calendar.YEAR);
+        iMonth = cal.get(Calendar.MONTH) + 1;
+        iDay = cal.get(Calendar.DAY_OF_MONTH);
+
         tvTimePicker.setText(timeString);
         tvDatePicker.setText(dateString);
 

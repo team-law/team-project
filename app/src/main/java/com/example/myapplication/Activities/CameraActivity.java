@@ -66,6 +66,8 @@ public class CameraActivity extends AppCompatActivity {
     private TextView tvPicsLeft;
     private Event event;
 
+    private int count;
+
 //    List<Filter> filters = FilterPack.getFilterPack(CameraActivity.this);
 
 
@@ -160,8 +162,8 @@ public class CameraActivity extends AppCompatActivity {
         myRef = mFirebaseDatabase.getReference();
 
         event = (Event) Parcels.unwrap(getIntent().getParcelableExtra("event"));
-        int num = getIntent().getIntExtra("picsLeft", 0);
-        tvPicsLeft.setText(Integer.toString(num));
+        count = getIntent().getIntExtra("picsLeft", 0);
+        tvPicsLeft.setText(Integer.toString(count));
 
 
         eventRef = mFirebaseDatabase.getReference("Events/" + event.accessCode);
@@ -191,6 +193,8 @@ public class CameraActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                count++;
+                tvPicsLeft.setText(Integer.toString(count));
                 ckv.setVisibility(View.VISIBLE);
                 ivResult.setVisibility(View.INVISIBLE);
                 btnCapture.setVisibility(View.VISIBLE);
@@ -335,6 +339,8 @@ public class CameraActivity extends AppCompatActivity {
             ckv.captureImage(new CameraKitView.ImageCallback() {
                 @Override
                 public void onImage(CameraKitView cameraKitView, final byte[] capturedImage) {
+                    count--;
+                    tvPicsLeft.setText(Integer.toString(count));
                     Bitmap bmp = BitmapFactory.decodeByteArray(capturedImage, 0, capturedImage.length);
 
                     postImage = capturedImage;
