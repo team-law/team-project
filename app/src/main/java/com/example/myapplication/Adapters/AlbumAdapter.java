@@ -37,10 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class AlbumAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static final int EVENT_TYPE = 1;
     static final int LIST_TYPE = 0;
+    static final int TEXT_TYPE = 2;
 
     private Context context;
     private List<Event> events;
@@ -61,12 +62,29 @@ public class AlbumAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
+//    public void setText(String message) {
+//        this.message = "";
+//        this.message = message;
+//        textCount++;
+//        notifyDataSetChanged();
+//    }
+
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 && isContainSubList) {
-            return LIST_TYPE;
+        if (isContainSubList) {
+            if (position == 0 || position == 2) {
+                return TEXT_TYPE;
+            } else if (position == 1) {
+                return LIST_TYPE;
+            }
+            return EVENT_TYPE;
+        } else {
+            // if this is the vertical list
+            if (itemLayoutRes == R.layout.item_album && position == 0) {
+                return TEXT_TYPE;
+            }
+            return EVENT_TYPE;
         }
-        return EVENT_TYPE;
     }
 
     @NonNull
@@ -75,20 +93,46 @@ public class AlbumAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (viewType == EVENT_TYPE) {
             View view = LayoutInflater.from(context).inflate(itemLayoutRes, parent, false);
             return new EventViewHolder(view);
-        } else {
+        } else if (viewType == LIST_TYPE){
             View view = LayoutInflater.from(context).inflate(R.layout.item_list, parent, false);
             return new ListViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_text_label, parent, false);
+            return new TextViewHolder(view);
         }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         if (getItemViewType(i) == EVENT_TYPE) {
-            Event event = events.get(isContainSubList ? i-1 : i);
+            Event event = events.get(getEventIndex(i));
             ((EventViewHolder) viewHolder).bind(event);
-        }
-        else {
+        } else if (getItemViewType(i) == TEXT_TYPE) {
+            ((TextViewHolder) viewHolder).bindText(getText(i));
+        } else {
             ((ListViewHolder) viewHolder).bindEvents(subListEvents);
+        }
+    }
+
+    private String getText(int i) {
+        if (isContainSubList) {
+            if (i == 0) {
+                return "Upcoming Events";
+            }
+            return "Past Events";
+        }
+        return "Past Events";
+    }
+
+    private int getEventIndex(int pos) {
+        if (itemLayoutRes == R.layout.item_album) {
+            // if there isn't future event?
+            if (!isContainSubList) {
+                return pos - 1;
+            }
+            return pos - 3;
+        } else {
+            return pos;
         }
     }
 
@@ -112,8 +156,25 @@ public class AlbumAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @Override
-    public int getItemCount() {
-        return events.size() + (isContainSubList ? 1 : 0);
+    public int getItemCount() { //TODO maybe fix this to include the texts?
+        if (itemLayoutRes == R.layout.item_album) {
+            return events.size() + (events.size() != 0 ? 1 : 0) + (isContainSubList ? 2 : 0);
+        } else {
+            return events.size();
+        }
+    }
+
+    class TextViewHolder extends RecyclerView.ViewHolder {
+        private TextView tvMessage;
+
+        public TextViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvMessage = (TextView) itemView.findViewById(R.id.tvMessage);
+        }
+
+        public void bindText(String text) {
+            tvMessage.setText(text);
+        }
     }
 
     class ListViewHolder extends RecyclerView.ViewHolder {
@@ -270,14 +331,12 @@ public class AlbumAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 return;
             }
             mLastClickTime = now;
-
-            //gets item position
-            int i = getAdapterPosition();
-            int position = (isContainSubList ? i-1 : i);
+            
+            int position = getAdapterPosition();
             // make sure the position is valid
             if (position != RecyclerView.NO_POSITION) {
                 // get the movie at the position
-                Event event = events.get(position);
+                Event event = events.get(getEventIndex(position));
 
                 // create intent for new activity
                 Intent intent = new Intent(context, EventDetail.class);
